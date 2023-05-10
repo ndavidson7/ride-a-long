@@ -6,6 +6,61 @@ function initAutocomplete() {
 
 }
 
-function initMap() {
+function onShowModal(event, modal, request) {
+    // Determine which ride was clicked
+    var ride = $(event.relatedTarget).attr("data-bs-ride");
+    var url = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/rides/'+ride : 'https://www.cs.virginia.edu/nid3dhu/4750_project/rides/'+ride;
+    if (request) $('#request').attr('href', url+'/request');
+    // AJAX request
+    $.getJSON(url, function(data) {
+        // Update the modal's content.
+        $("#"+modal+"-route").html(data.origin.address + " &#8594; " + data.destination.address);
+        $("#"+modal+"-description").text(data.description);
+        $("#"+modal+"-driver").text(data.driver.first_name+" "+data.driver.last_name+" ("+data.driver.email+")");
 
+        // Source: https://itnext.io/create-date-from-mysql-datetime-format-in-javascript-912111d57599
+        let dateTimeParts = data.start_time.split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+        dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+        var d = new Date(...dateTimeParts); // our Date object
+        var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var date = month[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+        var time = d.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", hour12: true, timeZone: 'America/New_York' });
+        $("#"+modal+"-date").text(date);
+        $("#"+modal+"-time").text(time);
+
+        // Initialize map
+        initMap(data, modal);
+    });
+}
+
+function initMap(data, modal) {
+    var origLat = data.origin.latitude;
+    var origLong = data.origin.longitude;
+    var destLat = data.destination.latitude;
+    var destLong = data.destination.longitude;
+    var origin = new google.maps.LatLng(origLat, origLong);
+    var destination = new google.maps.LatLng(destLat, destLong);
+    var myOptions = {
+        zoom: 7,
+        center: origin,
+        disableDefaultUI: true
+    }
+    var map = new google.maps.Map(document.getElementById(modal+'-map'), myOptions);
+    var directionsService = new google.maps.DirectionsService();
+    var directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    directionsService.route({
+        origin: origin,
+        destination: destination,
+        travelMode: 'DRIVING',
+    }, function (result, status) {
+        if (status == 'OK') {
+            directionsRenderer.setDirections(result);
+            var leg = result.routes[0].legs[0];
+            $('#'+modal+'-distance').html(leg.distance.text + ' (' + leg.duration.text + ')');
+        } else {
+            window.alert('Directions request failed due to ' + status);
+        }
+    });
 }

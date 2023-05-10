@@ -1,9 +1,9 @@
 <?php
 
 class Config {
-  // FOR CS4640 SERVERS
+  // FOR CS SERVERS
   public static $db = [
-    "host" => "localhost",
+    "host" => "mysql01.cs.virginia.edu",
     "user" => "nid3dhu",
     "pass" => "ogJPXR9wyH.XDP((",
     "database" => "nid3dhu"

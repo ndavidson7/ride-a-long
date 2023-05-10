@@ -1,5 +1,4 @@
 <?php
-// Link: https://cs4640.cs.virginia.edu/nid3dhu/project/sprint3/
 
 // Register the autoloader
 spl_autoload_register(function($classname) {
@@ -14,7 +13,7 @@ session_start();
 // so we should send them over to sign in or sign up first before doing
 // anything else! Otherwise, parse the query string for command
 $command = "signin";
-if (isset($_SESSION["id"])) {
+if (isset($_SESSION["email"])) {
   if (isset($_GET["command"])) {
     $command = $_GET["command"];
   } else {

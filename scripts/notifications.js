@@ -1,4 +1,4 @@
-var url = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/notifications' : 'https://cs4640.cs.virginia.edu/nid3dhu/project/notifications';
+var url = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/notifications' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/notifications';
 $.getJSON(url, function(data) {
   var notifs = [];
 
@@ -9,7 +9,7 @@ $.getJSON(url, function(data) {
     });
   });
   $.each(data['responses'], function(key, val) {
-    if (val == "accept") {
+    if (val == 1) {
       notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-bs-ride='" + key + "' data-bs-response=Accepted>Your request was accepted!</button></li>");
     } else {
       notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-bs-ride='" + key + "' data-bs-response=Denied>Your request was denied!</button></li>");
@@ -28,25 +28,25 @@ $.getJSON(url, function(data) {
     var ride = $(event.relatedTarget).attr("data-bs-ride");
     var user = $(event.relatedTarget).attr("data-bs-user");
 
-    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://cs4640.cs.virginia.edu/nid3dhu/project/';
+    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/';
     var url = base+'index.php?command=requestinfo&ride='+ride+'&user='+user;
     $.get(url, function(data) {
       $('#requestRide').html(data.orig_addr + " &#8594; " + data.dest_addr);
-      $('#requestUser').text(data.user.first_name+" "+data.user.last_name+" ("+data.user.email+")");
+      $('#requestUser').text(data.rider.first_name+" "+data.rider.last_name+" ("+data.rider.email+")");
     });
 
-    $('#deny').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=deny');
-    $('#accept').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=accept');
+    $('#deny').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=0');
+    $('#accept').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=1');
   });
 
   $('#responseModal').on('show.bs.modal', function(event) {
     var ride = $(event.relatedTarget).attr("data-bs-ride");
     var response = $(event.relatedTarget).attr("data-bs-response");
 
-    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://cs4640.cs.virginia.edu/nid3dhu/project/';
+    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/';
     var url = base+'rides/'+ride;
     $.get(url, function(data) {
-      $('#responseRide').html(data.orig_addr + " &#8594; " + data.dest_addr);
+      $('#responseRide').html(data.origin.address + " &#8594; " + data.destination.address);
       $('#response').text(response);
     });
 
