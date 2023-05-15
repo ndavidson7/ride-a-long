@@ -13,19 +13,19 @@
       <label for="seats" class="form-label">Seats</label>
       <input type="number" class="form-control" id="seats" name="seats" min="1" required>
     </div>
-    <div class="mb-3 col-12">
+    <div class="mb-3 col-12 autocomplete">
       <label for="origin" class="form-label">Origin</label>
-      <input type="text" class="form-control" id="origin" name="origin" required>
-      <input type="hidden" id="orig-addr" name="orig-addr" maxlength="255" value="">
-      <input type="hidden" id="orig-lat" name="orig-lat" value="">
-      <input type="hidden" id="orig-long" name="orig-long" value="">
+      <input type="text" class="form-control place" id="origin" name="origin" required>
+      <input type="hidden" class="address" id="orig-addr" name="orig-addr" maxlength="255" value="">
+      <input type="hidden" class="latitude" id="orig-lat" name="orig-lat" value="">
+      <input type="hidden" class="longitude" id="orig-long" name="orig-long" value="">
     </div>
-    <div class="mb-3 col-12">
+    <div class="mb-3 col-12 autocomplete">
       <label for="destination" class="form-label">Destination</label>
-      <input type="text" class="form-control" id="destination" name="destination" required>
-      <input type="hidden" id="dest-addr" name="dest-addr" maxlength="255" value="">
-      <input type="hidden" id="dest-lat" name="dest-lat" value="">
-      <input type="hidden" id="dest-long" name="dest-long" value="">
+      <input type="text" class="form-control place" id="destination" name="destination" required>
+      <input type="hidden" class="address" id="dest-addr" name="dest-addr" maxlength="255" value="">
+      <input type="hidden" class="latitude" id="dest-lat" name="dest-lat" value="">
+      <input type="hidden" class="longitude" id="dest-long" name="dest-long" value="">
     </div>
     <div class="mb-3 col-12">
       <label class="form-label" for="description">Description/Additional info</label>
@@ -38,70 +38,70 @@
   </form>
 
   <script type="text/javascript">
-    let acOrigin;
-    let acDestination;
+    // let acOrigin;
+    // let acDestination;
 
-    function onOriginChanged() {
-      var place = acOrigin.getPlace();
+    // function onOriginChanged() {
+    //   var place = acOrigin.getPlace();
 
-      if (!place.geometry || !place.geometry.location) {
-        // User entered the name of a Place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed.
-        var input = document.getElementById('origin');
-        input.value = '';
-        window.alert("Please select a location from the autocomplete list");
-      } else {
-        document.getElementById('orig-addr').value = place.formatted_address;
-        var location = place.geometry.location;
-        document.getElementById('orig-lat').value = location.lat();
-        document.getElementById('orig-long').value = location.lng();
-      }
-    }
+    //   if (!place.geometry || !place.geometry.location) {
+    //     // User entered the name of a Place that was not suggested and
+    //     // pressed the Enter key, or the Place Details request failed.
+    //     var input = document.getElementById('origin');
+    //     input.value = '';
+    //     window.alert("Please select a location from the autocomplete list");
+    //   } else {
+    //     document.getElementById('orig-addr').value = place.formatted_address;
+    //     var location = place.geometry.location;
+    //     document.getElementById('orig-lat').value = location.lat();
+    //     document.getElementById('orig-long').value = location.lng();
+    //   }
+    // }
 
-    function onDestinationChanged() {
-      var place = acDestination.getPlace();
+    // function onDestinationChanged() {
+    //   var place = acDestination.getPlace();
 
-      if (!place.geometry || !place.geometry.location) {
-        // User entered the name of a Place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed.
-        var input = document.getElementById('destination');
-        input.value = '';
-        window.alert("Please select a location from the autocomplete list");
-      } else {
-        document.getElementById('dest-addr').value = place.formatted_address;
-        var location = place.geometry.location;
-        document.getElementById('dest-lat').value = location.lat();
-        document.getElementById('dest-long').value = location.lng();
-      }
-    }
+    //   if (!place.geometry || !place.geometry.location) {
+    //     // User entered the name of a Place that was not suggested and
+    //     // pressed the Enter key, or the Place Details request failed.
+    //     var input = document.getElementById('destination');
+    //     input.value = '';
+    //     window.alert("Please select a location from the autocomplete list");
+    //   } else {
+    //     document.getElementById('dest-addr').value = place.formatted_address;
+    //     var location = place.geometry.location;
+    //     document.getElementById('dest-lat').value = location.lat();
+    //     document.getElementById('dest-long').value = location.lng();
+    //   }
+    // }
 
-    function initAutocomplete() {
-      // Google Maps UVA coordinates
-      const center = { lat: 38.03361737225505, lng: -78.50800895660305 };
-      // Bias location autocomplete results to UVA grounds/Charlottesville
-      const bounds = {
-        north: center.lat + 0.15,
-        south: center.lat - 0.15,
-        east: center.lng + 0.15,
-        west: center.lng - 0.15,
-      };
-      // Attach autocomplete widget to location inputs
-      const origin = document.getElementById("origin");
-      const destination = document.getElementById("destination");
-      // Autocomplete configuration
-      const options = {
-        bounds: bounds,
-        componentRestrictions: { country: "us" },
-        fields: ["formatted_address", "geometry"],
-        strictBounds: false,
-        types: [],
-      };
-      acOrigin = new google.maps.places.Autocomplete(origin, options);
-      acDestination = new google.maps.places.Autocomplete(destination, options);
+    // function initAutocomplete() {
+    //   // Google Maps UVA coordinates
+    //   const center = { lat: 38.03361737225505, lng: -78.50800895660305 };
+    //   // Bias location autocomplete results to UVA grounds/Charlottesville
+    //   const bounds = {
+    //     north: center.lat + 0.15,
+    //     south: center.lat - 0.15,
+    //     east: center.lng + 0.15,
+    //     west: center.lng - 0.15,
+    //   };
+    //   // Attach autocomplete widget to location inputs
+    //   const origin = document.getElementById("origin");
+    //   const destination = document.getElementById("destination");
+    //   // Autocomplete configuration
+    //   const options = {
+    //     bounds: bounds,
+    //     componentRestrictions: { country: "us" },
+    //     fields: ["formatted_address", "geometry"],
+    //     strictBounds: false,
+    //     types: [],
+    //   };
+    //   acOrigin = new google.maps.places.Autocomplete(origin, options);
+    //   acDestination = new google.maps.places.Autocomplete(destination, options);
 
-      acOrigin.addListener('place_changed', onOriginChanged);
-      acDestination.addListener('place_changed', onDestinationChanged);
-    }
+    //   acOrigin.addListener('place_changed', onOriginChanged);
+    //   acDestination.addListener('place_changed', onDestinationChanged);
+    // }
 
     function initPreview() {
       data = {
@@ -153,55 +153,6 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="requestModal" tabindex="-1" aria-labelledby="requestModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="requestModalLabel">Request to Join Ride</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12"><b>Ride:</b> <span id="requestRide"></span></div>
-            </div>
-            <div class="row">
-              <div class="col-12"><b>User:</b> <span id="requestUser"></span></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a id="deny" href="#" role="button" class="btn btn-danger">Deny</a>
-          <a id="accept" href="#" role="button" class="btn btn-success">Accept</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="responseModal" tabindex="-1" aria-labelledby="responseModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg modal-fullscreen-md-down">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="responseModalLabel">Response to Request</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="container-fluid">
-            <div class="row">
-              <div class="col-12"><b>Ride:</b> <span id="responseRide"></span></div>
-            </div>
-            <div class="row">
-              <div class="col-12"><b>Response:</b> <span id="response"></span></div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <a id="read" href="#" role="button" class="btn btn-primary">Mark as Read</a>
         </div>
       </div>
     </div>

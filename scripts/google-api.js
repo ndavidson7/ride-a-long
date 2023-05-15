@@ -1,15 +1,47 @@
-function onPlaceChanged() {
+function onPlaceChanged(inputDiv, autocompleteObj) {
+    var place = autocompleteObj.getPlace();
 
+    if (!place.geometry || !place.geometry.location) {
+        // User entered the name of a Place that was not suggested and
+        // pressed the Enter key, or the Place Details request failed.
+        inputDiv.children(".place").value = '';
+        window.alert("Please select a location from the autocomplete list");
+    } else {
+        inputDiv.children(".address").value = place.formatted_address;
+        var location = place.geometry.location;
+        inputDiv.children(".latitude").value = location.lat();
+        inputDiv.children(".longitude").value = location.lng();
+    }
 }
 
 function initAutocomplete() {
-
+    // Google Maps UVA coordinates
+    const center = { lat: 38.03361737225505, lng: -78.50800895660305 };
+    // Bias location autocomplete results to UVA grounds/Charlottesville
+    const bounds = {
+        north: center.lat + 0.15,
+        south: center.lat - 0.15,
+        east: center.lng + 0.15,
+        west: center.lng - 0.15,
+    };
+    // Autocomplete configuration
+    const options = {
+        bounds: bounds,
+        componentRestrictions: { country: "us" },
+        fields: ["formatted_address", "geometry"],
+        strictBounds: false,
+        types: [],
+    };
+    $('.autocomplete').each(function() {
+        let autocompleteObj = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
+        autocompleteObj.addListener('place_changed', onPlaceChanged($(this), autocompleteObj));
+    });
 }
 
 function onShowModal(event, modal, request) {
     // Determine which ride was clicked
     var ride = $(event.relatedTarget).attr("data-bs-ride");
-    var url = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/rides/'+ride : 'https://www.cs.virginia.edu/nid3dhu/4750_project/rides/'+ride;
+    var url = $(location).attr('origin')+'/rides/'+ride;
     if (request) $('#request').attr('href', url+'/request');
     // AJAX request
     $.getJSON(url, function(data) {

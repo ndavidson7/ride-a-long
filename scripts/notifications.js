@@ -1,4 +1,5 @@
-var url = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/notifications' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/notifications';
+var base = $(location).attr('origin');
+var url = base+'/notifications';
 $.getJSON(url, function(data) {
   var notifs = [];
 
@@ -28,28 +29,26 @@ $.getJSON(url, function(data) {
     var ride = $(event.relatedTarget).attr("data-bs-ride");
     var user = $(event.relatedTarget).attr("data-bs-user");
 
-    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/';
-    var url = base+'index.php?command=requestinfo&ride='+ride+'&user='+user;
+    var url = base+'/index.php?command=requestinfo&ride='+ride+'&user='+user;
     $.get(url, function(data) {
       $('#requestRide').html(data.orig_addr + " &#8594; " + data.dest_addr);
       $('#requestUser').text(data.rider.first_name+" "+data.rider.last_name+" ("+data.rider.email+")");
     });
 
-    $('#deny').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=0');
-    $('#accept').attr('href', base+'index.php?command=respond&ride='+ride+'&user='+user+'&response=1');
+    $('#deny').attr('href', base+'/index.php?command=respond&ride='+ride+'&user='+user+'&response=0');
+    $('#accept').attr('href', base+'/index.php?command=respond&ride='+ride+'&user='+user+'&response=1');
   });
 
   $('#responseModal').on('show.bs.modal', function(event) {
     var ride = $(event.relatedTarget).attr("data-bs-ride");
     var response = $(event.relatedTarget).attr("data-bs-response");
 
-    var base = $(location).attr('origin') == 'http://localhost' ? 'http://localhost/' : 'https://www.cs.virginia.edu/nid3dhu/4750_project/';
-    var url = base+'rides/'+ride;
+    var url = base+'/rides/'+ride;
     $.get(url, function(data) {
       $('#responseRide').html(data.origin.address + " &#8594; " + data.destination.address);
       $('#response').text(response);
     });
 
-    $('#read').attr('href', base+'index.php?command=deleteresponse&ride='+ride);
+    $('#read').attr('href', base+'/index.php?command=deleteresponse&ride='+ride);
   });
 });

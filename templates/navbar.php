@@ -30,4 +30,5 @@
 </li>
 </ul>
 </nav>
+<?php require "templates/notifications.php"; ?>
 </header>

@@ -79,13 +79,21 @@ class Controller {
     session_destroy();
   }
 
+  /* 
+   * My simple templating system.
+   * $template is the name of the template to be rendered (without the .php extension).
+   * templates should only include the <main> tag and its children.
+   * $navbar is a boolean indicating whether the navbar or the largeheader should be rendered.
+   * $vars is an associative array of variables to be passed to the template.
+   */
   private function renderTemplate($template, $navbar, $vars) {
     extract($vars);
-    include "templates/top.php";
-    include "templates/$template.php";
-    include "templates/bottom.php";
+    require "templates/top.php";
+    require "templates/$template.php";
+    require "templates/bottom.php";
   }
 
+  // Get number of seats available for a given ride. Returns -1 if ride does not exist.
   private function calculateSeatsOpen($ride_id) {
     $seats_total = $this->db->query("select seats_total from ride where id = ?;", "i", $ride_id);
     $num_riders = $this->db->query("select count(rider_email) from ride_riders where id = ?;", "i", $ride_id);
