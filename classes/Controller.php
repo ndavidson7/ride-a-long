@@ -519,21 +519,21 @@ class Controller {
         die("You are already in this ride!");
       }
 
-      // if (isset($_POST["stop"])) {
-      $insert = $this->db->query("insert into request (id, rider_email) values (?, ?);", "is", $id, $_SESSION["email"]);
-      if ($insert === false) {
-        die("Error inserting request.");
+      if (isset($_POST["stop"])) {
+        $insert = $this->db->query("insert into request (id, rider_email) values (?, ?);", "is", $id, $_SESSION["email"]);
+        if ($insert === false) {
+          die("Error inserting request.");
+        } else {
+          header("Location: /rides");
+        }
       } else {
-        header("Location: /rides");
+        $title = "Request";
+        $styles = array('main');
+        $scripts = array(self::JQUERY, self::NOTIFS, self::GOOGLE_API);
+        $maps_script = self::MAPS_AUTOCOMPLETE_AND_PLACES;
+        $vars = array('title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script);
+        $this->renderTemplate('request', true, $vars);
       }
-      // } else {
-      //   $title = "Request";
-      //   $styles = array('main');
-      //   $scripts = array(self::JQUERY, self::NOTIFS);
-      //   $maps_script = self::MAPS_AUTOCOMPLETE_AND_PLACES;
-      //   $vars = array('title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script);
-      //   $this->renderTemplate('request', true, $vars);
-      // }
     }
   }
 

@@ -1,16 +1,20 @@
-function onPlaceChanged(inputDiv, autocompleteObj) {
-    var place = autocompleteObj.getPlace();
+var autocompletes = [];
+
+function onPlaceChanged() {
+    var place = this.getPlace();
+    // console.log(place);
+    // if (!place) return;
 
     if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        inputDiv.children(".place").value = '';
+        this.inputDiv.children(".place").val('');
         window.alert("Please select a location from the autocomplete list");
     } else {
-        inputDiv.children(".address").value = place.formatted_address;
+        this.inputDiv.children(".address").val(place.formatted_address);
         var location = place.geometry.location;
-        inputDiv.children(".latitude").value = location.lat();
-        inputDiv.children(".longitude").value = location.lng();
+        this.inputDiv.children(".latitude").val(location.lat());
+        this.inputDiv.children(".longitude").val(location.lng());
     }
 }
 
@@ -33,8 +37,10 @@ function initAutocomplete() {
         types: [],
     };
     $('.autocomplete').each(function() {
-        let autocompleteObj = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
-        autocompleteObj.addListener('place_changed', onPlaceChanged($(this), autocompleteObj));
+        var autocomplete = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
+        autocomplete.inputDiv = $(this);
+        autocomplete.addListener('place_changed', onPlaceChanged);
+        autocompletes.push(autocomplete);
     });
 }
 

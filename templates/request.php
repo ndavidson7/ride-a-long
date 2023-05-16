@@ -15,12 +15,12 @@
   <form class="" method="post">
     <label class="form-label" for="checkbox">Add Stop?</label>
     <input type="checkbox" name="checkbox">
-    <div class="d-none" id="stop-div">
+    <div class="d-none autocomplete" id="stop-div">
       <label class="form-label" for="stop">Your Stop</label>
-      <input type="text" name="stop" id="stop" value="">
-      <input type="hidden" id="stop-addr" name="stop-addr" value="">
-      <input type="hidden" id="stop-lat" name="stop-lat" value="">
-      <input type="hidden" id="stop-long" name="stop-long" value="">
+      <input type="text" class="place" name="stop" id="stop" value="">
+      <input type="hidden" class="address" id="stop-addr" name="stop-addr" value="">
+      <input type="hidden" class="latitude" id="stop-lat" name="stop-lat" value="">
+      <input type="hidden" class="longitude" id="stop-long" name="stop-long" value="">
       <button type="button" class="btn btn-uva-ob" onclick="initPreview()">Preview</button>
     </div>
   </form>
@@ -36,37 +36,37 @@
       }
     });
 
-    let acStop;
+    // let acStop;
 
-    function onStopChanged() {
-      var place = acStop.getPlace();
+    // function onStopChanged() {
+    //   var place = acStop.getPlace();
 
-      // User entered the name of a Place that was not suggested and
-      // pressed the Enter key, or the Place Details request failed.
-      if (!place.geometry || !place.geometry.location) {
-        var input = document.getElementById('stop');
-        input.value = '';
-        window.alert("Please select a location from the autocomplete list");
-      } else {
-        document.getElementById('stop-addr').value = place.formatted_address;
-        var location = place.geometry.location;
-        document.getElementById('stop-lat').value = location.lat();
-        document.getElementById('stop-long').value = location.lng();
-      }
-    }
+    //   // User entered the name of a Place that was not suggested and
+    //   // pressed the Enter key, or the Place Details request failed.
+    //   if (!place.geometry || !place.geometry.location) {
+    //     var input = document.getElementById('stop');
+    //     input.value = '';
+    //     window.alert("Please select a location from the autocomplete list");
+    //   } else {
+    //     document.getElementById('stop-addr').value = place.formatted_address;
+    //     var location = place.geometry.location;
+    //     document.getElementById('stop-lat').value = location.lat();
+    //     document.getElementById('stop-long').value = location.lng();
+    //   }
+    // }
 
-    function initAutocomplete() {
-      // Attach autocomplete widget to location inputs
-      const stop = document.getElementById("stop");
-      // Autocomplete configuration
-      const options = {
-        componentRestrictions: { country: "us" },
-        fields: ["formatted_address", "geometry"],
-        strictBounds: false
-      };
-      acStop = new google.maps.places.Autocomplete(stop, options);
+    // function initAutocomplete() {
+    //   // Attach autocomplete widget to location inputs
+    //   const stop = document.getElementById("stop");
+    //   // Autocomplete configuration
+    //   const options = {
+    //     componentRestrictions: { country: "us" },
+    //     fields: ["formatted_address", "geometry"],
+    //     strictBounds: false
+    //   };
+    //   acStop = new google.maps.places.Autocomplete(stop, options);
 
-      acStop.addListener('place_changed', onStopChanged);
-    }
+    //   acStop.addListener('place_changed', onStopChanged);
+    // }
   </script>
 </main>
