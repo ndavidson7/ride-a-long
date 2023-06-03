@@ -1,7 +1,7 @@
 # Ride-A-Long
 Ride sharing web app designed by and for college students. Carpool with your classmates!
 
-Written with simple HTML, CSS (some custom, some bootstrap), JavaScript (some vanilla, some jQuery), and PHP. Makes use of a SQL database. To try it out, import db.sql into your DBMS, modify classes/Config.php to use your new database's connection parameters, and host however you prefer. For local development, I used XAMPP's Apache and MySQL.
+Written with simple HTML, CSS (some custom, some bootstrap), JavaScript (some vanilla, some jQuery), and PHP. Makes use of a SQL database.
 
 ## Preview
 ### Sign in
@@ -15,3 +15,15 @@ Written with simple HTML, CSS (some custom, some bootstrap), JavaScript (some va
 
 ### New ride
 ![New ride page](https://github.com/ndavidson7/ride-a-long/blob/main/images/newride.png?raw=true)
+
+## Try it yourself
+### Installing dependencies
+1. Install [composer](https://getcomposer.org/) if you have not already.
+2. Open the repository in the command line and run `composer install`.
+3. Optionally, install [XAMPP](https://www.apachefriends.org/) to host Ride-A-Long locally. If you do not wish to use XAMPP, make sure you can host an Apache server & MySQL database.
+
+### Configuration
+1. Create a new database.
+2. Import db.sql.
+3. Copy `\.env.example` to `\.env` and modify it to use your new database's connection parameters.
+4. Host however you prefer.
