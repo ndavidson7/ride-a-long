@@ -1,8 +1,14 @@
 <?php
 
+require_once 'vendor/autoload.php';
+
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+$dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
+
 // Register the autoloader
 spl_autoload_register(function($classname) {
-  include "classes/$classname.php";
+  require "classes/$classname.php";
 });
 
 // Start session
