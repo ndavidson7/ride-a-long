@@ -36,7 +36,7 @@ function initAutocomplete() {
         strictBounds: false,
         types: [],
     };
-    $('.autocomplete').each(function() {
+    $('.autocomplete').each(function () {
         var autocomplete = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
         autocomplete.inputDiv = $(this);
         autocomplete.addListener('place_changed', onPlaceChanged);
@@ -47,14 +47,14 @@ function initAutocomplete() {
 function onShowModal(event, modal, request) {
     // Determine which ride was clicked
     var ride = $(event.relatedTarget).attr("data-bs-ride");
-    var url = $(location).attr('origin')+'/rides/'+ride;
-    if (request) $('#request').attr('href', url+'/request');
+    var url = $(location).attr('origin') + '/rides/' + ride;
+    if (request) $('#request').attr('href', url + '/request');
     // AJAX request
-    $.getJSON(url, function(data) {
+    $.getJSON(url, function (data) {
         // Update the modal's content.
-        $("#"+modal+"-route").html(data.origin.address + " &#8594; " + data.destination.address);
-        $("#"+modal+"-description").text(data.description);
-        $("#"+modal+"-driver").text(data.driver.first_name+" "+data.driver.last_name+" ("+data.driver.email+")");
+        $("#" + modal + "-route").html(data.origin.address + " &#8594; " + data.destination.address);
+        $("#" + modal + "-description").text(data.description);
+        $("#" + modal + "-driver").text(data.driver.first_name + " " + data.driver.last_name + " (" + data.driver.email + ")");
 
         // Source: https://itnext.io/create-date-from-mysql-datetime-format-in-javascript-912111d57599
         let dateTimeParts = data.start_time.split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
@@ -63,8 +63,8 @@ function onShowModal(event, modal, request) {
         var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
         var date = month[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
         var time = d.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", hour12: true, timeZone: 'America/New_York' });
-        $("#"+modal+"-date").text(date);
-        $("#"+modal+"-time").text(time);
+        $("#" + modal + "-date").text(date);
+        $("#" + modal + "-time").text(time);
 
         // Initialize map
         initMap(data, modal);
@@ -78,12 +78,13 @@ function initMap(data, modal) {
     var destLong = data.destination.longitude;
     var origin = new google.maps.LatLng(origLat, origLong);
     var destination = new google.maps.LatLng(destLat, destLong);
+    // const waypoints = data.waypoints; TODO: pass this in data
     var myOptions = {
         zoom: 7,
         center: origin,
         disableDefaultUI: true
     }
-    var map = new google.maps.Map(document.getElementById(modal+'-map'), myOptions);
+    var map = new google.maps.Map(document.getElementById(modal + '-map'), myOptions);
     var directionsService = new google.maps.DirectionsService();
     var directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
@@ -91,12 +92,13 @@ function initMap(data, modal) {
     directionsService.route({
         origin: origin,
         destination: destination,
+        // waypoints: waypoints, TODO: uncomment when added
         travelMode: 'DRIVING',
     }, function (result, status) {
         if (status == 'OK') {
             directionsRenderer.setDirections(result);
             var leg = result.routes[0].legs[0];
-            $('#'+modal+'-distance').html(leg.distance.text + ' (' + leg.duration.text + ')');
+            $('#' + modal + '-distance').html(leg.distance.text + ' (' + leg.duration.text + ')');
         } else {
             window.alert('Directions request failed due to ' + status);
         }

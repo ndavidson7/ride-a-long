@@ -1,5 +1,6 @@
 <?php
-class Controller {
+class Controller
+{
   private $command;
   private $db;
   private $get_vars;
@@ -9,14 +10,16 @@ class Controller {
   private const MAPS_PLACES = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc&libraries=places";
   private const MAPS_AUTOCOMPLETE_AND_PLACES = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc&callback=initAutocomplete&libraries=places";
 
-  public function __construct($command, $get_vars) {
+  public function __construct($command, $get_vars)
+  {
     $this->command = $command;
     $this->db = new Database();
     $this->get_vars = $get_vars;
   }
 
-  public function run() {
-    switch($this->command) {
+  public function run()
+  {
+    switch ($this->command) {
       case "notifications":
         $this->getNotifs();
         break;
@@ -75,7 +78,8 @@ class Controller {
   }
 
   // Destroy the session
-  private function destroySession() {
+  private function destroySession()
+  {
     session_destroy();
   }
 
@@ -86,7 +90,8 @@ class Controller {
    * $navbar is a boolean indicating whether the navbar or the largeheader should be rendered.
    * $vars is an associative array of variables to be passed to the template.
    */
-  private function renderTemplate($template, $navbar, $vars) {
+  private function renderTemplate($template, $navbar, $vars)
+  {
     extract($vars);
     require "templates/top.php";
     require "templates/$template.php";
@@ -94,7 +99,8 @@ class Controller {
   }
 
   // Get number of seats available for a given ride. Returns -1 if ride does not exist.
-  private function calculateSeatsOpen($ride_id) {
+  private function calculateSeatsOpen($ride_id)
+  {
     $seats_total = $this->db->query("select seats_total from ride where id = ?;", "i", $ride_id);
     $num_riders = $this->db->query("select count(rider_email) from ride_riders where id = ?;", "i", $ride_id);
     if ($seats_total === false || $num_riders === false) {
@@ -107,7 +113,8 @@ class Controller {
   }
 
   // Sign in template and logic
-  public function signIn() {
+  public function signIn()
+  {
     if (isset($_POST["email"])) {
       $data = $this->db->query("select password from user where email = ?;", "s", $_POST["email"]);
       if ($data === false) {
@@ -135,7 +142,8 @@ class Controller {
   }
 
   // Sign up form template and logic
-  public function signUp() {
+  public function signUp()
+  {
     // Validate inputs
     // No input can be empty due to the required attribute on their HTML inputs
     // Emails are validated by their HTML pattern attribute (TODO: sign up/in through Google/Netbadge)
@@ -166,7 +174,8 @@ class Controller {
   }
 
   // Ride listings template and logic
-  public function allRides() {
+  public function allRides()
+  {
     $rides = $this->db->query("select * from ride;");
     if ($rides === false) {
       $error_msg = "Error checking for rides.";
@@ -195,7 +204,8 @@ class Controller {
   }
 
   // New ride form template and logic
-  public function newRide() {
+  public function newRide()
+  {
     // Check that the user is a driver
     $driver = $this->db->query("select * from driver where email = ?;", "s", $_SESSION["email"]);
     if ($driver === false) {
@@ -233,7 +243,8 @@ class Controller {
   }
 
   // Profile template and logic
-  public function profile($error = null) {
+  public function profile($error = null)
+  {
     // Any and all POST variables are "set" (still possibly empty) if the form was submitted
     if (isset($_POST["year"])) {
       // Profile update logic
@@ -262,8 +273,7 @@ class Controller {
             // If the user already has a car, update it
             $license = $select[0]["car_license_plate"];
             $update = $this->db->query("update driver_car set license_plate = ?, make = ?, color = ? where license_plate = ?;", "ssss", $_POST["car-license-plate"], $_POST["car-make"], $_POST["car-color"], $license);
-          }
-          else {
+          } else {
             // Otherwise, insert a new car and then driver
             $insert = $this->db->query("insert into driver_car (license_plate, make, color) values (?, ?, ?);", "sss", $_POST["car-license-plate"], $_POST["car-make"], $_POST["car-color"]);
             $insert2 = $this->db->query("insert into driver (email, car_license_plate) values (?, ?);", "ss", $_SESSION["email"], $_POST["car-license-plate"]);
@@ -294,19 +304,22 @@ class Controller {
     $sources_used = "https://fontawesome.com/, https://getbootstrap.com/docs/5.1/forms/";
     $title = "My profile";
     $styles = array("main");
-    $scripts = array(self::JQUERY, self::NOTIFS,
-                     '<script type="text/javascript">
+    $scripts = array(
+      self::JQUERY, self::NOTIFS,
+      '<script type="text/javascript">
                         $(document).ready(function() {
                           $("form").on("input change", () => $("#save").attr("disabled", false));
                         });
-                      </script>');
-    $vars = array("sources_used"=>$sources_used, "title"=>$title, "styles"=>$styles, "scripts"=>$scripts, "user_info"=>$user_info, "contact_info"=>$contact_info, "car_info"=>$car_info, "rider_info"=>$rider_info);
+                      </script>'
+    );
+    $vars = array("sources_used" => $sources_used, "title" => $title, "styles" => $styles, "scripts" => $scripts, "user_info" => $user_info, "contact_info" => $contact_info, "car_info" => $car_info, "rider_info" => $rider_info);
     if (isset($error_msg)) $vars["error_msg"] = $error_msg;
     else if ($error !== null) $vars["error_msg"] = $error;
     $this->renderTemplate("profile", true, $vars);
   }
 
-  public function messages() {
+  public function messages()
+  {
     $messages = $this->db->query("select * from message where sender_email = ? or recipient_email = ? order by time_sent desc;", "ss", $_SESSION["email"], $_SESSION["email"]);
     if ($messages === false) {
       $error_msg = "Error retrieving messages.";
@@ -315,14 +328,15 @@ class Controller {
     $title = "Messages";
     $styles = array("main");
     $scripts = array(self::JQUERY, self::NOTIFS);
-    $vars = array("title"=>$title, "styles"=>$styles, "scripts"=>$scripts, "messages"=>$messages);
+    $vars = array("title" => $title, "styles" => $styles, "scripts" => $scripts, "messages" => $messages);
     if (isset($error_msg)) {
       $vars["error_msg"] = $error_msg;
     }
     $this->renderTemplate("messages", true, $vars);
   }
 
-  public function deleteAccount() {
+  public function deleteAccount()
+  {
     $delete = $this->db->query("delete from user where email = ?;", "s", $_SESSION["email"]);
     if ($delete === false) {
       $error_msg = "Error deleting user.";
@@ -334,7 +348,8 @@ class Controller {
   }
 
   // User ride listings template and logic
-  public function myRides() {
+  public function myRides()
+  {
     $posted = $this->db->query("select * from ride where driver_email = ?;", "s", $_SESSION["email"]);
     if ($posted === false) {
       $error_msg = "Error checking for posted rides.";
@@ -374,7 +389,8 @@ class Controller {
   }
 
   // Delete ride listing logic
-  public function deleteRide() {
+  public function deleteRide()
+  {
     if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
       $ride = $this->db->query("select * from ride where id = ?;", "i", $this->get_vars["id"]);
       if ($ride === false) {
@@ -402,7 +418,8 @@ class Controller {
   }
 
   // Leave ride logic
-  public function leaveRide() {
+  public function leaveRide()
+  {
     if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
       $id = $this->get_vars["id"];
 
@@ -434,7 +451,8 @@ class Controller {
   }
 
   // Ride listing info JSON
-  public function rideInfo() {
+  public function rideInfo()
+  {
     if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
       $id = $this->get_vars["id"];
       $ride_info = $this->db->query("select * from ride where id = ?;", "i", $id);
@@ -475,10 +493,20 @@ class Controller {
         die("No coordinates found with given destination address.");
       }
 
+      $waypoints = $this->db->query("select address from waypoints where ride = ?;", "i", $id);
+      if (!empty($waypoints)) {
+        array_flip($waypoints);
+        foreach ($waypoints as $addr) {
+          // TODO: $addr => $coords
+        }
+      }
+
+      // Make new array excluding driver email, origin address, and destination address, as we want to include data beyond what's in $ride_info[0]
       $data = array_diff_key($ride_info[0], array_flip(array("driver_email", "orig_addr", "dest_addr")));
-      $data["driver"] = array("first_name"=>$driver_info[0]["first_name"], "last_name"=>$driver_info[0]["last_name"], "email"=>$driver_email, "car"=>$car_info[0]);
-      $data["origin"] = ["address"=>$orig_addr, "latitude"=>$orig_coords[0]["latitude"], "longitude"=>$orig_coords[0]["longitude"]];
-      $data["destination"] = ["address"=>$dest_addr, "latitude"=>$dest_coords[0]["latitude"], "longitude"=>$dest_coords[0]["longitude"]];
+      $data["driver"] = array("first_name" => $driver_info[0]["first_name"], "last_name" => $driver_info[0]["last_name"], "email" => $driver_email, "car" => $car_info[0]);
+      $data["origin"] = ["address" => $orig_addr, "latitude" => $orig_coords[0]["latitude"], "longitude" => $orig_coords[0]["longitude"]];
+      $data["destination"] = ["address" => $dest_addr, "latitude" => $dest_coords[0]["latitude"], "longitude" => $dest_coords[0]["longitude"]];
+      $data["waypoints"] = $waypoints;
 
       header("Content-Type: application/json");
       echo json_encode($data);
@@ -488,7 +516,8 @@ class Controller {
   }
 
   // Request logic
-  public function request() {
+  public function request()
+  {
     // Check that the user is a rider
     $rider = $this->db->query("select * from rider where email = ?;", "s", $_SESSION["email"]);
     if ($rider === false) {
@@ -538,7 +567,8 @@ class Controller {
   }
 
   // Notifications JSON
-  public function getNotifs() {
+  public function getNotifs()
+  {
     // Notifications
     $requests = array(); // Assoc. array of ride IDs to arrays of rider emails, e.g., [1 => ["nid3dhu@virginia.edu"], 2 => ["nid3dhu@virginia.edu", "abc1def@virginia.edu"]]
     $responses = array(); // Assoc. array of ride ID to response, e.g., [1 => 1, 2 => 2]
@@ -564,13 +594,14 @@ class Controller {
       $responses[$response['id']] = $response['response'];
     }
 
-    $json_obj = array("requests"=>$requests, "responses"=>$responses);
+    $json_obj = array("requests" => $requests, "responses" => $responses);
     header("Content-Type: application/json");
     echo json_encode($json_obj);
   }
 
   // Request info JSON
-  public function requestInfo() {
+  public function requestInfo()
+  {
     if (!empty($this->get_vars) and array_key_exists("ride", $this->get_vars) and array_key_exists("user", $this->get_vars)) {
       $data = array();
 
@@ -598,7 +629,7 @@ class Controller {
       } else if (empty($rider)) {
         die("No rider found with given email.");
       }
-      $data["rider"] = array("first_name"=>$rider[0]["first_name"], "last_name"=>$rider[0]["last_name"], "email"=>$rider[0]["email"], "contributions"=>$rider[0]["contributions"]);
+      $data["rider"] = array("first_name" => $rider[0]["first_name"], "last_name" => $rider[0]["last_name"], "email" => $rider[0]["email"], "contributions" => $rider[0]["contributions"]);
 
       header("Content-Type: application/json");
       echo json_encode($data);
@@ -608,7 +639,8 @@ class Controller {
   }
 
   // Respond logic
-  public function respond() {
+  public function respond()
+  {
     if (!empty($this->get_vars) and array_key_exists("ride", $this->get_vars) and array_key_exists("user", $this->get_vars) and array_key_exists("response", $this->get_vars) and ($this->get_vars["response"] == 0 or $this->get_vars["response"] == 1)) {
       $id = $this->get_vars["ride"];
       $rider = $this->get_vars["user"];
@@ -643,7 +675,8 @@ class Controller {
   }
 
   // Mark response notifications as read (delete them from database)
-  public function deleteResponse() {
+  public function deleteResponse()
+  {
     if (!empty($this->get_vars) and array_key_exists("ride", $this->get_vars)) {
       $id = $this->get_vars["ride"];
 
@@ -665,7 +698,8 @@ class Controller {
     }
   }
 
-  public function report() {
+  public function report()
+  {
     if (isset($_POST["reportee-email"])) {
       $reportee_email = $_POST["reportee-email"];
       $reporter_email = $_SESSION["email"];

@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: May 10, 2023 at 05:05 PM
--- Server version: 10.6.12-MariaDB-0ubuntu0.22.04.1
--- PHP Version: 8.1.2-1ubuntu2.11
+-- Generation Time: Aug 04, 2023 at 04:33 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `nid3dhu`
+-- Database: `ride_a_long`
 --
 
 -- --------------------------------------------------------
@@ -38,10 +38,10 @@ CREATE TABLE `coordinates` (
 --
 
 INSERT INTO `coordinates` (`address`, `latitude`, `longitude`) VALUES
-('1204 Wertland St, Charlottesville, VA 22903, USA', '38.0339064', '-78.4966265'),
-('1826 University Ave, Charlottesville, VA 22904, USA', '38.0355514', '-78.5034260'),
-('85 Engineer\'s Way, Charlottesville, VA 22903, USA', '38.0316188', '-78.5108459'),
-('Blacksburg, VA 24061, USA', '37.2283843', '-80.4234167');
+('1204 Wertland St, Charlottesville, VA 22903, USA', 38.0339064, -78.4966265),
+('1826 University Ave, Charlottesville, VA 22904, USA', 38.0355514, -78.5034260),
+('85 Engineer\'s Way, Charlottesville, VA 22903, USA', 38.0316188, -78.5108459),
+('Blacksburg, VA 24061, USA', 37.2283843, -80.4234167);
 
 -- --------------------------------------------------------
 
@@ -214,13 +214,6 @@ CREATE TABLE `ride_riders` (
   `rider_email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Dumping data for table `ride_riders`
---
-
-INSERT INTO `ride_riders` (`id`, `rider_email`) VALUES
-(9, 't2u@virginia.edu');
-
 -- --------------------------------------------------------
 
 --
@@ -270,6 +263,17 @@ CREATE TABLE `user_emergency_contact` (
 INSERT INTO `user_emergency_contact` (`user_email`, `phone`, `first_name`, `last_name`, `relationship`) VALUES
 ('nid3dhu@virginia.edu', '9312658853', 'Amanda', 'Davidson', 'Mother'),
 ('s1a@virginia.edu', '1234567890', 'Bob', 'Anonymous', 'Father');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `waypoints`
+--
+
+CREATE TABLE `waypoints` (
+  `ride` int(10) UNSIGNED NOT NULL,
+  `address` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -360,6 +364,12 @@ ALTER TABLE `user_emergency_contact`
   ADD PRIMARY KEY (`user_email`,`phone`);
 
 --
+-- Indexes for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  ADD PRIMARY KEY (`ride`,`address`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -436,6 +446,12 @@ ALTER TABLE `ride_riders`
 --
 ALTER TABLE `user_emergency_contact`
   ADD CONSTRAINT `user_emergency_contact_ibfk_1` FOREIGN KEY (`user_email`) REFERENCES `user` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  ADD CONSTRAINT `waypoints_ibfk_1` FOREIGN KEY (`ride`) REFERENCES `ride` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
