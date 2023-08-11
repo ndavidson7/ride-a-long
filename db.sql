@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Aug 04, 2023 at 04:33 PM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Host: 127.0.0.1
+-- Generation Time: Aug 07, 2023 at 06:20 PM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -38,10 +38,10 @@ CREATE TABLE `coordinates` (
 --
 
 INSERT INTO `coordinates` (`address`, `latitude`, `longitude`) VALUES
-('1204 Wertland St, Charlottesville, VA 22903, USA', 38.0339064, -78.4966265),
-('1826 University Ave, Charlottesville, VA 22904, USA', 38.0355514, -78.5034260),
-('85 Engineer\'s Way, Charlottesville, VA 22903, USA', 38.0316188, -78.5108459),
-('Blacksburg, VA 24061, USA', 37.2283843, -80.4234167);
+('1204 Wertland St, Charlottesville, VA 22903, USA', '38.0339064', '-78.4966265'),
+('1826 University Ave, Charlottesville, VA 22904, USA', '38.0355514', '-78.5034260'),
+('85 Engineer\'s Way, Charlottesville, VA 22903, USA', '38.0316188', '-78.5108459'),
+('Blacksburg, VA 24061, USA', '37.2283843', '-80.4234167');
 
 -- --------------------------------------------------------
 
@@ -211,7 +211,9 @@ INSERT INTO `rider` (`email`, `contributions`) VALUES
 
 CREATE TABLE `ride_riders` (
   `id` int(10) UNSIGNED NOT NULL,
-  `rider_email` varchar(255) NOT NULL
+  `rider_email` varchar(255) NOT NULL,
+  `pickup_addr` varchar(255) DEFAULT NULL,
+  `dropoff_addr` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -272,7 +274,8 @@ INSERT INTO `user_emergency_contact` (`user_email`, `phone`, `first_name`, `last
 
 CREATE TABLE `waypoints` (
   `ride` int(10) UNSIGNED NOT NULL,
-  `address` varchar(255) NOT NULL
+  `address` varchar(255) NOT NULL,
+  `order` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -348,7 +351,9 @@ ALTER TABLE `rider`
 --
 ALTER TABLE `ride_riders`
   ADD PRIMARY KEY (`id`,`rider_email`),
-  ADD KEY `rider_email` (`rider_email`);
+  ADD KEY `rider_email` (`rider_email`),
+  ADD KEY `pickup_waypoint` (`pickup_addr`),
+  ADD KEY `dropoff_waypoint` (`dropoff_addr`);
 
 --
 -- Indexes for table `user`
@@ -367,7 +372,8 @@ ALTER TABLE `user_emergency_contact`
 -- Indexes for table `waypoints`
 --
 ALTER TABLE `waypoints`
-  ADD PRIMARY KEY (`ride`,`address`);
+  ADD PRIMARY KEY (`ride`,`address`),
+  ADD KEY `ride` (`ride`,`order`);
 
 --
 -- AUTO_INCREMENT for dumped tables

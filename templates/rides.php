@@ -2,18 +2,18 @@
   <a href="/newride" class="btn btn-uva-ob fw-bold fs-5 mb-4 p-2" role="button">Post new ride</a>
   <?php if ($rides != null) { ?>
     <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
-    <?php foreach ($rides as $ride) { ?>
-      <div class="col">
-        <div class="card text-center h-100">
-          <div class="card-body">
-            <h5 class="card-title"><?=$ride["orig_addr"]?> &#8594; <?=$ride["dest_addr"]?></h5>
-            <h6 class="card-subtitle mb-2"><?=date("n/j \@ g:i a", strtotime($ride["start_time"]))?></h6>
-            <p class="card-text"><?=$ride["seats_open"]?> out of <?=$ride["seats_total"]?> seats left!</p>
-            <button type="button" class="card-link btn btn-uva-ob stretched-link" data-bs-toggle="modal" data-bs-target="#infoModal" data-bs-ride="<?=$ride["id"]?>">More info</button>
+      <?php foreach ($rides as $ride) { ?>
+        <div class="col">
+          <div class="card text-center h-100">
+            <div class="card-body">
+              <h5 class="card-title"><?= $ride["orig_addr"] ?> &#8594; <?= $ride["dest_addr"] ?></h5>
+              <h6 class="card-subtitle mb-2"><?= date("n/j \@ g:i a", strtotime($ride["start_time"])) ?></h6>
+              <p class="card-text"><?= $ride["seats_open"] ?> out of <?= $ride["seats_total"] ?> seats left!</p>
+              <button type="button" class="card-link btn btn-uva-ob stretched-link" data-bs-toggle="modal" data-bs-target="#infoModal" data-bs-ride="<?= $ride["id"] ?>">More info</button>
+            </div>
           </div>
         </div>
-      </div>
-    <?php } ?>
+      <?php } ?>
     </div>
 
     <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
@@ -26,15 +26,15 @@
           <div class="modal-body">
             <div class="container-fluid">
               <div class="row mb-3">
-                <div id="info-map" style="height:300px; width:100%;"></div>
+                <div class="map" id="info-map" style="height:300px; width:100%;"></div>
               </div>
               <div class="row">
                 <h3 class="route" id="info-route"></h3>
-                <h4 id="info-distance"></h4>
-                <h5 class="datetime"><span id="info-date"></span> @ <span id="info-time"></span></h6>
+                <h4 class="distance" id="info-distance"></h4>
+                <h5 class="datetime"><span class="date" id="info-date"></span> @ <span class="time" id="info-time"></span></h6>
               </div>
               <div class="row">
-                <p class="info"><span id="info-description"></span> - <span id="info-driver"></span></p>
+                <p class="info"><span class="description" id="info-description"></span> - <span class="driver" id="info-driver"></span></p>
               </div>
             </div>
           </div>
@@ -47,9 +47,10 @@
     </div>
 
     <script type="text/javascript">
-      $(document).ready(function() {
-        $('#infoModal').on('show.bs.modal', function(event) {
-          onShowModal(event, 'info', true);
+      document.addEventListener('DOMContentLoaded', function() {
+        let modal = document.querySelector('#infoModal');
+        modal.addEventListener('show.bs.modal', function(event) {
+          initModal(event, modal, true);
         });
       });
     </script>

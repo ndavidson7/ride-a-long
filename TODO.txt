@@ -1,3 +1,12 @@
+Allow riders to request pickup/dropoff spots:
+    - If a rider requests a pickup and/or dropoff spot and the driver accepts:
+        1. add a waypoint with a unique ID and an order of -1 for each spot
+        2. save the ID(s) to the new ride_riders record (so we have a way to know who requested each spot)
+        3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
+
+Refactor redundancy:
+    - ride info modal repetition in rides.php and myrides.php (as well as the way these modals are updated by the onShowModal function in google-api.js—should pass the modal element itself, not its name)
+
 Add messaging functionality
 
-Allow riders to request pickup/dropoff spots
+Coordinates table is never deleted from. Partition pruning might be on solution? https://stackoverflow.com/questions/9472167/what-is-the-best-way-to-delete-old-rows-from-mysql-on-a-rolling-basis

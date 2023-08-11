@@ -32,12 +32,12 @@
       </div>
       <div class="modal-body">
         <div class="container-fluid">
-        <div class="row">
-          <div class="col-12"><b>Ride:</b> <span id="responseRide"></span></div>
-        </div>
-        <div class="row">
-          <div class="col-12"><b>Response:</b> <span id="response"></span></div>
-        </div>
+          <div class="row">
+            <div class="col-12"><b>Ride:</b> <span id="responseRide"></span></div>
+          </div>
+          <div class="row">
+            <div class="col-12"><b>Response:</b> <span id="response"></span></div>
+          </div>
         </div>
       </div>
       <div class="modal-footer">

@@ -496,12 +496,12 @@ class Controller
       $waypoints = $this->db->query("select address from waypoints where ride = ?;", "i", $id);
       if (!empty($waypoints)) {
         array_flip($waypoints);
-        foreach ($waypoints as $addr) {
-          // TODO: $addr => $coords
-        }
+        // foreach ($waypoints as $addr) {
+        //   // TODO: $addr => $coords
+        // }
       }
 
-      // Make new array excluding driver email, origin address, and destination address, as we want to include data beyond what's in $ride_info[0]
+      // Make new array excluding driver email, origin address, and destination address, as we want to provide custom driver and address info
       $data = array_diff_key($ride_info[0], array_flip(array("driver_email", "orig_addr", "dest_addr")));
       $data["driver"] = array("first_name" => $driver_info[0]["first_name"], "last_name" => $driver_info[0]["last_name"], "email" => $driver_email, "car" => $car_info[0]);
       $data["origin"] = ["address" => $orig_addr, "latitude" => $orig_coords[0]["latitude"], "longitude" => $orig_coords[0]["longitude"]];
@@ -527,6 +527,7 @@ class Controller
       return $this->profile($error_msg);
     }
 
+    // Get ride ID
     if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
       $id = $this->get_vars["id"];
       // Validate ride ID
@@ -548,7 +549,8 @@ class Controller
         die("You are already in this ride!");
       }
 
-      if (isset($_POST["stop"])) {
+      // If user is submitting request, insert relevant records into database; otherwise, serve request page
+      if (isset($_POST["pickup"])) {
         $insert = $this->db->query("insert into request (id, rider_email) values (?, ?);", "is", $id, $_SESSION["email"]);
         if ($insert === false) {
           die("Error inserting request.");
