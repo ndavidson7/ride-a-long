@@ -1,5 +1,5 @@
 <main class="container-fluid mt-3">
-    <form class="row col-sm-10 col-md-8 col-lg-6 mx-auto" action="/newride" method="post">
+    <form id="newride" class="row col-sm-10 col-md-8 col-lg-6 mx-auto" action="/newride" method="post">
         <h2 class="text-center col-12">Ride Details</h2>
         <?php if (isset($error_msg)) { ?>
             <p class="alert alert-danger text-center"><?= $error_msg ?></p>
@@ -33,70 +33,10 @@
         </div>
         <div class="col-12">
             <button type="submit" class="btn btn-uva-ob">Post</button>
-            <button type="button" class="btn btn-uva-ob" data-bs-toggle="modal" data-bs-target="#previewModal" onclick="initPreview()">Preview</button>
+            <button type="button" class="btn btn-uva-ob" data-bs-toggle="modal" data-bs-target="#mapModal" data-modal-type="preview">Preview</button>
         </div>
     </form>
-
-    <script type="text/javascript">
-        function initPreview() {
-            data = {
-                origin: {
-                    latitude: document.getElementById('orig-lat').value,
-                    longitude: document.getElementById('orig-long').value,
-                },
-                destination: {
-                    latitude: document.getElementById('dest-lat').value,
-                    longitude: document.getElementById('dest-long').value,
-                }
-            };
-
-            initMap(data, 'preview');
-
-            $("#preview-route").html($('#orig-addr').val() + " &#8594; " + $('#dest-addr').val());
-            $("#preview-description").text($('#description').val());
-
-            d = new Date($('#start-time').val());
-            var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October',
-                'November', 'December'
-            ];
-            var date = month[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-            var time = d.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: "2-digit",
-                hour12: true,
-                timeZone: 'America/New_York'
-            });
-            $('#preview-date').text(date);
-            $('#preview-time').text(time);
-        }
-    </script>
-
-    <div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-fullscreen-md-down">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="previewModalLabel">Preview</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="container-fluid">
-                        <div class="row mb-3">
-                            <div id="preview-map" style="height:300px; width:100%;"></div>
-                        </div>
-                        <div class="row">
-                            <h3 class="route" id="preview-route"></h3>
-                            <h4 class="distance" id="preview-distance"></h4>
-                            <h5 class="datetime"><span id="preview-date"></span> @ <span id="preview-time"></span></h6>
-                        </div>
-                        <div class="row">
-                            <p class="info" id="preview-description"></p>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+    require_once "templates/mapmodal.php";
+    ?>
 </main>

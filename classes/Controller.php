@@ -6,6 +6,7 @@ class Controller
   private $get_vars;
   private const JQUERY = '<script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>';
   private const NOTIFS = '<script src="/scripts/notifications.js" charset="utf-8" defer></script>';
+  private const UTILS = '<script src="/scripts/utils.js" charset="utf-8"></script>';
   private const GOOGLE_API = '<script src="/scripts/google-api.js" charset="utf-8"></script>';
   private const MAPS_PLACES = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc&libraries=places";
   private const MAPS_AUTOCOMPLETE_AND_PLACES = "https://maps.googleapis.com/maps/api/js?key=AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc&callback=initAutocomplete&libraries=places";
@@ -193,7 +194,7 @@ class Controller
       $sources_used = array("https://getbootstrap.com/docs/5.1/components/navbar/", "https://fontawesome.com/", "https://getbootstrap.com/docs/5.1/components/card/");
       $title = "Ride listings";
       $styles = array("main");
-      $scripts = array(self::JQUERY, self::NOTIFS, self::GOOGLE_API);
+      $scripts = array(self::JQUERY, self::NOTIFS, self::UTILS, self::GOOGLE_API);
       $maps_script = self::MAPS_PLACES;
       $vars = array("sources_used" => $sources_used, "title" => $title, "styles" => $styles, "scripts" => $scripts, "maps_script" => $maps_script, "rides" => $rides);
       if (isset($error_msg)) {
@@ -233,7 +234,7 @@ class Controller
     $sources_used = "https://getbootstrap.com/docs/5.1/components/navbar/, https://fontawesome.com/, https://getbootstrap.com/docs/5.0/content/tables/, https://getbootstrap.com/docs/5.0/components/pagination/";
     $title = "New ride";
     $styles = array('main');
-    $scripts = array(self::JQUERY, self::NOTIFS, self::GOOGLE_API);
+    $scripts = array(self::JQUERY, self::NOTIFS, self::UTILS, self::GOOGLE_API);
     $maps_script = self::MAPS_AUTOCOMPLETE_AND_PLACES;
     $vars = array('sources_used' => $sources_used, 'title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script);
     if (isset($error_msg)) {
@@ -379,7 +380,7 @@ class Controller
     $sources_used = "https://getbootstrap.com/docs/5.1/components/navbar/, https://fontawesome.com/, https://getbootstrap.com/docs/5.1/components/card/";
     $title = "My rides";
     $styles = array('main');
-    $scripts = array(self::JQUERY, self::NOTIFS, self::GOOGLE_API);
+    $scripts = array(self::JQUERY, self::NOTIFS, self::UTILS, self::GOOGLE_API);
     $maps_script = self::MAPS_PLACES;
     $vars = array('sources_used' => $sources_used, 'title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script, 'posted' => $posted, 'joined' => $joined);
     if (isset($error_msg)) {
@@ -560,9 +561,9 @@ class Controller
       } else {
         $title = "Request";
         $styles = array('main');
-        $scripts = array(self::JQUERY, self::NOTIFS, self::GOOGLE_API);
+        $scripts = array(self::JQUERY, self::NOTIFS, self::UTILS, self::GOOGLE_API);
         $maps_script = self::MAPS_AUTOCOMPLETE_AND_PLACES;
-        $vars = array('title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script);
+        $vars = array('title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script, 'ride' => $id);
         $this->renderTemplate('request', true, $vars);
       }
     }
