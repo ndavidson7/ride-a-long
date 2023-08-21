@@ -30,6 +30,20 @@ class Database
             return true;
         } catch (mysqli_sql_exception $e) {
             error_log($e->__toString());
+            return false;
         }
+    }
+
+    public function __destruct()
+    {
+        $this->mysqli->close();
+    }
+
+    public function insertCoordinates($address, $latitude, $longitude)
+    {
+        $query = "INSERT INTO coordinates (address, latitude, longitude) VALUES (?, ?, ?)";
+        $bparam = "sdd";
+        $params = [$address, $latitude, $longitude];
+        return $this->query($query, $bparam, ...$params);
     }
 }

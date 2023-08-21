@@ -52,14 +52,17 @@ function initAutocomplete() {
  */
 function initModal(event, modal) {
     /**
-     * @type {string} A string representing the modal's type. Valid values include:
-     * "info": for modals displayed on the home/ride listings page; includes the ride's details and a "Request" button,
-     * "preview": for modals displayed when previewing a new ride post; includes the ride's details and a "Post" button,
-     * "request": for modals displayed when requesting to join a ride; includes the ride's details with the user's additional waypoint(s) and a "Confirm" button,
-     * "posted": for modals displaying a driver's posted ride; includes the ride's details and a "Delete" button,
-     * "joined": for modals displaying a passenger's joined ride; includes the ride's details and a "Leave" button
+     * A string representing the modal's type. Valid values include:
+     * "info": for modals displayed on the home/ride listings page; includes the ride's details and a Request button,
+     * "preview": for modals displayed when previewing a new ride post; includes the ride's details and a Post button,
+     * "request": for modals displayed when requesting to join a ride; includes the ride's details with the user's additional waypoint(s) and a Confirm button,
+     * "posted": for modals displaying a driver's posted ride; includes the ride's details and a Delete button,
+     * "joined": for modals displaying a passenger's joined ride; includes the ride's details and a Leave button
+     * @type {string}
      */
     const type = event.relatedTarget.dataset.modalType;
+    if (!type) throw new Error("Modal type not specified");
+    else if (!["info", "preview", "request", "posted", "joined"].includes(type)) throw new Error("Invalid modal type");
 
     if (type !== "preview") {
         // Determine which ride was clicked and format URL for AJAX request

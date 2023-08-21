@@ -115,7 +115,7 @@ class Controller
     }
 
     // Sign in template and logic
-    public function signIn()
+    private function signIn()
     {
         if (isset($_POST["email"])) {
             $data = $this->db->query("select password from user where email = ?;", "s", $_POST["email"]);
@@ -143,7 +143,7 @@ class Controller
     }
 
     // Sign up form template and logic
-    public function signUp()
+    private function signUp()
     {
         // Validate inputs
         // No input can be empty due to the required attribute on their HTML inputs
@@ -174,7 +174,7 @@ class Controller
     }
 
     // Ride listings template and logic
-    public function allRides()
+    private function allRides()
     {
         $rides = $this->db->query("select * from ride;");
         if ($rides === false) {
@@ -203,7 +203,7 @@ class Controller
     }
 
     // New ride form template and logic
-    public function newRide()
+    private function newRide()
     {
         // Check that the user is a driver
         $driver = $this->db->query("select * from driver where email = ?;", "s", $this->user);
@@ -217,8 +217,8 @@ class Controller
         if (isset($_POST["start-time"])) {
             $orig_coords = $this->db->query("select * from coordinates where address = ?;", "s", $_POST["orig-addr"]);
             $dest_coords = $this->db->query("select * from coordinates where address = ?;", "s", $_POST["dest-addr"]);
-            if (empty($orig_coords)) $coords_insert1 = $this->db->query("insert into coordinates (address, latitude, longitude) values (?, ?, ?);", "sdd", $_POST["orig-addr"], $_POST["orig-lat"], $_POST["orig-long"]);
-            if (empty($dest_coords)) $coords_insert2 = $this->db->query("insert into coordinates (address, latitude, longitude) values (?, ?, ?);", "sdd", $_POST["dest-addr"], $_POST["dest-lat"], $_POST["dest-long"]);
+            if (empty($orig_coords)) $coords_insert1 = $this->db->insertCoordinates($_POST["orig-addr"], $_POST["orig-lat"], $_POST["orig-long"]);
+            if (empty($dest_coords)) $coords_insert2 = $this->db->insertCoordinates($_POST["dest-addr"], $_POST["dest-lat"], $_POST["dest-long"]);
             $ride_insert = $this->db->query("insert into ride (driver_email, start_time, orig_addr, dest_addr, seats_total, description) values (?, ?, ?, ?, ?, ?);", "ssssis", $this->user, $_POST["start-time"], $_POST["orig-addr"], $_POST["dest-addr"], $_POST["seats"], $_POST["description"]);
             if ($coords_insert1 === false or $coords_insert2 === false) {
                 $error_msg = "Error inserting coordinates.";
@@ -241,7 +241,7 @@ class Controller
     }
 
     // Profile template and logic
-    public function profile($error = null)
+    private function profile($error = null)
     {
         // Any and all POST variables are "set" (still possibly empty) if the form was submitted
         if (isset($_POST["year"])) {
@@ -315,7 +315,7 @@ class Controller
         $this->renderTemplate("profile", true, $vars);
     }
 
-    public function messages()
+    private function messages()
     {
         $messages = $this->db->query("select * from message where sender_email = ? or recipient_email = ? order by time_sent desc;", "ss", $this->user, $this->user);
         if ($messages === false) {
@@ -332,7 +332,7 @@ class Controller
         $this->renderTemplate("messages", true, $vars);
     }
 
-    public function deleteAccount()
+    private function deleteAccount()
     {
         $delete = $this->db->query("delete from user where email = ?;", "s", $this->user);
         if ($delete === false) {
@@ -345,7 +345,7 @@ class Controller
     }
 
     // User ride listings template and logic
-    public function myRides()
+    private function myRides()
     {
         $posted = $this->db->query("select * from ride where driver_email = ?;", "s", $this->user);
         if ($posted === false) {
@@ -385,7 +385,7 @@ class Controller
     }
 
     // Delete ride listing logic
-    public function deleteRide()
+    private function deleteRide()
     {
         if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
             $ride = $this->db->query("select * from ride where id = ?;", "i", $this->get_vars["id"]);
@@ -414,7 +414,7 @@ class Controller
     }
 
     // Leave ride logic
-    public function leaveRide()
+    private function leaveRide()
     {
         if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
             $id = $this->get_vars["id"];
@@ -447,7 +447,7 @@ class Controller
     }
 
     // Ride listing info JSON
-    public function rideInfo()
+    private function rideInfo()
     {
         if (!empty($this->get_vars) and array_key_exists("id", $this->get_vars)) {
             $id = $this->get_vars["id"];
@@ -512,7 +512,7 @@ class Controller
     }
 
     // Request logic
-    public function request()
+    private function request()
     {
         // Check that the user is a rider
         $rider = $this->db->query("select * from rider where email = ?;", "s", $this->user);
@@ -550,8 +550,13 @@ class Controller
 
         // If user is submitting request, insert relevant records into database; otherwise, serve request page
         if (isset($_POST["pickup"])) {
+            // Save any provided addresses and coordinates so that we can display them to the driver
             $pickup_addr = empty($_POST["pickup-addr"]) ? null : $_POST["pickup-addr"];
+            if ($pickup_addr and !empty($_POST["pickup-lat"]) and !empty($_POST["pickup-long"])) $this->db->insertCoordinates($pickup_addr, $_POST["pickup-lat"], $_POST["pickup-long"]); // TODO: May want to check if coordinates already exist
+
             $dropoff_addr = empty($_POST["dropoff-addr"]) ? null : $_POST["dropoff-addr"];
+            if ($dropoff_addr and !empty($_POST["dropoff-lat"]) and !empty($_POST["dropoff-long"])) $this->db->insertCoordinates($dropoff_addr, $_POST["dropoff-lat"], $_POST["dropoff-long"]); // TODO: May want to check if coordinates already exist
+
             $insert = $this->db->query("insert into request (id, rider_email, pickup_addr, dropoff_addr) values (?, ?, ?, ?);", "isss", $id, $this->user, $pickup_addr, $dropoff_addr);
             if ($insert === false) {
                 die("Error inserting request.");
@@ -569,7 +574,7 @@ class Controller
     }
 
     // Notifications JSON
-    public function getNotifs()
+    private function getNotifs()
     {
         // Notifications
         $requests = array(); // Assoc. array of ride IDs to arrays of rider emails, e.g., [1 => ["nid3dhu@virginia.edu"], 2 => ["nid3dhu@virginia.edu", "abc1def@virginia.edu"]]
@@ -602,7 +607,7 @@ class Controller
     }
 
     // Request info JSON
-    public function requestInfo()
+    private function requestInfo()
     {
         if (!empty($this->get_vars) and array_key_exists("ride", $this->get_vars) and array_key_exists("user", $this->get_vars)) {
             $data = array();
@@ -641,7 +646,7 @@ class Controller
     }
 
     // Respond logic
-    public function respond()
+    private function respond()
     {
         if (empty($this->get_vars) or !array_key_exists("ride", $this->get_vars) or !array_key_exists("user", $this->get_vars) or !array_key_exists("response", $this->get_vars) or !($this->get_vars["response"] == 0 or $this->get_vars["response"] == 1)) {
             die("Ride ID, rider email, or response missing from query, or response is invalid.");
@@ -674,11 +679,14 @@ class Controller
             die("Error inserting response.");
         }
 
+        // DB trigger will handle deleting request and inserting rider into ride if necessary. Need to manually update waypoints.
+
+
         header("Location: /rides");
     }
 
     // Mark response notifications as read (delete them from database)
-    public function deleteResponse()
+    private function deleteResponse()
     {
         if (!empty($this->get_vars) and array_key_exists("ride", $this->get_vars)) {
             $id = $this->get_vars["ride"];
@@ -701,7 +709,7 @@ class Controller
         }
     }
 
-    public function report()
+    private function report()
     {
         if (isset($_POST["reportee-email"])) {
             $reportee_email = $_POST["reportee-email"];

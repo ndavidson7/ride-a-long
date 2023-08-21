@@ -2,8 +2,8 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Aug 20, 2023 at 07:59 AM
+-- Host: 127.0.0.1
+-- Generation Time: Aug 21, 2023 at 07:00 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -41,7 +41,9 @@ INSERT INTO `coordinates` (`address`, `latitude`, `longitude`) VALUES
 ('1204 Wertland St, Charlottesville, VA 22903, USA', 38.0339064, -78.4966265),
 ('1305 Wertland St, Charlottesville, VA 22903, USA', 38.0352141, -78.4975918),
 ('1826 University Ave, Charlottesville, VA 22904, USA', 38.0355514, -78.5034260),
+('701 Club Dr, Keswick, VA 22947, USA', 38.0167803, -78.3666045),
 ('85 Engineer\'s Way, Charlottesville, VA 22903, USA', 38.0316188, -78.5108459),
+('927 Bing Ln, Charlottesville, VA 22903, USA', 38.0205486, -78.5074067),
 ('Blacksburg, VA 24061, USA', 37.2283843, -80.4234167),
 ('Monroe Hall, Charlottesville, VA 22903, USA', 38.0348370, -78.5064309),
 ('Richmond, VA, USA', 37.5407246, -77.4360481);
@@ -147,11 +149,13 @@ CREATE TABLE `response` (
 --
 DELIMITER $$
 CREATE TRIGGER `after_response_insert` AFTER INSERT ON `response` FOR EACH ROW BEGIN
-        IF NEW.response = 1 THEN
-            INSERT INTO ride_riders (id, rider_email) VALUES (NEW.id, NEW.rider_email);
-        END IF;
-        DELETE FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
-    END
+	IF NEW.response = 1 THEN
+		INSERT INTO ride_riders (id, rider_email, pickup_addr, dropoff_addr)
+        SELECT NEW.id, NEW.rider_email, pickup_addr, dropoff_addr
+        FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
+    END IF;
+	DELETE FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
+END
 $$
 DELIMITER ;
 
