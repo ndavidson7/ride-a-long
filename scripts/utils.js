@@ -10,13 +10,13 @@ function getOrCreateModalButton(modal, type) {
             case "preview":
                 element = document.createElement("button");
                 element.type = "submit";
-                element.form = "newride";
+                element.setAttribute("form", "newride");
                 element.textContent = "Post";
                 break;
             case "request":
                 element = document.createElement("button");
                 element.type = "submit";
-                element.form = "request";
+                element.setAttribute("form", "request");
                 element.textContent = "Confirm";
                 break;
             case "posted":

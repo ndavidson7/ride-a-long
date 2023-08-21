@@ -1,13 +1,4 @@
 <!DOCTYPE html>
-<!--
-Sources used:
-<?php
-if (isset($sources_used)) {
-    foreach ($sources_used as $source) {
-        echo $source . ", ";
-    }
-} ?>
--->
 <html lang="en" class="h-100">
 
 <head>
@@ -26,6 +17,9 @@ if (isset($sources_used)) {
     <?php
         }
     }
+    ?>
+    <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
+    <?php
     if (isset($scripts)) {
         foreach ($scripts as $script) {
             echo $script;

@@ -2,19 +2,17 @@ const autocompletes = [];
 
 function onPlaceChanged() {
     const place = this.getPlace();
-    // console.log(place);
-    // if (!place) return;
 
     if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        this.inputDiv.children(".place").val('');
+        this.inputDiv.querySelector(".place").value = "";
         window.alert("Please select a location from the autocomplete list");
     } else {
-        this.inputDiv.children(".address").val(place.formatted_address);
+        this.inputDiv.querySelector(".address").value = place.formatted_address;
         const location = place.geometry.location;
-        this.inputDiv.children(".latitude").val(location.lat());
-        this.inputDiv.children(".longitude").val(location.lng());
+        this.inputDiv.querySelector(".latitude").value = location.lat();
+        this.inputDiv.querySelector(".longitude").value = location.lng();
     }
 }
 
@@ -39,9 +37,9 @@ function initAutocomplete() {
         types: [],
     };
 
-    $('.autocomplete').each(function () {
-        const autocomplete = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
-        autocomplete.inputDiv = $(this);
+    document.querySelectorAll('.autocomplete').forEach(div => {
+        const autocomplete = new google.maps.places.Autocomplete(div.querySelector(".place"), options);
+        autocomplete.inputDiv = div;
         autocomplete.addListener('place_changed', onPlaceChanged);
         autocompletes.push(autocomplete);
     });

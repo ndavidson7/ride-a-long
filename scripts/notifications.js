@@ -1,54 +1,60 @@
-var base = $(location).attr('origin');
-var url = base + '/notifications';
-$.getJSON(url, function (data) {
-  var notifs = [];
+const base = window.location.origin;
 
-  $.each(data['requests'], function (key, val) {
-    var ride = key;
-    $.each(val, function (key, val) {
-      notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#requestModal' data-bs-ride='" + ride + "' data-bs-user='" + val + "'>Someone requested to join your ride!</button></li>");
+fetch(`${base}/notifications`)
+    .then(response => response.json())
+    .then(data => {
+        var notifs = [];
+
+        // Assoc. array of ride IDs to arrays of rider emails, e.g., [1 => ["nid3dhu@virginia.edu"], 2 => ["nid3dhu@virginia.edu", "abc1def@virginia.edu"]]
+        for (const [ride, requests] of Object.entries(data['requests'])) {
+            requests.forEach(user => {
+                notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#requestModal' data-ride='" + ride + "' data-user='" + user + "'>Someone requested to join your ride!</button></li>");
+            });
+        };
+
+        // Assoc. array of ride ID to response, e.g., [1 => 1, 2 => 2]
+        for (const [ride, response] of Object.entries(data['responses'])) {
+            if (response === 1) {
+                notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-ride='" + ride + "' data-response=Accepted>Your request was accepted!</button></li>");
+            } else {
+                notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-ride='" + ride + "' data-response=Denied>Your request was denied!</button></li>");
+            }
+        };
+
+        if (notifs.length == 0) {
+            document.getElementById('notifsBadge').remove();
+        } else {
+            document.getElementById('numNotifs').textContent = notifs.length;
+        }
+        document.getElementById('notifs').innerHTML = notifs.join("");
+
+        document.getElementById('requestModal').addEventListener('show.bs.modal', event => {
+            // Determine which request was clicked
+            const ride = event.relatedTarget.dataset.ride;
+            const user = event.relatedTarget.dataset.user;
+
+            fetch(`${base}/index.php?command=requestinfo&ride=${ride}&user=${user}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('requestRide').textContent = data.orig_addr + " \u2192 " + data.dest_addr;
+                    document.getElementById('requestUser').textContent = data.rider.first_name + " " + data.rider.last_name + " (" + data.rider.email + ")";
+                });
+
+            document.getElementById('deny').href = base + '/index.php?command=respond&ride=' + ride + '&user=' + user + '&response=0';
+            document.getElementById('accept').href = base + '/index.php?command=respond&ride=' + ride + '&user=' + user + '&response=1';
+        });
+
+        document.getElementById('responseModal').addEventListener('show.bs.modal', event => {
+            const ride = event.relatedTarget.dataset.ride;
+            const response = event.relatedTarget.dataset.response;
+
+            fetch(`${base}/rides/${ride}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('responseRide').textContent = data.origin.address + " \u2192 " + data.destination.address;
+                    document.getElementById('response').textContent = response;
+                });
+
+            document.getElementById('read').href = base + '/index.php?command=deleteresponse&ride=' + ride;
+        });
     });
-  });
-  $.each(data['responses'], function (key, val) {
-    if (val == 1) {
-      notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-bs-ride='" + key + "' data-bs-response=Accepted>Your request was accepted!</button></li>");
-    } else {
-      notifs.push("<li><button class='dropdown-item' data-bs-toggle='modal' data-bs-target='#responseModal' data-bs-ride='" + key + "' data-bs-response=Denied>Your request was denied!</button></li>");
-    }
-  });
-
-  if (notifs.length == 0) {
-    $('#notifsBadge').remove();
-  } else {
-    $('#numNotifs').text(notifs.length);
-  }
-  $('#notifs').html(notifs.join(""));
-
-  $('#requestModal').on('show.bs.modal', function (event) {
-    // Determine which request was clicked
-    var ride = $(event.relatedTarget).attr("data-bs-ride");
-    var user = $(event.relatedTarget).attr("data-bs-user");
-
-    var url = base + '/index.php?command=requestinfo&ride=' + ride + '&user=' + user;
-    $.get(url, function (data) {
-      $('#requestRide').html(data.orig_addr + " &#8594; " + data.dest_addr);
-      $('#requestUser').text(data.rider.first_name + " " + data.rider.last_name + " (" + data.rider.email + ")");
-    });
-
-    $('#deny').attr('href', base + '/index.php?command=respond&ride=' + ride + '&user=' + user + '&response=0');
-    $('#accept').attr('href', base + '/index.php?command=respond&ride=' + ride + '&user=' + user + '&response=1');
-  });
-
-  $('#responseModal').on('show.bs.modal', function (event) {
-    var ride = $(event.relatedTarget).attr("data-bs-ride");
-    var response = $(event.relatedTarget).attr("data-bs-response");
-
-    var url = base + '/rides/' + ride;
-    $.get(url, function (data) {
-      $('#responseRide').html(data.origin.address + " &#8594; " + data.destination.address);
-      $('#response').text(response);
-    });
-
-    $('#read').attr('href', base + '/index.php?command=deleteresponse&ride=' + ride);
-  });
-});
