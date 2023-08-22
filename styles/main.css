@@ -1,63 +1,75 @@
 .orange {
   color: #E57200;
 }
+
 .orange-darken-hover:hover {
   color: #EB5F0C;
 }
+
 .btn-uva-wb {
   color: #232D4B;
   background-color: white;
 }
+
 .btn-uva-wb:hover {
   background-color: #232D4B;
   color: white;
 }
+
 .btn-uva-ow {
   color: white;
   background-color: #E57200;
 }
+
 .btn-uva-ow:hover {
   background-color: white;
   color: #E57200;
 }
+
 .btn-uva-bo {
   color: #E57200;
   background-color: #232D4B;
 }
+
 .btn-uva-bo:hover {
   background-color: #E57200;
   color: #232D4B;
 }
+
 .btn-uva-ob {
   color: #232D4B;
   background-color: #E57200;
 }
+
 .btn-uva-ob:hover {
   background-color: #232D4B;
   color: #E57200;
 }
+
 header {
   background-color: #232D4B;
   border-bottom: 10px solid #E57200;
 }
+
 header i {
   color: white;
 }
+
 header sub {
   font-size: 0.5em;
 }
+
 footer a {
   color: inherit;
 }
+
 footer a:hover {
   color: inherit;
 }
+
 .notification {
   position: absolute;
   top: 15px;
   left: 35px;
   font-size: 12px;
-}
-.route {
-  
 }

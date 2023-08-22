@@ -1,72 +1,64 @@
 <main class="container-fluid mt-3">
-  <div class="border-bottom">
-    <div class="row mb-3">
-      <div id="map" style="height:300px; width:100%;"></div>
-    </div>
-    <div class="row">
-      <h3 class="route" id="route"></h3>
-      <h4 id="distance"></h4>
-      <h5 class="datetime"><span id="date"></span> @ <span id="time"></span></h6>
-    </div>
-    <div class="row">
-      <p class="info"><span id="description"></span> - <span id="driver"></span></p>
-    </div>
-  </div>
-  <form class="" method="post">
-    <label class="form-label" for="checkbox">Add Stop?</label>
-    <input type="checkbox" name="checkbox">
-    <div class="d-none autocomplete" id="stop-div">
-      <label class="form-label" for="stop">Your Stop</label>
-      <input type="text" class="place" name="stop" id="stop" value="">
-      <input type="hidden" class="address" id="stop-addr" name="stop-addr" value="">
-      <input type="hidden" class="latitude" id="stop-lat" name="stop-lat" value="">
-      <input type="hidden" class="longitude" id="stop-long" name="stop-long" value="">
-      <button type="button" class="btn btn-uva-ob" onclick="initPreview()">Preview</button>
-    </div>
-  </form>
+    <form id="request" class="" method="post">
+        <label class="form-label" for="pickup-checkbox">Pickup</label>
+        <input type="checkbox" name="pickup-checkbox">
+        <div class="autocomplete" id="pickup-div">
+            <label class="form-label" for="pickup">Your Pickup Address</label>
+            <input type="text" class="place waypoint" name="pickup" id="pickup" value="">
+            <input type="hidden" class="address" id="pickup-addr" name="pickup-addr" value="">
+            <input type="hidden" class="latitude" id="pickup-lat" name="pickup-lat" value="">
+            <input type="hidden" class="longitude" id="pickup-long" name="pickup-long" value="">
+        </div>
+        <label class="form-label" for="dropoff-checkbox">Dropoff</label>
+        <input type="checkbox" name="dropoff-checkbox">
+        <div class="autocomplete" id="dropoff-div">
+            <label class="form-label" for="dropoff">Your Dropoff Address</label>
+            <input type="text" class="place waypoint" name="dropoff" id="dropoff" value="">
+            <input type="hidden" class="address" id="dropoff-addr" name="dropoff-addr" value="">
+            <input type="hidden" class="latitude" id="dropoff-lat" name="dropoff-lat" value="">
+            <input type="hidden" class="longitude" id="dropoff-long" name="dropoff-long" value="">
+        </div>
+        <button type="submit" class="btn btn-uva-ob">Request</button>
+        <button type="button" id="previewbutton" class="btn btn-uva-ob" disabled="true" data-bs-toggle="modal" data-bs-target="#mapModal" data-modal-type="request" data-ride="<?= $ride ?>">Preview</button>
+    </form>
 
-  <script type="text/javascript">
-    $('input[name=checkbox]').change(function() {
-      if ($(this).is(':checked')) {
-        $('#stop-div').removeClass('d-none');
-        $('#stop').prop('required', true);
-      } else {
-        $('#stop-div').addClass('d-none');
-        $('#stop').prop('required', false);
-      }
-    });
+    <script type="text/javascript">
+        // Hide address inputs and preview button until the user checks the boxes
+        const previewButton = document.getElementById('previewbutton');
+        previewButton.style.display = 'none';
 
-    // let acStop;
+        document.querySelectorAll('.autocomplete').forEach(autocomplete => {
+            autocomplete.style.display = 'none';
+            autocomplete.addEventListener('input', () => {
+                if (this.value !== '') {
+                    previewButton.disabled = false;
+                } else {
+                    previewButton.disabled = true;
+                }
+            });
+        });
 
-    // function onStopChanged() {
-    //   var place = acStop.getPlace();
+        document.querySelectorAll('input[type=checkbox]').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                if (this.checked) {
+                    this.nextElementSibling.style.display = 'block';
+                    this.nextElementSibling.firstElementChild.focus();
+                    this.nextElementSibling.firstElementChild.required = true;
+                } else {
+                    this.nextElementSibling.style.display = 'none';
+                    this.nextElementSibling.firstElementChild.required = false;
+                }
 
-    //   // User entered the name of a Place that was not suggested and
-    //   // pressed the Enter key, or the Place Details request failed.
-    //   if (!place.geometry || !place.geometry.location) {
-    //     var input = document.getElementById('stop');
-    //     input.value = '';
-    //     window.alert("Please select a location from the autocomplete list");
-    //   } else {
-    //     document.getElementById('stop-addr').value = place.formatted_address;
-    //     var location = place.geometry.location;
-    //     document.getElementById('stop-lat').value = location.lat();
-    //     document.getElementById('stop-long').value = location.lng();
-    //   }
-    // }
+                if (document.querySelectorAll('input[type=checkbox]:checked').length > 0) {
+                    previewButton.style.display = 'block';
+                } else {
+                    previewButton.style.display = 'none';
+                }
+            });
+        });
+    </script>
 
-    // function initAutocomplete() {
-    //   // Attach autocomplete widget to location inputs
-    //   const stop = document.getElementById("stop");
-    //   // Autocomplete configuration
-    //   const options = {
-    //     componentRestrictions: { country: "us" },
-    //     fields: ["formatted_address", "geometry"],
-    //     strictBounds: false
-    //   };
-    //   acStop = new google.maps.places.Autocomplete(stop, options);
-
-    //   acStop.addListener('place_changed', onStopChanged);
-    // }
-  </script>
+    <?php
+    require_once "templates/mapmodal.php";
+    ?>
 </main>

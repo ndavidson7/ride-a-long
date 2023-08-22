@@ -1,26 +1,25 @@
-var autocompletes = [];
+const autocompletes = [];
 
 function onPlaceChanged() {
-    var place = this.getPlace();
-    // console.log(place);
-    // if (!place) return;
+    const place = this.getPlace();
 
     if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        this.inputDiv.children(".place").val('');
+        this.inputDiv.querySelector(".place").value = "";
         window.alert("Please select a location from the autocomplete list");
     } else {
-        this.inputDiv.children(".address").val(place.formatted_address);
-        var location = place.geometry.location;
-        this.inputDiv.children(".latitude").val(location.lat());
-        this.inputDiv.children(".longitude").val(location.lng());
+        this.inputDiv.querySelector(".address").value = place.formatted_address;
+        const location = place.geometry.location;
+        this.inputDiv.querySelector(".latitude").value = location.lat();
+        this.inputDiv.querySelector(".longitude").value = location.lng();
     }
 }
 
 function initAutocomplete() {
     // Google Maps UVA coordinates
     const center = { lat: 38.03361737225505, lng: -78.50800895660305 };
+
     // Bias location autocomplete results to UVA grounds/Charlottesville
     const bounds = {
         north: center.lat + 0.15,
@@ -28,6 +27,7 @@ function initAutocomplete() {
         east: center.lng + 0.15,
         west: center.lng - 0.15,
     };
+
     // Autocomplete configuration
     const options = {
         bounds: bounds,
@@ -36,67 +36,160 @@ function initAutocomplete() {
         strictBounds: false,
         types: [],
     };
-    $('.autocomplete').each(function() {
-        var autocomplete = new google.maps.places.Autocomplete($(this).children(".place")[0], options);
-        autocomplete.inputDiv = $(this);
+
+    document.querySelectorAll('.autocomplete').forEach(div => {
+        const autocomplete = new google.maps.places.Autocomplete(div.querySelector(".place"), options);
+        autocomplete.inputDiv = div;
         autocomplete.addListener('place_changed', onPlaceChanged);
         autocompletes.push(autocomplete);
     });
 }
 
-function onShowModal(event, modal, request) {
-    // Determine which ride was clicked
-    var ride = $(event.relatedTarget).attr("data-bs-ride");
-    var url = $(location).attr('origin')+'/rides/'+ride;
-    if (request) $('#request').attr('href', url+'/request');
-    // AJAX request
-    $.getJSON(url, function(data) {
-        // Update the modal's content.
-        $("#"+modal+"-route").html(data.origin.address + " &#8594; " + data.destination.address);
-        $("#"+modal+"-description").text(data.description);
-        $("#"+modal+"-driver").text(data.driver.first_name+" "+data.driver.last_name+" ("+data.driver.email+")");
+/**
+ * 
+ * @param {Event} event The event that triggered the modal
+ * @param {Element} modal The modal's div element (of class "modal")
+ */
+function initModal(event, modal) {
+    /**
+     * A string representing the modal's type. Valid values include:
+     * "info": for modals displayed on the home/ride listings page; includes the ride's details and a Request button,
+     * "preview": for modals displayed when previewing a new ride post; includes the ride's details and a Post button,
+     * "request": for modals displayed when requesting to join a ride; includes the ride's details with the user's additional waypoint(s) and a Confirm button,
+     * "posted": for modals displaying a driver's posted ride; includes the ride's details and a Delete button,
+     * "joined": for modals displaying a passenger's joined ride; includes the ride's details and a Leave button
+     * @type {string}
+     */
+    const type = event.relatedTarget.dataset.modalType;
+    if (!type) throw new Error("Modal type not specified");
+    else if (!["info", "preview", "request", "posted", "joined"].includes(type)) throw new Error("Invalid modal type");
 
-        // Source: https://itnext.io/create-date-from-mysql-datetime-format-in-javascript-912111d57599
-        let dateTimeParts = data.start_time.split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
-        dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
-        var d = new Date(...dateTimeParts); // our Date object
-        var month = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        var date = month[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
-        var time = d.toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", hour12: true, timeZone: 'America/New_York' });
-        $("#"+modal+"-date").text(date);
-        $("#"+modal+"-time").text(time);
+    if (type !== "preview") {
+        // Determine which ride was clicked and format URL for AJAX request
+        var ride = event.relatedTarget.dataset.ride;
+        var rideInfo = `${window.location.origin}/rides/${ride}`;
+    }
 
-        // Initialize map
-        initMap(data, modal);
-    });
+    // Add and/or update modal button
+    const modalButton = getOrCreateModalButton(modal, type); // from utils.js (must be loaded)
+    switch (type) {
+        case "info":
+            modalButton.href = `${rideInfo}/request`;
+            break;
+        case "posted":
+            modalButton.href = `${window.location.origin}/myrides/delete/${ride}`;
+            break;
+        case "joined":
+            modalButton.href = `${window.location.origin}/myrides/leave/${ride}`;
+            break;
+    }
+
+    if (type === "preview") {
+        let data = {
+            origin: {
+                address: document.getElementById("orig-addr").value,
+                latitude: document.getElementById("orig-lat").value,
+                longitude: document.getElementById("orig-long").value,
+            },
+            destination: {
+                address: document.getElementById("dest-addr").value,
+                latitude: document.getElementById("dest-lat").value,
+                longitude: document.getElementById("dest-long").value,
+            },
+            waypoints: [],
+            description: document.getElementById("description").value,
+            start_time: document.getElementById("start-time").value, // TODO: format this
+            // TODO: add driver info
+            // driver: {
+            //     first_name: document.getElementById("first-name").value,
+            //     last_name: document.getElementById("last-name").value,
+            //     email: document.getElementById("email").value,
+            // }
+        };
+        console.log(data);
+        populateModal(data, modal, type);
+    } else {
+        // AJAX request
+        fetch(rideInfo)
+            .then(response => response.json())
+            .then(data => {
+                populateModal(data, modal, type);
+            });
+    }
+}
+
+function populateModal(data, modal, type) {
+    // Update the modal's content.
+    modal.querySelector(".route").textContent = data.origin.address + " \u2192 " + data.destination.address;
+    modal.querySelector(".description").textContent = data.description;
+    if (type !== "preview") modal.querySelector(".driver").textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
+    const { date, time } = formatDateTime(data.start_time); // from utils.js (must be loaded)
+    modal.querySelector(".date").textContent = date;
+    modal.querySelector(".time").textContent = time;
+
+    if (type === "request") {
+        // Add the user's additional waypoints to data.waypoints
+        const waypoints = document.querySelectorAll(".waypoint");
+        waypoints.forEach(waypoint => {
+            if (waypoint.value) {
+                data.waypoints.push({
+                    location: waypoint.value,
+                    stopover: true
+                });
+            }
+        });
+    }
+
+    // Initialize map
+    initMap(data, modal);
 }
 
 function initMap(data, modal) {
-    var origLat = data.origin.latitude;
-    var origLong = data.origin.longitude;
-    var destLat = data.destination.latitude;
-    var destLong = data.destination.longitude;
-    var origin = new google.maps.LatLng(origLat, origLong);
-    var destination = new google.maps.LatLng(destLat, destLong);
-    var myOptions = {
+    const origin = new google.maps.LatLng(data.origin.latitude, data.origin.longitude);
+    const destination = new google.maps.LatLng(data.destination.latitude, data.destination.longitude);
+    const waypoints = data.waypoints;
+    const myOptions = {
         zoom: 7,
         center: origin,
         disableDefaultUI: true
     }
-    var map = new google.maps.Map(document.getElementById(modal+'-map'), myOptions);
-    var directionsService = new google.maps.DirectionsService();
-    var directionsRenderer = new google.maps.DirectionsRenderer();
+    const map = new google.maps.Map(modal.querySelector('.map'), myOptions);
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
 
     directionsService.route({
         origin: origin,
         destination: destination,
-        travelMode: 'DRIVING',
+        waypoints: waypoints,
+        optimizeWaypoints: true,
+        travelMode: google.maps.TravelMode.DRIVING,
     }, function (result, status) {
-        if (status == 'OK') {
+        if (status === 'OK') {
             directionsRenderer.setDirections(result);
-            var leg = result.routes[0].legs[0];
-            $('#'+modal+'-distance').html(leg.distance.text + ' (' + leg.duration.text + ')');
+
+            // Calculate distance and duration from start to end
+            var dist = 0;
+            var dur = 0;
+            for (let i = 0; i < result.routes[0].legs.length; i++) {
+                dist += result.routes[0].legs[i].distance.value;
+                dur += result.routes[0].legs[i].duration.value;
+            }
+            const miles = (dist / 1609.344).toFixed(1);
+
+            // Format duration to hours and minutes
+            // Author: Wilson Lee, https://stackoverflow.com/a/37096512
+            const h = Math.floor(dur / 3600);
+            const m = Math.floor(dur % 3600 / 60);
+            const s = Math.floor(dur % 3600 % 60);
+
+            const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+            const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+            const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+
+            const time = hDisplay + mDisplay + sDisplay;
+
+            modal.querySelector('.distance').textContent = miles + ' miles (' + time + ')';
         } else {
             window.alert('Directions request failed due to ' + status);
         }

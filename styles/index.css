@@ -3,11 +3,13 @@ ul {
   padding: 0px;
   margin: 0px;
 }
+
 .card {
   width: 250px;
   background-color: #E57200;
   padding-top: 15px;
 }
+
 .btn {
   font-weight: 800;
   font-size: 2em;

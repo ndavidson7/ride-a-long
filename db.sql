@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.2.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: May 10, 2023 at 05:05 PM
--- Server version: 10.6.12-MariaDB-0ubuntu0.22.04.1
--- PHP Version: 8.1.2-1ubuntu2.11
+-- Host: 127.0.0.1
+-- Generation Time: Aug 21, 2023 at 07:00 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `nid3dhu`
+-- Database: `ride_a_long`
 --
 
 -- --------------------------------------------------------
@@ -38,10 +38,15 @@ CREATE TABLE `coordinates` (
 --
 
 INSERT INTO `coordinates` (`address`, `latitude`, `longitude`) VALUES
-('1204 Wertland St, Charlottesville, VA 22903, USA', '38.0339064', '-78.4966265'),
-('1826 University Ave, Charlottesville, VA 22904, USA', '38.0355514', '-78.5034260'),
-('85 Engineer\'s Way, Charlottesville, VA 22903, USA', '38.0316188', '-78.5108459'),
-('Blacksburg, VA 24061, USA', '37.2283843', '-80.4234167');
+('1204 Wertland St, Charlottesville, VA 22903, USA', 38.0339064, -78.4966265),
+('1305 Wertland St, Charlottesville, VA 22903, USA', 38.0352141, -78.4975918),
+('1826 University Ave, Charlottesville, VA 22904, USA', 38.0355514, -78.5034260),
+('701 Club Dr, Keswick, VA 22947, USA', 38.0167803, -78.3666045),
+('85 Engineer\'s Way, Charlottesville, VA 22903, USA', 38.0316188, -78.5108459),
+('927 Bing Ln, Charlottesville, VA 22903, USA', 38.0205486, -78.5074067),
+('Blacksburg, VA 24061, USA', 37.2283843, -80.4234167),
+('Monroe Hall, Charlottesville, VA 22903, USA', 38.0348370, -78.5064309),
+('Richmond, VA, USA', 37.5407246, -77.4360481);
 
 -- --------------------------------------------------------
 
@@ -136,26 +141,21 @@ CREATE TABLE `request` (
 CREATE TABLE `response` (
   `id` int(10) UNSIGNED NOT NULL,
   `rider_email` varchar(255) NOT NULL,
-  `response` bit(1) NOT NULL
+  `response` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `response`
---
-
-INSERT INTO `response` (`id`, `rider_email`, `response`) VALUES
-(9, 't2u@virginia.edu', b'1');
 
 --
 -- Triggers `response`
 --
 DELIMITER $$
 CREATE TRIGGER `after_response_insert` AFTER INSERT ON `response` FOR EACH ROW BEGIN
-        IF NEW.response = 1 THEN
-            INSERT INTO ride_riders VALUES (NEW.id, NEW.rider_email);
-        END IF;
-        DELETE FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
-    END
+	IF NEW.response = 1 THEN
+		INSERT INTO ride_riders (id, rider_email, pickup_addr, dropoff_addr)
+        SELECT NEW.id, NEW.rider_email, pickup_addr, dropoff_addr
+        FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
+    END IF;
+	DELETE FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
+END
 $$
 DELIMITER ;
 
@@ -180,7 +180,7 @@ CREATE TABLE `ride` (
 --
 
 INSERT INTO `ride` (`id`, `driver_email`, `start_time`, `orig_addr`, `dest_addr`, `seats_total`, `description`) VALUES
-(9, 'nid3dhu@virginia.edu', '2023-05-01 10:30:00', '1826 University Ave, Charlottesville, VA 22904, USA', 'Blacksburg, VA 24061, USA', 6, 'Going to VT!');
+(10, 'nid3dhu@virginia.edu', '2023-08-26 13:21:00', '1305 Wertland St, Charlottesville, VA 22903, USA', 'Richmond, VA, USA', 4, 'ghost ride da whip');
 
 -- --------------------------------------------------------
 
@@ -201,7 +201,8 @@ INSERT INTO `rider` (`email`, `contributions`) VALUES
 ('nid3dhu@virginia.edu', 'lovely'),
 ('s1a@virginia.edu', 'very fun guy'),
 ('t1r@virginia.edu', 'will pay for gas'),
-('t2u@virginia.edu', 'Will pay for gas');
+('t2u@virginia.edu', 'Will pay for gas'),
+('t9u@virginia.edu', 'serenade');
 
 -- --------------------------------------------------------
 
@@ -211,15 +212,10 @@ INSERT INTO `rider` (`email`, `contributions`) VALUES
 
 CREATE TABLE `ride_riders` (
   `id` int(10) UNSIGNED NOT NULL,
-  `rider_email` varchar(255) NOT NULL
+  `rider_email` varchar(255) NOT NULL,
+  `pickup_addr` varchar(255) DEFAULT NULL,
+  `dropoff_addr` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `ride_riders`
---
-
-INSERT INTO `ride_riders` (`id`, `rider_email`) VALUES
-(9, 't2u@virginia.edu');
 
 -- --------------------------------------------------------
 
@@ -247,7 +243,8 @@ INSERT INTO `user` (`email`, `password`, `first_name`, `last_name`, `phone`, `ye
 ('nid3dhu@virginia.edu', '$2y$10$jSNTrt9L0JGftb/eCfGhp.1sbPOUp2p.9GQfs0YQBIvh2DDgghBMS', 'Nicholas', 'Davidson', '9312005811', 4, 'Computer Science', 'I designed this website :)', NULL),
 ('s1a@virginia.edu', '$2y$10$GYJ8YjYrama8F1t7V93oCOtd7TaTNLHwSab4FuwcVmjH1A0.PzLgq', 'Somebody', 'Anonymous', '1234567890', 2, 'Philosophy', 'I\'m just a silly goofy dude', NULL),
 ('t1r@virginia.edu', '$2y$10$a7SiI1lG6jLFRefziJmUGuL3iEt39pAj1Avn9Kx/9KTeHdVbVGA1S', 'Test', 'User', '1234567891', 3, 'cs', 'this is a bio', NULL),
-('t2u@virginia.edu', '$2y$10$yEF9V/QuCo2RG5xvkfdxR.KljYCcVW4Ru5R6iAE3d.gLslBtXon3C', 'Test', 'User', '1012023003', NULL, NULL, NULL, NULL);
+('t2u@virginia.edu', '$2y$10$yEF9V/QuCo2RG5xvkfdxR.KljYCcVW4Ru5R6iAE3d.gLslBtXon3C', 'Test', 'User', '1012023003', NULL, NULL, NULL, NULL),
+('t9u@virginia.edu', '$2y$10$H5ML3thu49G1o8EHSe3jsOdERza2lItj2heGRa4BCkFHRcIRdeAqC', 'test', 'user', '1112223333', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -270,6 +267,18 @@ CREATE TABLE `user_emergency_contact` (
 INSERT INTO `user_emergency_contact` (`user_email`, `phone`, `first_name`, `last_name`, `relationship`) VALUES
 ('nid3dhu@virginia.edu', '9312658853', 'Amanda', 'Davidson', 'Mother'),
 ('s1a@virginia.edu', '1234567890', 'Bob', 'Anonymous', 'Father');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `waypoints`
+--
+
+CREATE TABLE `waypoints` (
+  `ride` int(10) UNSIGNED NOT NULL,
+  `address` varchar(255) NOT NULL,
+  `order` tinyint(4) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -344,7 +353,9 @@ ALTER TABLE `rider`
 --
 ALTER TABLE `ride_riders`
   ADD PRIMARY KEY (`id`,`rider_email`),
-  ADD KEY `rider_email` (`rider_email`);
+  ADD KEY `rider_email` (`rider_email`),
+  ADD KEY `pickup_waypoint` (`pickup_addr`),
+  ADD KEY `dropoff_waypoint` (`dropoff_addr`);
 
 --
 -- Indexes for table `user`
@@ -360,6 +371,13 @@ ALTER TABLE `user_emergency_contact`
   ADD PRIMARY KEY (`user_email`,`phone`);
 
 --
+-- Indexes for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  ADD PRIMARY KEY (`ride`,`address`),
+  ADD KEY `ride` (`ride`,`order`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -367,7 +385,7 @@ ALTER TABLE `user_emergency_contact`
 -- AUTO_INCREMENT for table `ride`
 --
 ALTER TABLE `ride`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- Constraints for dumped tables
@@ -436,6 +454,12 @@ ALTER TABLE `ride_riders`
 --
 ALTER TABLE `user_emergency_contact`
   ADD CONSTRAINT `user_emergency_contact_ibfk_1` FOREIGN KEY (`user_email`) REFERENCES `user` (`email`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `waypoints`
+--
+ALTER TABLE `waypoints`
+  ADD CONSTRAINT `waypoints_ibfk_1` FOREIGN KEY (`ride`) REFERENCES `ride` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
