@@ -1,12 +1,4 @@
 Allow riders to request pickup/dropoff spots:
-    - Update after_response_insert trigger to also insert pickup_addr and dropoff_addr
-        (original trigger:
-        BEGIN
-        IF NEW.response = 1 THEN
-            INSERT INTO ride_riders (id, rider_email) VALUES (NEW.id, NEW.rider_email);
-        END IF;
-        DELETE FROM request WHERE id = NEW.id AND rider_email = NEW.rider_email;
-        END)
     - Preview button not being disabled when both checkboxes checked and one autocomplete filled in
     - Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
     - If a rider requests a pickup and/or dropoff spot and the driver accepts:
@@ -15,6 +7,8 @@ Allow riders to request pickup/dropoff spots:
         3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
 
 Extract repeated code and queries into functions in Controller.php and Database.php
+
+Reorganize files (https://docs.php.earth/faq/misc/structure/#directory-structure-example) and update .htaccess (https://stackoverflow.com/questions/23635746/htaccess-redirect-from-site-root-to-public-folder-hiding-public-in-url and https://stackoverflow.com/questions/704102/how-does-rewritebase-work-in-htaccess)
 
 More gracefully handle invalid inputs and errors
 

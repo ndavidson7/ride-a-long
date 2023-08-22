@@ -8,7 +8,7 @@ $dotenv->required(['DB_HOST', 'DB_NAME', 'DB_USER', 'DB_PASS']);
 
 // Register the autoloader
 spl_autoload_register(function ($classname) {
-    require "classes/$classname.php";
+    require "src/$classname.php";
 });
 
 // Start session

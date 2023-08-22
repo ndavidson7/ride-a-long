@@ -85,14 +85,14 @@ class Controller
         session_destroy();
     }
 
-    /* 
-   * My simple templating system.
-   * $template is the name of the template to be rendered (without the .php extension).
-   * templates should only include the <main> tag and its children.
-   * $navbar is a boolean indicating whether the navbar or the largeheader should be rendered.
-   * $vars is an associative array of variables to be passed to the template.
-   */
-    private function renderTemplate($template, $navbar, $vars)
+    /**
+     * My simple templating system.
+     * 
+     * @param string $template Name of the template to be rendered (without the .php extension).
+     * @param array $vars Associative array of variable string name => value to be passed to the template.
+     * @param bool $navbar Optional. Whether the navbar should be rendered. Largeheader used if false. Defaults to `true`.
+     */
+    private function renderTemplate($template, $vars, $navbar = true)
     {
         extract($vars);
         require "templates/top.php";
@@ -101,7 +101,7 @@ class Controller
     }
 
     // Get number of seats available for a given ride. Returns -1 if ride does not exist.
-    private function calculateSeatsOpen($ride_id)
+    private function getSeatsOpen($ride_id)
     {
         $seats_total = $this->db->query("select seats_total from ride where id = ?;", "i", $ride_id);
         $num_riders = $this->db->query("select count(rider_email) from ride_riders where id = ?;", "i", $ride_id);
@@ -117,7 +117,7 @@ class Controller
     // Sign in template and logic
     private function signIn()
     {
-        if (isset($_POST["email"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = $this->db->query("select password from user where email = ?;", "s", $_POST["email"]);
             if ($data === false) {
                 $error_msg = "Error checking for user.";
@@ -139,7 +139,7 @@ class Controller
         if (isset($error_msg)) {
             $vars["error_msg"] = $error_msg;
         }
-        $this->renderTemplate("signin", false, $vars);
+        $this->renderTemplate("signin", $vars, false);
     }
 
     // Sign up form template and logic
@@ -148,7 +148,7 @@ class Controller
         // Validate inputs
         // No input can be empty due to the required attribute on their HTML inputs
         // Emails are validated by their HTML pattern attribute (TODO: sign up/in through Google/Netbadge)
-        if (isset($_POST["email"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             if ($_POST["password"] != $_POST["password2"]) {
                 $error_msg = "Passwords do not match!";
             } else if (!empty($this->db->query("select * from user where email = ?;", "s", $_POST["email"]))) {
@@ -170,7 +170,7 @@ class Controller
         if (isset($error_msg)) {
             $vars["error_msg"] = $error_msg;
         }
-        $this->renderTemplate("signup", false, $vars);
+        $this->renderTemplate("signup", $vars, false);
     }
 
     // Ride listings template and logic
@@ -181,7 +181,7 @@ class Controller
             $error_msg = "Error checking for rides.";
         }
         foreach ($rides as &$ride) {
-            $seats_open = $this->calculateSeatsOpen($ride["id"]);
+            $seats_open = $this->getSeatsOpen($ride["id"]);
             $ride["seats_open"] = $seats_open;
             unset($ride);
         }
@@ -198,7 +198,7 @@ class Controller
             if (isset($error_msg)) {
                 $vars["error_msg"] = $error_msg;
             }
-            $this->renderTemplate("rides", true, $vars);
+            $this->renderTemplate("rides", $vars);
         }
     }
 
@@ -214,7 +214,7 @@ class Controller
             return $this->profile($error_msg);
         }
 
-        if (isset($_POST["start-time"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $orig_coords = $this->db->query("select * from coordinates where address = ?;", "s", $_POST["orig-addr"]);
             $dest_coords = $this->db->query("select * from coordinates where address = ?;", "s", $_POST["dest-addr"]);
             if (empty($orig_coords)) $coords_insert1 = $this->db->insertCoordinates($_POST["orig-addr"], $_POST["orig-lat"], $_POST["orig-long"]);
@@ -237,14 +237,14 @@ class Controller
         if (isset($error_msg)) {
             $vars['error_msg'] = $error_msg;
         }
-        $this->renderTemplate('newride', true, $vars);
+        $this->renderTemplate('newride', $vars);
     }
 
     // Profile template and logic
     private function profile($error = null)
     {
         // Any and all POST variables are "set" (still possibly empty) if the form was submitted
-        if (isset($_POST["year"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Profile update logic
             if (!empty($_POST["year"])) $update = $this->db->query("update user set year = ? where email = ?;", "is", $_POST["year"], $this->user);
             if (!empty($_POST["major"])) $update = $this->db->query("update user set major = ? where email = ?;", "ss", $_POST["major"], $this->user);
@@ -312,7 +312,7 @@ class Controller
         $vars = array("title" => $title, "styles" => $styles, "scripts" => $scripts, "user_info" => $user_info, "contact_info" => $contact_info, "car_info" => $car_info, "rider_info" => $rider_info);
         if (isset($error_msg)) $vars["error_msg"] = $error_msg;
         else if ($error !== null) $vars["error_msg"] = $error;
-        $this->renderTemplate("profile", true, $vars);
+        $this->renderTemplate("profile", $vars);
     }
 
     private function messages()
@@ -329,7 +329,7 @@ class Controller
         if (isset($error_msg)) {
             $vars["error_msg"] = $error_msg;
         }
-        $this->renderTemplate("messages", true, $vars);
+        $this->renderTemplate("messages", $vars);
     }
 
     private function deleteAccount()
@@ -352,7 +352,7 @@ class Controller
             $error_msg = "Error checking for posted rides.";
         }
         foreach ($posted as &$ride) {
-            $seats_open = $this->calculateSeatsOpen($ride["id"]);
+            $seats_open = $this->getSeatsOpen($ride["id"]);
             $ride["seats_open"] = $seats_open;
             unset($ride);
         }
@@ -367,7 +367,7 @@ class Controller
                 $joined[] = $ride_info[0]; // weird PHP syntax for appending to array without overhead of function call
             }
             foreach ($joined as &$ride) {
-                $seats_open = $this->calculateSeatsOpen($ride["id"]);
+                $seats_open = $this->getSeatsOpen($ride["id"]);
                 $ride["seats_open"] = $seats_open;
                 unset($ride);
             }
@@ -381,7 +381,7 @@ class Controller
         if (isset($error_msg)) {
             $vars['error_msg'] = $error_msg;
         }
-        $this->renderTemplate('myrides', true, $vars);
+        $this->renderTemplate('myrides', $vars);
     }
 
     // Delete ride listing logic
@@ -530,7 +530,7 @@ class Controller
         $id = $this->get_vars["id"];
 
         // Validate ride ID and verify that there are seats open
-        $seats_open = $this->calculateSeatsOpen($id);
+        $seats_open = $this->getSeatsOpen($id);
         if ($seats_open == -1) {
             die("No ride found with given ID.");
         } else if ($seats_open == 0) {
@@ -549,12 +549,12 @@ class Controller
         }
 
         // If user is submitting request, insert relevant records into database; otherwise, serve request page
-        if (isset($_POST["pickup"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Save any provided addresses and coordinates so that we can display them to the driver
-            $pickup_addr = empty($_POST["pickup-addr"]) ? null : $_POST["pickup-addr"];
+            $pickup_addr = trim($_POST["pickup-addr"]) ?: null;
             if ($pickup_addr and !empty($_POST["pickup-lat"]) and !empty($_POST["pickup-long"])) $this->db->insertCoordinates($pickup_addr, $_POST["pickup-lat"], $_POST["pickup-long"]); // TODO: May want to check if coordinates already exist
 
-            $dropoff_addr = empty($_POST["dropoff-addr"]) ? null : $_POST["dropoff-addr"];
+            $dropoff_addr = trim($_POST["dropoff-addr"]) ?: null;
             if ($dropoff_addr and !empty($_POST["dropoff-lat"]) and !empty($_POST["dropoff-long"])) $this->db->insertCoordinates($dropoff_addr, $_POST["dropoff-lat"], $_POST["dropoff-long"]); // TODO: May want to check if coordinates already exist
 
             $insert = $this->db->query("insert into request (id, rider_email, pickup_addr, dropoff_addr) values (?, ?, ?, ?);", "isss", $id, $this->user, $pickup_addr, $dropoff_addr);
@@ -569,7 +569,7 @@ class Controller
             $scripts = array(self::NOTIFS, self::UTILS, self::GOOGLE_API);
             $maps_script = self::MAPS_AUTOCOMPLETE_AND_PLACES;
             $vars = array('title' => $title, 'styles' => $styles, 'scripts' => $scripts, 'maps_script' => $maps_script, 'ride' => $id);
-            $this->renderTemplate('request', true, $vars);
+            $this->renderTemplate('request', $vars);
         }
     }
 
@@ -711,7 +711,7 @@ class Controller
 
     private function report()
     {
-        if (isset($_POST["reportee-email"])) {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $reportee_email = $_POST["reportee-email"];
             $reportee = $this->db->query("select * from user where email = ?;", "s", $reportee_email);
             if ($reportee === false) {
@@ -735,6 +735,6 @@ class Controller
         if (isset($error_msg)) {
             $vars["error_msg"] = $error_msg;
         }
-        $this->renderTemplate("report", true, $vars);
+        $this->renderTemplate("report", $vars);
     }
 }
