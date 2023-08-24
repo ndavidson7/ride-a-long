@@ -2,6 +2,20 @@
 
 Ride sharing web app designed by and for college students. Carpool with your classmates!
 
+## :white_check_mark: TODO
+
+-   [ ] Rewrite in Laravel
+-   [ ] Allow riders to request pickup/dropoff spots:
+    -   [ ] Preview button not being disabled when both checkboxes checked and one autocomplete filled in (Array.from(checkboxes)?)
+    -   [ ] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
+    -   [ ] If a rider requests a pickup and/or dropoff spot and the driver accepts:
+        1. add a waypoint with a unique ID and an order of -1 for each spot
+        2. save the ID(s) to the new ride_riders record (so we have a way to know who requested each spot)
+        3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
+-   [ ] Update .htaccess (https://stackoverflow.com/questions/23635746/htaccess-redirect-from-site-root-to-public-folder-hiding-public-in-url and https://stackoverflow.com/questions/704102/how-does-rewritebase-work-in-htaccess)
+-   [ ] Add messaging functionality
+-   [ ] \(Optional) Delete from coordinates table. Partition pruning might be one solution? https://stackoverflow.com/questions/9472167/what-is-the-best-way-to-delete-old-rows-from-mysql-on-a-rolling-basis
+
 ## :hammer_and_wrench: Built With
 
 -   Laravel/PHP
