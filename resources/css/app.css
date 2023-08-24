@@ -1,0 +1,116 @@
+.orange {
+    color: #e57200;
+}
+
+.orange-darken-hover:hover {
+    color: #eb5f0c;
+}
+
+.btn-uva-wb {
+    color: #232d4b;
+    background-color: white;
+}
+
+.btn-uva-wb:hover {
+    background-color: #232d4b;
+    color: white;
+}
+
+.btn-uva-ow {
+    color: white;
+    background-color: #e57200;
+}
+
+.btn-uva-ow:hover {
+    background-color: white;
+    color: #e57200;
+}
+
+.btn-uva-bo {
+    color: #e57200;
+    background-color: #232d4b;
+}
+
+.btn-uva-bo:hover {
+    background-color: #e57200;
+    color: #232d4b;
+}
+
+.btn-uva-ob {
+    color: #232d4b;
+    background-color: #e57200;
+}
+
+.btn-uva-ob:hover {
+    background-color: #232d4b;
+    color: #e57200;
+}
+
+header {
+    background-color: #232d4b;
+    border-bottom: 10px solid #e57200;
+
+    & i {
+        color: white;
+    }
+
+    & sub {
+        font-size: 0.5em;
+    }
+
+    & h1 {
+        font-size: 5em;
+    }
+}
+
+footer a {
+    color: inherit;
+
+    &:hover {
+        color: inherit;
+    }
+}
+
+.disclaimer {
+    text-decoration: none;
+    color: inherit;
+}
+
+.notification {
+    position: absolute;
+    top: 15px;
+    left: 35px;
+    font-size: 12px;
+}
+
+body.splash {
+    background-color: #141e3c;
+
+    & main {
+        padding-top: 50px;
+        margin-bottom: 30px;
+    }
+
+    & header {
+        padding: 70px 0px;
+    }
+
+    & input:not(:placeholder-shown):invalid {
+        background-color: grey;
+    }
+
+    form:invalid button {
+        background-color: grey;
+
+        &:hover {
+            background-color: grey;
+            color: white;
+        }
+    }
+}
+
+/* Not nested in order to take precedence (greater specificity) over Bootstrap .btn defaults */
+body.splash .btn {
+    font-weight: 800;
+    font-size: 2em;
+}

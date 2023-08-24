@@ -167,8 +167,8 @@ DELIMITER ;
 
 CREATE TABLE `ride` (
   `id` int(10) UNSIGNED NOT NULL,
-  `driver_email` varchar(255) DEFAULT NULL,
-  `start_time` datetime DEFAULT NULL,
+  `driver_email` varchar(255) NOT NULL,
+  `start_time` datetime NOT NULL,
   `orig_addr` varchar(255) NOT NULL,
   `dest_addr` varchar(255) NOT NULL,
   `seats_total` int(11) NOT NULL,

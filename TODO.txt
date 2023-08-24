@@ -1,5 +1,5 @@
 Allow riders to request pickup/dropoff spots:
-    - Preview button not being disabled when both checkboxes checked and one autocomplete filled in
+    - Preview button not being disabled when both checkboxes checked and one autocomplete filled in (Array.from(checkboxes)?)
     - Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
     - If a rider requests a pickup and/or dropoff spot and the driver accepts:
         1. add a waypoint with a unique ID and an order of -1 for each spot

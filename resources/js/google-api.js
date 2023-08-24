@@ -1,3 +1,13 @@
+const MAPS_API_KEY = "AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc";
+
+// IIFE to initialize Google Maps API
+(function () {
+    // prettier-ignore
+    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
+        key: MAPS_API_KEY,
+    });
+})();
+
 const autocompletes = [];
 
 function onPlaceChanged() {
@@ -37,16 +47,19 @@ function initAutocomplete() {
         types: [],
     };
 
-    document.querySelectorAll('.autocomplete').forEach(div => {
-        const autocomplete = new google.maps.places.Autocomplete(div.querySelector(".place"), options);
+    document.querySelectorAll(".autocomplete").forEach((div) => {
+        const autocomplete = new google.maps.places.Autocomplete(
+            div.querySelector(".place"),
+            options
+        );
         autocomplete.inputDiv = div;
-        autocomplete.addListener('place_changed', onPlaceChanged);
+        autocomplete.addListener("place_changed", onPlaceChanged);
         autocompletes.push(autocomplete);
     });
 }
 
 /**
- * 
+ *
  * @param {Event} event The event that triggered the modal
  * @param {Element} modal The modal's div element (of class "modal")
  */
@@ -62,7 +75,8 @@ function initModal(event, modal) {
      */
     const type = event.relatedTarget.dataset.modalType;
     if (!type) throw new Error("Modal type not specified");
-    else if (!["info", "preview", "request", "posted", "joined"].includes(type)) throw new Error("Invalid modal type");
+    else if (!["info", "preview", "request", "posted", "joined"].includes(type))
+        throw new Error("Invalid modal type");
 
     if (type !== "preview") {
         // Determine which ride was clicked and format URL for AJAX request
@@ -111,8 +125,8 @@ function initModal(event, modal) {
     } else {
         // AJAX request
         fetch(rideInfo)
-            .then(response => response.json())
-            .then(data => {
+            .then((response) => response.json())
+            .then((data) => {
                 populateModal(data, modal, type);
             });
     }
@@ -120,9 +134,13 @@ function initModal(event, modal) {
 
 function populateModal(data, modal, type) {
     // Update the modal's content.
-    modal.querySelector(".route").textContent = data.origin.address + " \u2192 " + data.destination.address;
+    modal.querySelector(".route").textContent =
+        data.origin.address + " \u2192 " + data.destination.address;
     modal.querySelector(".description").textContent = data.description;
-    if (type !== "preview") modal.querySelector(".driver").textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
+    if (type !== "preview")
+        modal.querySelector(
+            ".driver"
+        ).textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
     const { date, time } = formatDateTime(data.start_time); // from utils.js (must be loaded)
     modal.querySelector(".date").textContent = date;
     modal.querySelector(".time").textContent = time;
@@ -130,11 +148,11 @@ function populateModal(data, modal, type) {
     if (type === "request") {
         // Add the user's additional waypoints to data.waypoints
         const waypoints = document.querySelectorAll(".waypoint");
-        waypoints.forEach(waypoint => {
+        waypoints.forEach((waypoint) => {
             if (waypoint.value) {
                 data.waypoints.push({
                     location: waypoint.value,
-                    stopover: true
+                    stopover: true,
                 });
             }
         });
@@ -144,54 +162,72 @@ function populateModal(data, modal, type) {
     initMap(data, modal);
 }
 
-function initMap(data, modal) {
-    const origin = new google.maps.LatLng(data.origin.latitude, data.origin.longitude);
-    const destination = new google.maps.LatLng(data.destination.latitude, data.destination.longitude);
+async function initMap(data, modal) {
+    const { LatLng, Map, DirectionsService, DirectionsRenderer } =
+        await google.maps.importLibrary(
+            "geometry",
+            "places",
+            "visualization",
+            "directions"
+        );
+
+    const origin = new LatLng(data.origin.latitude, data.origin.longitude);
+    const destination = new LatLng(
+        data.destination.latitude,
+        data.destination.longitude
+    );
     const waypoints = data.waypoints;
     const myOptions = {
         zoom: 7,
         center: origin,
-        disableDefaultUI: true
-    }
-    const map = new google.maps.Map(modal.querySelector('.map'), myOptions);
+        disableDefaultUI: true,
+    };
+    const map = new Map(modal.querySelector(".map"), myOptions);
     const directionsService = new google.maps.DirectionsService();
     const directionsRenderer = new google.maps.DirectionsRenderer();
     directionsRenderer.setMap(map);
 
-    directionsService.route({
-        origin: origin,
-        destination: destination,
-        waypoints: waypoints,
-        optimizeWaypoints: true,
-        travelMode: google.maps.TravelMode.DRIVING,
-    }, function (result, status) {
-        if (status === 'OK') {
-            directionsRenderer.setDirections(result);
+    directionsService.route(
+        {
+            origin: origin,
+            destination: destination,
+            waypoints: waypoints,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING,
+        },
+        function (result, status) {
+            if (status === "OK") {
+                directionsRenderer.setDirections(result);
 
-            // Calculate distance and duration from start to end
-            var dist = 0;
-            var dur = 0;
-            for (let i = 0; i < result.routes[0].legs.length; i++) {
-                dist += result.routes[0].legs[i].distance.value;
-                dur += result.routes[0].legs[i].duration.value;
+                // Calculate distance and duration from start to end
+                var dist = 0;
+                var dur = 0;
+                for (let i = 0; i < result.routes[0].legs.length; i++) {
+                    dist += result.routes[0].legs[i].distance.value;
+                    dur += result.routes[0].legs[i].duration.value;
+                }
+                const miles = (dist / 1609.344).toFixed(1);
+
+                // Format duration to hours and minutes
+                // Author: Wilson Lee, https://stackoverflow.com/a/37096512
+                const h = Math.floor(dur / 3600);
+                const m = Math.floor((dur % 3600) / 60);
+                const s = Math.floor((dur % 3600) % 60);
+
+                const hDisplay =
+                    h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+                const mDisplay =
+                    m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+                const sDisplay =
+                    s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+
+                const time = hDisplay + mDisplay + sDisplay;
+
+                modal.querySelector(".distance").textContent =
+                    miles + " miles (" + time + ")";
+            } else {
+                window.alert("Directions request failed due to " + status);
             }
-            const miles = (dist / 1609.344).toFixed(1);
-
-            // Format duration to hours and minutes
-            // Author: Wilson Lee, https://stackoverflow.com/a/37096512
-            const h = Math.floor(dur / 3600);
-            const m = Math.floor(dur % 3600 / 60);
-            const s = Math.floor(dur % 3600 % 60);
-
-            const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-            const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-            const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-
-            const time = hDisplay + mDisplay + sDisplay;
-
-            modal.querySelector('.distance').textContent = miles + ' miles (' + time + ')';
-        } else {
-            window.alert('Directions request failed due to ' + status);
         }
-    });
+    );
 }

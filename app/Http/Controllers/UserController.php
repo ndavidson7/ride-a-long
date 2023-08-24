@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
-    public function signUp(Request $request) {
+    public function signUp(Request $request)
+    {
         $fields = $request->validate([
-            'first-name' => 'required|alpha',
+            'first-name' => 'required|alpha', // Might consider some legitimate names invalid?
             'last-name' => 'required|alpha',
             'email' => 'required|email|ends_with:@virginia.edu|unique:user,email',
             'phone' => 'required|digits:10',
-            'password' => 'required',
-            'password2' => 'required|same:password'
+            'password' => 'required|same:password2'
         ]);
 
         $fields['password'] = bcrypt($fields['password']);
@@ -22,10 +23,24 @@ class UserController extends Controller
         return redirect('/signin');
     }
 
-    public function signIn(Request $request) {
+    public function signIn(Request $request)
+    {
         $fields = $request->validate([
-            'email' => 'required',
+            'email' => 'required|email|ends_with:@virginia.edu',
             'password' => 'required'
         ]);
+
+        if (auth()->attempt($fields)) {
+            $request->session()->regenerate();
+            return redirect('/');
+        } else {
+            return redirect('/signin');
+        }
+    }
+
+    public function signOut()
+    {
+        auth()->logout();
+        return redirect('/signin');
     }
 }

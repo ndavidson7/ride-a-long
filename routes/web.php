@@ -14,6 +14,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/signin', [UserController::class, 'signIn']);
+Route::get('/', function () {
+    return 'Test';
+});
+Route::get('/signin', function () {
+    // return view('signin', ['withNavbar' => false]);
+    return view('signin');
+});
+Route::get('/signup', function () {
+    return view('signup');
+});
 
-Route::get('/signup', [UserController::class, 'signUp']);
+Route::post('/signin', [UserController::class, 'signIn']);
+Route::post('/signup', [UserController::class, 'signUp']);
+Route::post('/signout', [UserController::class, 'signOut']);

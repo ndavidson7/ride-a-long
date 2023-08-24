@@ -24,7 +24,11 @@
                             <li><a class="dropdown-item" href="/profile">Profile</a></li>
                             <li><a class="dropdown-item" href="/myrides">My Rides</a></li>
                             <li><a class="dropdown-item" href="/messages">Messages</a></li>
-                            <li><a class="dropdown-item" href="/signout" id="signOut">Sign Out</a></li>
+                            <li>
+                                <form action="/signout" method="post">
+                                    <button type="submit" class="dropdown-item">Sign Out</button>
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </li>
