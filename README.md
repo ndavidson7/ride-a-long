@@ -1,29 +1,54 @@
-# Ride-A-Long
+# :car: **Ride-A-Long**
+
 Ride sharing web app designed by and for college students. Carpool with your classmates!
 
-Written with simple HTML, CSS (some custom, some bootstrap), JavaScript (some vanilla, some jQuery), and PHP. Makes use of a SQL database.
+## :hammer_and_wrench: Built With
 
-## Preview
+-   Laravel/PHP
+-   ES6 JavaScript
+-   MySQL
+
+## :camera: Preview
+
 ### Sign in
+
 ![Sign in page](https://github.com/ndavidson7/ride-a-long/blob/main/images/signin.png?raw=true)
 
 ### Ride listings
+
 ![Rides page](https://github.com/ndavidson7/ride-a-long/blob/main/images/rides.png?raw=true)
 
 ### Ride info
+
 ![Ride info modal](https://github.com/ndavidson7/ride-a-long/blob/main/images/rideinfo.png?raw=true)
 
 ### New ride
+
 ![New ride page](https://github.com/ndavidson7/ride-a-long/blob/main/images/newride.png?raw=true)
 
-## Try it yourself
+## Setup development environment
+
 ### Installing dependencies
+
 1. Install [composer](https://getcomposer.org/) if you have not already.
-2. Open the repository in the command line and run `composer install`.
-3. Optionally, install [XAMPP](https://www.apachefriends.org/) to host Ride-A-Long locally. If you do not wish to use XAMPP, make sure you can host an Apache server & MySQL database.
+2. Install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you have not already.
+3. Open the repository in your terminal and run:
+
+    ```
+    composer install
+    npm install
+    ```
 
 ### Configuration
+
 1. Create a new database.
-2. Import db.sql.
-3. Copy `\.env.example` to `\.env` and modify it to use your new database's connection parameters.
-4. Host however you prefer.
+2. Copy `/.env.example` to `/.env` and modify it to use your new database's connection parameters.
+3. Run `php artisan migrate:fresh --seed`.
+
+### Host
+
+-   Optionally, install [XAMPP](https://www.apachefriends.org/) to host Ride-A-Long locally.
+
+    -   Configure XAMPP's httpd.conf to serve files from this repository's `/public` folder however you prefer.
+
+-   If you do not wish to use XAMPP, you can use Artisan's built-in development server with `php artisan serve`, but you will need some means of hosting a MySQL database.
