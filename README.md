@@ -28,7 +28,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 ## Setup development environment
 
-### Installing dependencies
+### Install dependencies
 
 1. Install [composer](https://getcomposer.org/) if you have not already.
 2. Install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you have not already.
@@ -39,7 +39,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     npm install
     ```
 
-### Configuration
+### Configure
 
 1. Create a new database.
 2. Copy `/.env.example` to `/.env` and modify it to use your new database's connection parameters.
