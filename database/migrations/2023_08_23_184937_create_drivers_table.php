@@ -14,8 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('drivers', function (Blueprint $table) {
-            $table->unsignedInteger('user_id');
-            $table->string('car_license_plate', 7)->unique('car_license_plate');
+            $table->increments('id');
+            $table->unsignedInteger('user_id')->unique();
+            $table->string('car_license_plate', 7)->unique();
         });
     }
 

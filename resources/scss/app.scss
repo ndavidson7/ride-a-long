@@ -1,3 +1,5 @@
+@import "~bootstrap/scss/bootstrap";
+
 .orange {
     color: #e57200;
 }
@@ -71,9 +73,8 @@ footer a {
     }
 }
 
-.disclaimer {
+.no-decor {
     text-decoration: none;
-    color: inherit;
 }
 
 .notification {
@@ -96,14 +97,18 @@ body.splash {
     }
 
     & input:not(:placeholder-shown):invalid {
-        background-color: grey;
+        background-color: rgb(180, 180, 180);
+
+        + label::after {
+            background-color: transparent;
+        }
     }
 
     form:invalid button {
-        background-color: grey;
+        background-color: rgb(180, 180, 180);
 
         &:hover {
-            background-color: grey;
+            background-color: rgb(180, 180, 180);
             color: white;
         }
     }

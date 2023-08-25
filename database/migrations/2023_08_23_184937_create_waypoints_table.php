@@ -14,11 +14,12 @@ return new class extends Migration
     public function up()
     {
         Schema::create('waypoints', function (Blueprint $table) {
+            $table->increments('id');
             $table->unsignedInteger('ride_id');
             $table->string('address');
             $table->tinyInteger('order');
 
-            $table->primary(['ride_id', 'address']);
+            $table->unique(['ride_id', 'address']);
             $table->index(['ride_id', 'order'], 'ordering');
         });
     }

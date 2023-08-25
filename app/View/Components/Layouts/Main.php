@@ -12,9 +12,7 @@ class Main extends Component
      * Create a new component instance.
      */
     public function __construct(
-        public string $title,
-        // public array $scripts = [],
-        public bool $withNavbar = true
+        public string $title
     ) {
     }
 

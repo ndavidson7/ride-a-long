@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('riders', function (Blueprint $table) {
+        Schema::create('ride_user', function (Blueprint $table) {
             $table->unsignedInteger('ride_id');
             $table->unsignedInteger('user_id')->index('user_id');
-            $table->string('pickup_addr')->nullable()->index('pickup_waypoint');
-            $table->string('dropoff_addr')->nullable()->index('dropoff_waypoint');
+            $table->unsignedInteger('pickup_waypoint_id')->nullable()->index('pickup_waypoint_id');
+            $table->unsignedInteger('dropoff_waypoint_id')->nullable()->index('dropoff_waypoint_id');
 
             $table->primary(['ride_id', 'user_id']);
         });
