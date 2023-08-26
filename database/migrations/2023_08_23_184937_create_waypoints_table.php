@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('waypoints', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('ride_id');
-            $table->string('address');
+            $table->unsignedInteger('address_id');
             $table->tinyInteger('order');
 
-            $table->unique(['ride_id', 'address']);
+            $table->unique(['ride_id', 'address_id']);
             $table->index(['ride_id', 'order'], 'ordering');
         });
     }

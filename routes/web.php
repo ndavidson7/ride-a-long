@@ -25,13 +25,15 @@ Route::get('/', function () {
     return redirect('/rides');
 });
 
-// Sign in and sign up routes
+// UserController routes
 Route::get('/signup', [UserController::class, 'create'])->middleware('guest');
 Route::post('/signup', [UserController::class, 'store'])->middleware('guest');
+Route::get('/profile', [UserController::class, 'show'])->middleware('auth');
 
+// SessionController routes
 Route::get('/signin', [SessionController::class, 'create'])->middleware('guest');
 Route::post('/signin', [SessionController::class, 'store'])->middleware('guest');
 Route::delete('/signout', [SessionController::class, 'destroy'])->middleware('auth');
 
-// Ride routes
+// RideController routes
 Route::get('/rides', [RideController::class, 'index'])->middleware('auth');

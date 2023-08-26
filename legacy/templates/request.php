@@ -5,18 +5,18 @@
         <div class="autocomplete" id="pickup-div">
             <label class="form-label" for="pickup">Your Pickup Address</label>
             <input type="text" class="place waypoint" name="pickup" id="pickup" value="">
-            <input type="hidden" class="address" id="pickup-addr" name="pickup-addr" value="">
-            <input type="hidden" class="latitude" id="pickup-lat" name="pickup-lat" value="">
-            <input type="hidden" class="longitude" id="pickup-long" name="pickup-long" value="">
+            <input type="hidden" class="address" id="pickup-address" name="pickup-address" value="">
+            <input type="hidden" class="latitude" id="pickup-latitude" name="pickup-latitude" value="">
+            <input type="hidden" class="longitude" id="pickup-longitude" name="pickup-longitude" value="">
         </div>
         <label class="form-label" for="dropoff-checkbox">Dropoff</label>
         <input type="checkbox" name="dropoff-checkbox">
         <div class="autocomplete" id="dropoff-div">
             <label class="form-label" for="dropoff">Your Dropoff Address</label>
             <input type="text" class="place waypoint" name="dropoff" id="dropoff" value="">
-            <input type="hidden" class="address" id="dropoff-addr" name="dropoff-addr" value="">
-            <input type="hidden" class="latitude" id="dropoff-lat" name="dropoff-lat" value="">
-            <input type="hidden" class="longitude" id="dropoff-long" name="dropoff-long" value="">
+            <input type="hidden" class="address" id="dropoff-address" name="dropoff-address" value="">
+            <input type="hidden" class="latitude" id="dropoff-latitude" name="dropoff-latitude" value="">
+            <input type="hidden" class="longitude" id="dropoff-longitude" name="dropoff-longitude" value="">
         </div>
         <button type="submit" class="btn btn-uva-ob">Request</button>
         <button type="button" id="previewbutton" class="btn btn-uva-ob" disabled="true" data-bs-toggle="modal" data-bs-target="#mapModal" data-modal-type="request" data-ride="<?= $ride ?>">Preview</button>

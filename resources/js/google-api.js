@@ -21,19 +21,19 @@ function onPlaceChanged() {
     } else {
         this.inputDiv.querySelector(".address").value = place.formatted_address;
         const location = place.geometry.location;
-        this.inputDiv.querySelector(".latitude").value = location.lat();
+        this.inputDiv.querySelector(".latitude").value = location.latitude();
         this.inputDiv.querySelector(".longitude").value = location.lng();
     }
 }
 
 function initAutocomplete() {
     // Google Maps UVA coordinates
-    const center = { lat: 38.03361737225505, lng: -78.50800895660305 };
+    const center = { latitude: 38.03361737225505, lng: -78.50800895660305 };
 
     // Bias location autocomplete results to UVA grounds/Charlottesville
     const bounds = {
-        north: center.lat + 0.15,
-        south: center.lat - 0.15,
+        north: center.latitude + 0.15,
+        south: center.latitude - 0.15,
         east: center.lng + 0.15,
         west: center.lng - 0.15,
     };
@@ -101,14 +101,15 @@ function initModal(event, modal) {
     if (type === "preview") {
         let data = {
             origin: {
-                address: document.getElementById("orig-addr").value,
-                latitude: document.getElementById("orig-lat").value,
-                longitude: document.getElementById("orig-long").value,
+                address: document.getElementById("origin-address").value,
+                latitude: document.getElementById("origin-latitude").value,
+                longitude: document.getElementById("origin-longitude").value,
             },
             destination: {
-                address: document.getElementById("dest-addr").value,
-                latitude: document.getElementById("dest-lat").value,
-                longitude: document.getElementById("dest-long").value,
+                address: document.getElementById("destination-address").value,
+                latitude: document.getElementById("destination-latitude").value,
+                longitude: document.getElementById("destination-longitude")
+                    .value,
             },
             waypoints: [],
             description: document.getElementById("description").value,

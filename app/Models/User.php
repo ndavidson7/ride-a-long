@@ -8,7 +8,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
@@ -48,9 +48,19 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
+    public function name(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function emergencyContacts(): HasMany
     {
         return $this->hasMany(EmergencyContact::class);
+    }
+
+    public function car(): HasOneThrough
+    {
+        return $this->hasOneThrough(Car::class, Driver::class)->withDefault();
     }
 
     public function requests(): HasMany

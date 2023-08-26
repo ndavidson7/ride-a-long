@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::table('requests', function (Blueprint $table) {
             $table->foreign(['user_id'], 'requests_ibfk_2')->references(['id'])->on('users')->onDelete('CASCADE');
-            $table->foreign(['dropoff_addr'], 'requests_ibfk_4')->references(['address'])->on('coordinates');
+            $table->foreign(['dropoff_address_id'], 'requests_ibfk_4')->references(['id'])->on('addresses')->onDelete('CASCADE');
             $table->foreign(['ride_id'], 'requests_ibfk_1')->references(['id'])->on('rides')->onDelete('CASCADE');
-            $table->foreign(['pickup_addr'], 'requests_ibfk_3')->references(['address'])->on('coordinates');
+            $table->foreign(['pickup_address_id'], 'requests_ibfk_3')->references(['id'])->on('addresses')->onDelete('CASCADE');
         });
     }
 

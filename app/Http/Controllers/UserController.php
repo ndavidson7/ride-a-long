@@ -12,9 +12,9 @@ class UserController extends Controller
         return view('signup');
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $fields = request()->validate([
+        $fields = $request->validate([
             'first-name' => 'required|alpha|max:255', // Might consider some legitimate names invalid?
             'last-name' => 'required|alpha|max:255',
             'email' => 'required|email|ends_with:@virginia.edu|max:255|unique:users,email',
@@ -34,5 +34,16 @@ class UserController extends Controller
         auth()->login($user);
 
         return redirect('/rides')->with('status', 'Account created successfully!');
+    }
+
+    public function show()
+    {
+        $user = auth()->user();
+
+        return view('profile', [
+            'user' => $user,
+            'contacts' => $user->emergencyContacts,
+            'car' => $user->car,
+        ]);
     }
 }

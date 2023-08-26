@@ -14,7 +14,9 @@ return new class extends Migration
     public function up()
     {
         Schema::create('cars', function (Blueprint $table) {
-            $table->string('license_plate', 7)->primary();
+            $table->increments('id');
+            $table->unsignedInteger('driver_id')->unique();
+            $table->string('license_plate', 7)->unique();
             $table->string('make', 63);
             $table->string('color', 63);
         });

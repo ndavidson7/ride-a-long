@@ -14,6 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('waypoints', function (Blueprint $table) {
+            $table->foreign(['address_id'], 'waypoints_ibfk_2')->references(['id'])->on('addresses')->onDelete('CASCADE');
             $table->foreign(['ride_id'], 'waypoints_ibfk_1')->references(['id'])->on('rides')->onDelete('CASCADE');
         });
     }

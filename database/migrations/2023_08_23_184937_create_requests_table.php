@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->unsignedInteger('ride_id');
             $table->unsignedInteger('user_id')->index('user_id');
-            $table->string('pickup_addr')->nullable()->index('pickup_addr');
-            $table->string('dropoff_addr')->nullable()->index('dropoff_addr');
+            $table->unsignedInteger('pickup_address_id')->nullable()->index('pickup_address_id');
+            $table->unsignedInteger('dropoff_address_id')->nullable()->index('dropoff_address_id');
 
             $table->primary(['ride_id', 'user_id']);
         });

@@ -16,16 +16,16 @@
         <div class="mb-3 col-12 autocomplete">
             <label for="origin" class="form-label">Origin</label>
             <input type="text" class="form-control place" id="origin" name="origin" required>
-            <input type="hidden" class="address" id="orig-addr" name="orig-addr" maxlength="255" value="">
-            <input type="hidden" class="latitude" id="orig-lat" name="orig-lat" value="">
-            <input type="hidden" class="longitude" id="orig-long" name="orig-long" value="">
+            <input type="hidden" class="address" id="origin-address" name="origin-address" maxlength="255" value="">
+            <input type="hidden" class="latitude" id="origin-latitude" name="origin-latitude" value="">
+            <input type="hidden" class="longitude" id="origin-longitude" name="origin-longitude" value="">
         </div>
         <div class="mb-3 col-12 autocomplete">
             <label for="destination" class="form-label">Destination</label>
             <input type="text" class="form-control place" id="destination" name="destination" required>
-            <input type="hidden" class="address" id="dest-addr" name="dest-addr" maxlength="255" value="">
-            <input type="hidden" class="latitude" id="dest-lat" name="dest-lat" value="">
-            <input type="hidden" class="longitude" id="dest-long" name="dest-long" value="">
+            <input type="hidden" class="address" id="destination-address" name="destination-address" maxlength="255" value="">
+            <input type="hidden" class="latitude" id="destination-latitude" name="destination-latitude" value="">
+            <input type="hidden" class="longitude" id="destination-longitude" name="destination-longitude" value="">
         </div>
         <div class="mb-3 col-12">
             <label class="form-label" for="description">Description/Additional info</label>

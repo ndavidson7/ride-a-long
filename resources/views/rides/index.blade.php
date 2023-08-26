@@ -6,7 +6,8 @@
                 <div class="col">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $ride->orig_addr }} &#8594; {{ $ride->dest_addr }}</h5>
+                            <h5 class="card-title">{{ $ride->origin_address }} &#8594; {{ $ride->destination_address }}
+                            </h5>
                             <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
                             </h6>
                             <p class="card-text"> {{ $ride->seats_open }} out of {{ $ride->seats_total }} seats
