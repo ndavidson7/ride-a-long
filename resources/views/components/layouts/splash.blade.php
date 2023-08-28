@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" class="h-100">
 
-<x-head :title="$title" />
+<x-head :title="$title" :entries="$entries" />
 
-<body class="d-flex flex-column align-items-center text-center h-100 splash">
+<body class="splash">
 
     <x-headers.splash />
 

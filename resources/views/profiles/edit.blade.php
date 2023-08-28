@@ -1,4 +1,4 @@
-<x-layouts.main title="Profile">
+<x-layouts.main title="Profile" :$entries>
     <main class="container-fluid d-flex flex-column flex-md-row align-items-center mt-5">
         {{-- <div class="container-fluid d-flex flex-column align-items-center col-md-6 mb-5 mb-md-0">
         <p style="font-size:2em;font-weight:500;">{{ $user->name }}</p>
@@ -7,20 +7,21 @@
         <input class="form-control w-75" type="file" id="pfp" name="pfp" accept="image/*">
     </div> --}}
         <div class="container-fluid d-flex flex-column align-items-center col-md-6">
-            <form class="w-100" action="/profile" method="post">
+            <form class="w-100 form-disabled" action="{{ route('profile.update') }}" method="post">
+                @method('PUT')
+                @csrf
                 <h3>Profile</h3>
                 <div class="mb-3 col-md-8">
                     <label class="form-label" for="year">Year</label>
-                    {{-- <select class="form-select" id="year" name="year">
-                    <option selected>{{ $user->year }}</option>
-                    <option value="1">First</option>
-                    <option value="2">Second</option>
-                    <option value="3">Third</option>
-                    <option value="4">Fourth</option>
-                    <option value="5">Graduate/Further Studies</option>
-                </select> --}}
-                    <input type="number" class="form-control" id="year" name="year" value="{{ $user->year }}"
-                        min="1" max="8">
+                    <select class="form-select" id="year" name="year">
+                        <option value="" @selected(!$user->year)></option>
+                        <option value="1" @selected($user->year == 1)>First</option>
+                        <option value="2" @selected($user->year == 2)>Second</option>
+                        <option value="3" @selected($user->year == 3)>Third</option>
+                        <option value="4" @selected($user->year == 4)>Fourth</option>
+                        <option value="5" @selected($user->year == 5)>Graduate/Further
+                            Studies</option>
+                    </select>
                 </div>
                 <div class="mb-3 col-md-8">
                     <label class="form-label" for="major">Major</label>
@@ -77,16 +78,8 @@
                         aria-describedby="colorLimit" value="{{ $car->color }}">
                     <div id="colorLimit" class="form-text">Max 63 characters.</div>
                 </div>
-                {{-- <h3>Rider Info</h3>
-            <div class="mb-3 col-md-8">
-                <label class="form-label" for="contributions">Contributions</label>
-                <textarea class="form-control" id="contributions" name="contributions" rows=3 maxlength="255"
-                    aria-describedby="contributionsLimit"
-                    placeholder="Will pay for gas, good sense of humor, great music taste, humble, etc."><?= $rider_info[0]['contributions'] ?></textarea>
-                <div id="contributionsLimit" class="form-text">Max 255 characters.</div>
-            </div> --}}
-                <button id="save" type="submit" class="btn btn-uva-ob" disabled>Save</button>
-                <a href="/profile/delete" role="button" class="btn btn-danger"
+                <button type="submit" class="btn btn-uva-ob" disabled>Save</button>
+                <a href="{{ route('profile.destroy') }}" class="btn btn-danger"
                     onclick="return confirm('Are you sure you want to delete your account? This action is irreversible.');">Delete
                     Account</a>
             </form>

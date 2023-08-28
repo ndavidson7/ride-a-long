@@ -9,7 +9,9 @@ class SessionController extends Controller
 {
     public function create()
     {
-        return view('signin');
+        return view('signin', [
+            'entries' => ['resources/js/form-enable.js']
+        ]);
     }
 
     public function store()
@@ -19,7 +21,7 @@ class SessionController extends Controller
             'password' => 'required'
         ]);
 
-        if (!auth()->attempt($fields)) {
+        if (!auth()->attempt($fields, request()->has('remember'))) {
             throw ValidationException::withMessages([
                 'incorrect' => 'The provided credentials do not match our records.',
             ]);

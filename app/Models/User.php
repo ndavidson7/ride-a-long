@@ -15,6 +15,12 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Database Settings
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,6 +32,9 @@ class User extends Authenticatable
         'phone',
         'first_name',
         'last_name',
+        'year',
+        'major',
+        'bio'
     ];
 
     /**
@@ -48,41 +57,11 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function name(): string
-    {
-        return "{$this->first_name} {$this->last_name}";
-    }
-
-    public function emergencyContacts(): HasMany
-    {
-        return $this->hasMany(EmergencyContact::class);
-    }
-
-    public function car(): HasOneThrough
-    {
-        return $this->hasOneThrough(Car::class, Driver::class)->withDefault();
-    }
-
-    public function requests(): HasMany
-    {
-        return $this->hasMany(Request::class);
-    }
-
-    public function responses(): HasMany
-    {
-        return $this->hasMany(Response::class);
-    }
-
-    public function rides(): BelongsToMany
-    {
-        return $this->belongsToMany(Ride::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
-    }
-
-    public function waypoints()
-    {
-        // TODO: Get all waypoints for all rides the user joined? Or make ride ID a parameter?
-        // Use pivot table or some sort of through()?
-    }
+    /*
+    |--------------------------------------------------------------------------
+    | Mutators and Accessors
+    |--------------------------------------------------------------------------
+    */
 
     /**
      * Mutate the user's password prior to storing it.
@@ -102,5 +81,60 @@ class User extends Authenticatable
         $suffix = substr($phone, 6);
 
         return "({$ac}) {$prefix}-{$suffix}";
+    }
+
+    public function getNameAttribute(): string
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
+    public function getYearFormattedAttribute(): string|null
+    {
+        switch ($this->year) {
+            case 1:
+                return 'First';
+            case 2:
+                return 'Second';
+            case 3:
+                return 'Third';
+            case 4:
+                return 'Fourth';
+            case 5:
+                return 'Graduate/Further Studies';
+            default:
+                return null;
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    public function emergencyContacts(): HasMany
+    {
+        return $this->hasMany(EmergencyContact::class);
+    }
+
+    public function car(): HasOneThrough
+    {
+        return $this->hasOneThrough(Car::class, Driver::class)->withDefault();
+    }
+
+    public function requests(): HasMany
+    {
+        return $this->hasMany(Request::class);
+    }
+
+    public function rides(): BelongsToMany
+    {
+        return $this->belongsToMany(Ride::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
+    }
+
+    public function waypoints()
+    {
+        // TODO: Get all waypoints for all rides the user joined? Or make ride ID a parameter?
+        // Use pivot table or some sort of through()?
     }
 }

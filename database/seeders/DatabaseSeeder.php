@@ -13,9 +13,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::truncate();
+        // User::truncate();
 
-        // User::factory(10)->create();
 
         User::create([
             'email' => 'nid3dhu@virginia.edu',
@@ -24,5 +23,7 @@ class DatabaseSeeder extends Seeder
             'first_name' => 'Nicholas',
             'last_name' => 'Davidson',
         ]);
+
+        User::factory(10)->create();
     }
 }

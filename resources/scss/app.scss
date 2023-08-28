@@ -1,56 +1,62 @@
 @import "~bootstrap/scss/bootstrap";
+@import "~bootstrap-icons/font/bootstrap-icons.css";
+
+$uva-orange: #e57200;
+$uva-orange-dark: #eb5f0c;
+$uva-blue: #232d4b;
+$uva-blue-dark: #141e3c;
 
 .orange {
-    color: #e57200;
+    color: $uva-orange;
 }
 
 .orange-darken-hover:hover {
-    color: #eb5f0c;
+    color: $uva-orange-dark;
 }
 
 .btn-uva-wb {
-    color: #232d4b;
+    color: $uva-blue;
     background-color: white;
 }
 
 .btn-uva-wb:hover {
-    background-color: #232d4b;
+    background-color: $uva-blue;
     color: white;
 }
 
 .btn-uva-ow {
     color: white;
-    background-color: #e57200;
+    background-color: $uva-orange;
 }
 
 .btn-uva-ow:hover {
     background-color: white;
-    color: #e57200;
+    color: $uva-orange;
 }
 
 .btn-uva-bo {
-    color: #e57200;
-    background-color: #232d4b;
+    color: $uva-orange;
+    background-color: $uva-blue;
 }
 
 .btn-uva-bo:hover {
-    background-color: #e57200;
-    color: #232d4b;
+    background-color: $uva-orange;
+    color: $uva-blue;
 }
 
 .btn-uva-ob {
-    color: #232d4b;
-    background-color: #e57200;
+    color: $uva-blue;
+    background-color: $uva-orange;
 }
 
 .btn-uva-ob:hover {
-    background-color: #232d4b;
-    color: #e57200;
+    background-color: $uva-blue;
+    color: $uva-orange;
 }
 
 header {
-    background-color: #232d4b;
-    border-bottom: 10px solid #e57200;
+    background-color: $uva-blue;
+    border-bottom: 10px solid $uva-orange;
 
     & i {
         color: white;
@@ -85,7 +91,7 @@ footer a {
 }
 
 body.splash {
-    background-color: #141e3c;
+    background-color: $uva-blue-dark;
 
     & main {
         padding-top: 50px;
@@ -118,4 +124,23 @@ body.splash {
 body.splash .btn {
     font-weight: 800;
     font-size: 2em;
+}
+
+.gradient-custom {
+    /* fallback for old browsers */
+    background: #f6d365;
+
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(
+        to right bottom,
+        rgba(246, 211, 101, 1),
+        rgba(253, 160, 133, 1)
+    );
+
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(
+        to right bottom,
+        rgba(246, 211, 101, 1),
+        rgba(253, 160, 133, 1)
+    );
 }

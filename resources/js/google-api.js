@@ -1,32 +1,18 @@
-const MAPS_API_KEY = "AIzaSyAIlNof-TwR5KfntgTBOWjxDcBV-mqNAnc";
+import { Loader } from "@googlemaps/js-api-loader";
 
-// IIFE to initialize Google Maps API
-(function () {
-    // prettier-ignore
-    (g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})({
-        key: MAPS_API_KEY,
-    });
-})();
+const loader = new Loader({
+    apiKey: import.meta.env.VITE_MAPS_API_KEY,
+    version: "weekly",
+    libraries: ["core", "maps", "places", "routes"],
+});
 
 const autocompletes = [];
 
-function onPlaceChanged() {
-    const place = this.getPlace();
+loader.importLibrary("places").then(({ Autocomplete }) => {
+    initAutocomplete(Autocomplete);
+});
 
-    if (!place.geometry || !place.geometry.location) {
-        // User entered the name of a Place that was not suggested and
-        // pressed the Enter key, or the Place Details request failed.
-        this.inputDiv.querySelector(".place").value = "";
-        window.alert("Please select a location from the autocomplete list");
-    } else {
-        this.inputDiv.querySelector(".address").value = place.formatted_address;
-        const location = place.geometry.location;
-        this.inputDiv.querySelector(".latitude").value = location.latitude();
-        this.inputDiv.querySelector(".longitude").value = location.lng();
-    }
-}
-
-function initAutocomplete() {
+function initAutocomplete(autocomplete) {
     // Google Maps UVA coordinates
     const center = { latitude: 38.03361737225505, lng: -78.50800895660305 };
 
@@ -48,14 +34,97 @@ function initAutocomplete() {
     };
 
     document.querySelectorAll(".autocomplete").forEach((div) => {
-        const autocomplete = new google.maps.places.Autocomplete(
-            div.querySelector(".place"),
-            options
-        );
-        autocomplete.inputDiv = div;
-        autocomplete.addListener("place_changed", onPlaceChanged);
+        const ac = new autocomplete(div.querySelector(".place"), options);
+        ac.inputDiv = div;
+        ac.addListener("place_changed", onPlaceChanged);
         autocompletes.push(autocomplete);
     });
+}
+
+function onPlaceChanged() {
+    const place = this.getPlace();
+
+    if (!place.geometry || !place.geometry.location) {
+        // User entered the name of a Place that was not suggested and
+        // pressed the Enter key, or the Place Details request failed.
+        this.inputDiv.querySelector(".place").value = "";
+        window.alert("Please select a location from the autocomplete list");
+    } else {
+        this.inputDiv.querySelector(".address").value = place.formatted_address;
+        const location = place.geometry.location;
+        this.inputDiv.querySelector(".latitude").value = location.lat();
+        this.inputDiv.querySelector(".longitude").value = location.lng();
+    }
+}
+
+async function initMap(data, modal) {
+    const { LatLng, Map, DirectionsService, DirectionsRenderer } =
+        await google.maps.importLibrary(
+            "geometry",
+            "places",
+            "visualization",
+            "directions"
+        );
+
+    const origin = new LatLng(data.origin.latitude, data.origin.longitude);
+    const destination = new LatLng(
+        data.destination.latitude,
+        data.destination.longitude
+    );
+    const waypoints = data.waypoints;
+    const myOptions = {
+        zoom: 7,
+        center: origin,
+        disableDefaultUI: true,
+    };
+    const map = new Map(modal.querySelector(".map"), myOptions);
+    const directionsService = new google.maps.DirectionsService();
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    directionsService.route(
+        {
+            origin: origin,
+            destination: destination,
+            waypoints: waypoints,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING,
+        },
+        function (result, status) {
+            if (status === "OK") {
+                directionsRenderer.setDirections(result);
+
+                // Calculate distance and duration from start to end
+                var dist = 0;
+                var dur = 0;
+                for (let i = 0; i < result.routes[0].legs.length; i++) {
+                    dist += result.routes[0].legs[i].distance.value;
+                    dur += result.routes[0].legs[i].duration.value;
+                }
+                const miles = (dist / 1609.344).toFixed(1);
+
+                // Format duration to hours and minutes
+                // Author: Wilson Lee, https://stackoverflow.com/a/37096512
+                const h = Math.floor(dur / 3600);
+                const m = Math.floor((dur % 3600) / 60);
+                const s = Math.floor((dur % 3600) % 60);
+
+                const hDisplay =
+                    h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+                const mDisplay =
+                    m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+                const sDisplay =
+                    s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+
+                const time = hDisplay + mDisplay + sDisplay;
+
+                modal.querySelector(".distance").textContent =
+                    miles + " miles (" + time + ")";
+            } else {
+                window.alert("Directions request failed due to " + status);
+            }
+        }
+    );
 }
 
 /**
@@ -161,74 +230,4 @@ function populateModal(data, modal, type) {
 
     // Initialize map
     initMap(data, modal);
-}
-
-async function initMap(data, modal) {
-    const { LatLng, Map, DirectionsService, DirectionsRenderer } =
-        await google.maps.importLibrary(
-            "geometry",
-            "places",
-            "visualization",
-            "directions"
-        );
-
-    const origin = new LatLng(data.origin.latitude, data.origin.longitude);
-    const destination = new LatLng(
-        data.destination.latitude,
-        data.destination.longitude
-    );
-    const waypoints = data.waypoints;
-    const myOptions = {
-        zoom: 7,
-        center: origin,
-        disableDefaultUI: true,
-    };
-    const map = new Map(modal.querySelector(".map"), myOptions);
-    const directionsService = new google.maps.DirectionsService();
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-
-    directionsService.route(
-        {
-            origin: origin,
-            destination: destination,
-            waypoints: waypoints,
-            optimizeWaypoints: true,
-            travelMode: google.maps.TravelMode.DRIVING,
-        },
-        function (result, status) {
-            if (status === "OK") {
-                directionsRenderer.setDirections(result);
-
-                // Calculate distance and duration from start to end
-                var dist = 0;
-                var dur = 0;
-                for (let i = 0; i < result.routes[0].legs.length; i++) {
-                    dist += result.routes[0].legs[i].distance.value;
-                    dur += result.routes[0].legs[i].duration.value;
-                }
-                const miles = (dist / 1609.344).toFixed(1);
-
-                // Format duration to hours and minutes
-                // Author: Wilson Lee, https://stackoverflow.com/a/37096512
-                const h = Math.floor(dur / 3600);
-                const m = Math.floor((dur % 3600) / 60);
-                const s = Math.floor((dur % 3600) % 60);
-
-                const hDisplay =
-                    h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-                const mDisplay =
-                    m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-                const sDisplay =
-                    s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-
-                const time = hDisplay + mDisplay + sDisplay;
-
-                modal.querySelector(".distance").textContent =
-                    miles + " miles (" + time + ")";
-            } else {
-                window.alert("Directions request failed due to " + status);
-            }
-        }
-    );
 }

@@ -4,36 +4,88 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\SessionController;
+use App\Models\Request;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Home Route
 |--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
 */
 
 Route::get('/', function () {
-    // If the user is not logged in, redirect them to the sign in page.
-    if (!auth()->check()) {
-        return redirect('/signin');
-    }
-
     return redirect('/rides');
+})->middleware('auth')->name('home');
+
+/*
+|--------------------------------------------------------------------------
+| UserController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(UserController::class)->group(function () {
+    Route::get('/signup', 'create')->middleware('guest')->name('signup');
+    Route::post('/signup', 'store')->middleware('guest');
+    Route::get('/profile/edit', 'edit')->middleware('auth')->name('profile.edit'); // have to put this before show because of wildcard
+    Route::get('/profile/{id?}', 'show')->middleware('auth')->name('profile.show'); // TODO: Could consider changing ID to local-part of email
+    Route::put('/profile', 'update')->middleware('auth')->name('profile.update');
+    Route::delete('/profile', 'destroy')->middleware('auth')->name('profile.destroy');
 });
 
-// UserController routes
-Route::get('/signup', [UserController::class, 'create'])->middleware('guest');
-Route::post('/signup', [UserController::class, 'store'])->middleware('guest');
-Route::get('/profile', [UserController::class, 'show'])->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| SessionController Routes
+|--------------------------------------------------------------------------
+*/
 
-// SessionController routes
-Route::get('/signin', [SessionController::class, 'create'])->middleware('guest');
-Route::post('/signin', [SessionController::class, 'store'])->middleware('guest');
-Route::delete('/signout', [SessionController::class, 'destroy'])->middleware('auth');
+Route::controller(SessionController::class)->name('sessions.')->group(function () {
+    Route::get('/signin', 'create')->middleware('guest')->name('create');
+    Route::post('/signin', 'store')->middleware('guest')->name('store');
+    Route::delete('/signout', 'destroy')->middleware('auth')->name('destroy');
+});
 
-// RideController routes
-Route::get('/rides', [RideController::class, 'index'])->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| RideController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(RideController::class)->middleware('auth')->prefix('rides')->name('rides.')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store'); // TODO: driver middleware? or just check in controller?
+    Route::get('/{ride}', 'show')->name('show');
+    Route::get('/{ride}/edit', 'edit')->name('edit');
+    Route::put('/{ride}', 'update')->name('update'); // TODO: driver middleware? or just check in controller?
+    Route::delete('/{ride}', 'destroy')->name('destroy'); // TODO: driver middleware? or just check in controller?
+});
+
+/*
+|--------------------------------------------------------------------------
+| RequestController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(RequestController::class)->middleware('auth')->group(function () {
+    Route::get('/requests', 'index');
+    Route::get('/rides/{ride}/request', 'create');
+    Route::post('/rides/{ride}', 'store');
+    Route::get('/requests/{request}', 'show');
+    Route::put('/requests/{request}', 'update');
+    Route::delete('/requests/{request}', 'destroy');
+});
+
+// Route::get('/requests/{request}', [RequestController::class, 'show'])->middleware('auth');
+
+/*
+|--------------------------------------------------------------------------
+| WaypointController Routes
+|--------------------------------------------------------------------------
+*/
+
+
+
+/*
+|--------------------------------------------------------------------------
+| ReportController Routes
+|--------------------------------------------------------------------------
+*/

@@ -15,6 +15,7 @@ class Request extends Model
         'user_id',
         'pickup_address_id', // Probably shouldn't be fillable?
         'dropoff_address_id',
+        'message'
     ];
 
     public function ride(): BelongsTo

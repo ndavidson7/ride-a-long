@@ -7,8 +7,5 @@
     <meta name="keywords" content="Ride-a-long, ridealong, ride, uva, carpool, hoosdriving, hoosriding">
     <title>Ride-A-Long - {{ $title }}</title>
     <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
-    {{-- FONT AWESOME --}}
-    <script defer src="https://kit.fontawesome.com/d21f3fd807.js" crossorigin="anonymous"></script>
-    {{-- all styles and scripts? --}}
-    @vite(['resources/scss/app.scss', 'resources/js/app.js'])
+    @vite(array_merge(['resources/scss/app.scss', 'resources/js/app.js'], $entries))
 </head>

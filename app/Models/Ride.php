@@ -9,6 +9,12 @@ class Ride extends Model
 {
     use HasFactory;
 
+    /*
+    |--------------------------------------------------------------------------
+    | Database Settings
+    |--------------------------------------------------------------------------
+    */
+
     /**
      * The attributes that are mass assignable.
      *
@@ -26,6 +32,23 @@ class Ride extends Model
     protected $casts = [
         'start_time' => 'datetime',
     ];
+
+    /*
+    |--------------------------------------------------------------------------
+    | Mutators and Accessors
+    |--------------------------------------------------------------------------
+    */
+
+    public function getSeatsOpenAttribute(): int
+    {
+        return $this->seats_total - $this->riders()->count();
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
 
     public function driver()
     {
@@ -47,18 +70,8 @@ class Ride extends Model
         return $this->hasMany(Request::class);
     }
 
-    public function responses()
-    {
-        return $this->hasMany(Response::class);
-    }
-
     public function riders()
     {
         return $this->belongsToMany(User::class);
-    }
-
-    public function seatsOpen(): int
-    {
-        return $this->seats_total - $this->riders()->count();
     }
 }

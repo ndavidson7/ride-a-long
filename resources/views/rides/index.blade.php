@@ -1,8 +1,16 @@
-<x-layouts.main title="Ride listings">
+<x-layouts.main title="Ride listings" :$entries>
     <main class="container-fluid d-flex flex-column mt-3">
-        <a href="/newride" class="btn btn-uva-ob fw-bold fs-5 mb-4 p-2" role="button">Post new ride</a>
-        @forelse ($rides as $ride)
-            <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
+        <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
+            <div class="col">
+                <div class="card text-center h-100">
+                    <div class="card-body">
+                        <a href="{{ route('rides.create') }}" class="stretched-link" title="Create new ride"><i
+                                class="bi bi-plus-circle-fill" title="Plus icon" aria-hidden="true"
+                                style="font-size: 5em;"></i></a>
+                    </div>
+                </div>
+            </div>
+            @foreach ($rides as $ride)
                 <div class="col">
                     <div class="card text-center h-100">
                         <div class="card-body">
@@ -19,13 +27,12 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        @empty
-            <div class="text-center">
+            @endforeach
+        </div>
+        {{-- <div class="text-center">
                 <h3>There are no upcoming rides :(</h3>
                 <h4>Be the first to post one!</h4>
-            </div>
-        @endforelse
+            </div> --}}
         {{-- <?php require_once 'templates/mapmodal.php'; ?> --}}
     </main>
 </x-layouts.main>
