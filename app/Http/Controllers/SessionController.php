@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
 class SessionController extends Controller
@@ -14,26 +15,26 @@ class SessionController extends Controller
         ]);
     }
 
-    public function store()
+    public function store(Request $request)
     {
-        $fields = request()->validate([
+        $fields = $request->validate([
             'email' => 'required|email|ends_with:@virginia.edu',
             'password' => 'required'
         ]);
 
-        if (!auth()->attempt($fields, request()->has('remember'))) {
+        if (!Auth::attempt($fields, $request->has('remember'))) {
             throw ValidationException::withMessages([
                 'incorrect' => 'The provided credentials do not match our records.',
             ]);
         }
 
-        request()->session()->regenerate();
-        return redirect('/rides')->with('status', 'Signed in successfully!');
+        $request->session()->regenerate();
+        return redirect()->route('rides.index')->with('status', 'Signed in successfully!');
     }
 
     public function destroy()
     {
-        auth()->logout();
-        return redirect('/signin');
+        Auth::logout();
+        return redirect()->route('sessions.create');
     }
 }

@@ -16,6 +16,8 @@ class Car extends Model
         'color',
     ];
 
+    public $timestamps = false;
+
     public function driver(): BelongsTo
     {
         return $this->belongsTo(Driver::class);

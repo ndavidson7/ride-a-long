@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -36,7 +37,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect('/rides')->with('status', 'Account created successfully!');
+        return redirect()->route('rides.index')->with('status', 'Account created successfully!');
     }
 
     public function show(int $id = null)
@@ -54,26 +55,46 @@ class UserController extends Controller
         $user = Auth::user()->load('emergencyContacts', 'car');
 
         return view('profiles.edit', [
-            'entries' => ['resources/js/form-enable.js'],
+            'entries' => ['resources/js/form-enable.js', 'resources/js/emergency-contacts.js'],
             'user' => $user,
-            'contacts' => $user->emergencyContacts,
             'car' => $user->car,
+            'contacts' => $user->emergencyContacts,
         ]);
     }
 
     public function update(Request $request)
     {
-        $fields = $request->validate([
+        $userFields = $request->validate([
             'year' => 'nullable|digits:1|min:1|max:5',
             'major' => 'nullable|string|max:63',
             'bio' => 'nullable|string|max:255',
         ]);
 
-        $nonEmptyFields = array_filter($fields);
+        $nonEmptyUserFields = array_filter($userFields);
 
-        Auth::user()->update($nonEmptyFields);
+        if ($nonEmptyUserFields) {
+            Auth::user()->update($nonEmptyUserFields);
+        }
 
-        return redirect('/profile')->with('status', 'Profile updated successfully!');
+        $carFields = $request->validate([
+            'car-license-plate' => 'nullable|required_with:car-make,car-color|string|alpha_num|max:7|unique:cars,license_plate',
+            'car-make' => 'nullable|required_with:car-license-plate,car-color|string|alpha|max:63',
+            'car-color' => 'nullable|required_with:car-license-plate,car-make|string|alpha|max:63',
+        ]);
+
+        if ($carFields) {
+            $driverId = Driver::firstOrCreate(['user_id' => Auth::user()->id])->id;
+
+            // Returns default car if none
+            $car = Auth::user()->car;
+            $car->driver_id = $driverId;
+            $car->license_plate = $carFields['car-license-plate'];
+            $car->make = $carFields['car-make'];
+            $car->color = $carFields['car-color'];
+            $car->save();
+        }
+
+        return redirect()->route('profile.show')->with('status', 'Profile updated successfully!');
     }
 
     public function destroy()

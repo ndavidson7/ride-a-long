@@ -14,4 +14,6 @@ class Address extends Model
         'latitude', // Coordinates should probably not be fillable...
         'longitude',
     ];
+
+    public $timestamps = false;
 }

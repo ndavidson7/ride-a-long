@@ -2,12 +2,17 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use App\Traits\SnakeCaseRelations;
 
 class Ride extends Model
 {
     use HasFactory;
+    use SnakeCaseRelations;
 
     /*
     |--------------------------------------------------------------------------
@@ -33,6 +38,8 @@ class Ride extends Model
         'start_time' => 'datetime',
     ];
 
+    public $timestamps = false;
+
     /*
     |--------------------------------------------------------------------------
     | Mutators and Accessors
@@ -50,27 +57,27 @@ class Ride extends Model
     |--------------------------------------------------------------------------
     */
 
-    public function driver()
+    public function driver(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function originAddress()
+    public function originAddress(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function destinationAddress()
+    public function destinationAddress(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function requests()
+    public function requests(): HasMany
     {
         return $this->hasMany(Request::class);
     }
 
-    public function riders()
+    public function riders(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

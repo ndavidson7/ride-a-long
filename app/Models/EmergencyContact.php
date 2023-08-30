@@ -17,6 +17,8 @@ class EmergencyContact extends Model
         'relationship',
     ];
 
+    public $timestamps = false;
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

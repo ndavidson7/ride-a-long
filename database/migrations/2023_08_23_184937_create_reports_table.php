@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedInteger('reportee_id')->index('reportee_id');
             $table->string('reason', 63);
             $table->string('info')->nullable();
+            $table->timestamp('created_at')->useCurrent();
 
             $table->primary(['reporter_id', 'reportee_id']);
         });

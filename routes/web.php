@@ -13,7 +13,7 @@ use App\Models\Request;
 */
 
 Route::get('/', function () {
-    return redirect('/rides');
+    return redirect()->route('rides.index');
 })->middleware('auth')->name('home');
 
 /*
