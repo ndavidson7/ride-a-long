@@ -10,11 +10,12 @@
                     </div>
                 </div>
             </div>
-            @foreach ($rides as $ride)
+            @forelse ($rides as $ride)
                 <div class="col">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $ride->origin_address }} &#8594; {{ $ride->destination_address }}
+                            <h5 class="card-title">{{ $ride->origin->address }} &#8594;
+                                {{ $ride->destination->address }}
                             </h5>
                             <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
                             </h6>
@@ -22,17 +23,18 @@
                                 left!
                             </p>
                             <button type="button" class="card-link btn btn-uva-ob stretched-link"
-                                data-bs-toggle="modal" data-bs-target="#mapModal" data-modal-type="info"
-                                data-ride="{{ $ride->id }}">More info</button>
+                                data-bs-toggle="modal" data-bs-target="#mapModal" data-ride="{{ $ride->id }}">More
+                                info</button>
                         </div>
                     </div>
                 </div>
-            @endforeach
+            @empty
+                <div class="text-center">
+                    <h3>There are no upcoming rides :(</h3>
+                    <h4>Be the first to post one!</h4>
+                </div>
+            @endforelse
         </div>
-        {{-- <div class="text-center">
-                <h3>There are no upcoming rides :(</h3>
-                <h4>Be the first to post one!</h4>
-            </div> --}}
-        {{-- <?php require_once 'templates/mapmodal.php'; ?> --}}
+        <x-modals.map :type="MapType::Info" />
     </main>
 </x-layouts.main>

@@ -16,8 +16,8 @@ return new class extends Migration
         Schema::create('requests', function (Blueprint $table) {
             $table->unsignedInteger('ride_id');
             $table->unsignedInteger('user_id')->index('user_id');
-            $table->unsignedInteger('pickup_address_id')->nullable()->index('pickup_address_id');
-            $table->unsignedInteger('dropoff_address_id')->nullable()->index('dropoff_address_id');
+            $table->unsignedInteger('pickup_id')->nullable()->index('pickup_id');
+            $table->unsignedInteger('dropoff_id')->nullable()->index('dropoff_id');
             $table->text('message')->nullable();
             $table->boolean('response')->nullable();
             // Updated_at will show when the response was given:

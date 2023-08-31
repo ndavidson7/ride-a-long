@@ -1,6 +1,6 @@
 <x-layouts.main title="Create ride" :$entries>
     <main class="container-fluid mt-3">
-        <form id="newride" class="row col-sm-10 col-md-8 col-lg-6 mx-auto" action="{{ route('rides.store') }}"
+        <form id="ride-create" class="row col-sm-10 col-md-8 col-lg-6 mx-auto" action="{{ route('rides.store') }}"
             method="post">
             @csrf
             <h2 class="text-center col-12">Ride Details</h2>
@@ -17,17 +17,16 @@
             <div class="mb-3 col-12 autocomplete">
                 <label for="origin" class="form-label">Origin</label>
                 <input type="text" class="form-control place" id="origin" name="origin" required />
-                <input type="hidden" class="address" id="origin-address" name="origin-address" maxlength="255" />
-                <input type="hidden" class="latitude" id="origin-latitude" name="origin-latitude" />
-                <input type="hidden" class="longitude" id="origin-longitude" name="origin-longitude" />
+                <input type="hidden" class="address" name="origin-address" maxlength="255" />
+                <input type="hidden" class="latitude" name="origin-latitude" />
+                <input type="hidden" class="longitude" name="origin-longitude" />
             </div>
             <div class="mb-3 col-12 autocomplete">
                 <label for="destination" class="form-label">Destination</label>
                 <input type="text" class="form-control place" id="destination" name="destination" required />
-                <input type="hidden" class="address" id="destination-address" name="destination-address"
-                    maxlength="255" />
-                <input type="hidden" class="latitude" id="destination-latitude" name="destination-latitude" />
-                <input type="hidden" class="longitude" id="destination-longitude" name="destination-longitude" />
+                <input type="hidden" class="address" name="destination-address" maxlength="255" />
+                <input type="hidden" class="latitude" name="destination-latitude" />
+                <input type="hidden" class="longitude" name="destination-longitude" />
             </div>
             <div class="mb-3 col-12">
                 <label class="form-label" for="description">Description/Additional info</label>

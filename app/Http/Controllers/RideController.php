@@ -10,11 +10,9 @@ class RideController extends Controller
 {
     public function index()
     {
-        // return Ride::with(['driver', 'origin_address', 'destination_address'])->get();
-
         return view('rides.index', [
-            'entries' => [],
-            'rides' => Ride::with(['driver', 'origin_address', 'destination_address'])->get()
+            'entries' => ['resources/js/google-api.js'],
+            'rides' => Ride::with(['driver', 'origin', 'destination'])->get()
         ]);
     }
 
@@ -39,7 +37,7 @@ class RideController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $origin_address_id = Address::firstOrCreate(
+        $originId = Address::firstOrCreate(
             ['address' => $fields['origin-address']],
             [
                 'latitude' => $fields['origin-latitude'],
@@ -47,7 +45,7 @@ class RideController extends Controller
             ]
         )->id;
 
-        $destination_address_id = Address::firstOrCreate(
+        $destinationId = Address::firstOrCreate(
             ['address' => $fields['destination-address']],
             [
                 'latitude' => $fields['destination-latitude'],
@@ -58,17 +56,19 @@ class RideController extends Controller
         Ride::create([
             'driver_id' => auth()->user()->id,
             'start_time' => $fields['start-time'],
-            'origin_address_id' => $origin_address_id,
-            'destination_address_id' => $destination_address_id,
+            'origin_id' => $originId,
+            'destination_id' => $destinationId,
             'seats_total' => $fields['seats'],
             'description' => $fields['description'],
         ]);
 
-        return redirect()->route('rides.index', ['status' => 'Ride created successfully!']);
+        return redirect()->route('rides.index', ['status' => 'success', 'message' => 'Ride created successfully!']);
     }
 
-    public function show()
+    public function show(Ride $ride)
     {
+        // Return JSON with ride details
+        return $ride->load(['driver', 'origin', 'destination', 'waypoints']);
     }
 
     public function edit()

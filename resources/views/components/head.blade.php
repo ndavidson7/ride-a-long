@@ -7,5 +7,6 @@
     <meta name="keywords" content="Ride-a-long, ridealong, ride, uva, carpool, hoosdriving, hoosriding">
     <title>Ride-A-Long - {{ $title }}</title>
     <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
+    @routes
     @vite(array_merge(['resources/scss/app.scss', 'resources/js/app.js'], $entries))
 </head>

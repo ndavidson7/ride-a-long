@@ -13,6 +13,31 @@ const loader = new Loader({
     libraries: ["core", "maps", "places", "routes"],
 });
 
+// These will all add their respective library to the global google.maps namespace
+loader
+    .importLibrary("core")
+    .catch((e) =>
+        console.error(
+            `Google API loader failed when importing Core library.\n${e}`
+        )
+    );
+
+loader
+    .importLibrary("maps")
+    .catch((e) =>
+        console.error(
+            `Google API loader failed when importing Maps library.\n${e}`
+        )
+    );
+
+loader
+    .importLibrary("routes")
+    .catch((e) =>
+        console.error(
+            `Google API loader failed when importing Routes library.\n${e}`
+        )
+    );
+
 /*
 |--------------------------------------------------------------------------
 | Google Places Autocomplete Initialization
@@ -110,109 +135,6 @@ function onPlaceChanged() {
 }
 
 /**
- * Initialize the Google Maps map element
- *
- * @param {JSON} data Contains the route-related data: origin and destination coordinates and, optionally, waypoints
- * @param {Element} modal Div element containing the map
- */
-async function initMap(data, modal) {
-    let origin, destination, map;
-
-    loader
-        .importLibrary("core")
-        .then(({ LatLng }) => {
-            origin = new LatLng(data.origin.latitude, data.origin.longitude);
-            destination = new LatLng(
-                data.destination.latitude,
-                data.destination.longitude
-            );
-        })
-        .catch((e) =>
-            console.error(
-                `Google API loader failed when importing Core library.\n${e}`
-            )
-        );
-
-    loader
-        .importLibrary("maps")
-        .then(({ Map }) => {
-            const myOptions = {
-                center: origin,
-                zoom: 7,
-                disableDefaultUI: true,
-            };
-
-            map = new Map(modal.querySelector(".map"), myOptions);
-        })
-        .catch((e) =>
-            console.error(
-                `Google API loader failed when importing Maps library.\n${e}`
-            )
-        );
-
-    loader
-        .importLibrary("routes")
-        .then(({ DirectionsService, DirectionsRenderer }) => {
-            const directionsService = new DirectionsService();
-            const directionsRenderer = new DirectionsRenderer();
-            directionsRenderer.setMap(map);
-
-            directionsService.route(
-                {
-                    origin: origin,
-                    destination: destination,
-                    waypoints: data.waypoints,
-                    optimizeWaypoints: true,
-                    travelMode: google.maps.TravelMode.DRIVING,
-                },
-                function (result, status) {
-                    if (status === "OK") {
-                        directionsRenderer.setDirections(result);
-
-                        // Calculate distance and duration from start to end
-                        var dist = 0;
-                        var dur = 0;
-                        for (let i = 0; i < result.routes[0].legs.length; i++) {
-                            dist += result.routes[0].legs[i].distance.value;
-                            dur += result.routes[0].legs[i].duration.value;
-                        }
-                        const miles = (dist / 1609.344).toFixed(1);
-
-                        // Format duration to hours and minutes
-                        // Author: Wilson Lee, https://stackoverflow.com/a/37096512
-                        const h = Math.floor(dur / 3600);
-                        const m = Math.floor((dur % 3600) / 60);
-                        const s = Math.floor((dur % 3600) % 60);
-
-                        const hDisplay =
-                            h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-                        const mDisplay =
-                            m > 0
-                                ? m + (m == 1 ? " minute, " : " minutes, ")
-                                : "";
-                        const sDisplay =
-                            s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-
-                        const time = hDisplay + mDisplay + sDisplay;
-
-                        modal.querySelector(".distance").textContent =
-                            miles + " miles (" + time + ")";
-                    } else {
-                        window.alert(
-                            "Directions request failed due to " + status
-                        );
-                    }
-                }
-            );
-        })
-        .catch((e) =>
-            console.error(
-                `Google API loader failed when importing Routes library.\n${e}`
-            )
-        );
-}
-
-/**
  * Initialize the map modal
  *
  * @param {Event} event The event that triggered the modal
@@ -236,17 +158,17 @@ function initModal(event, modal) {
     if (type !== "preview") {
         // Determine which ride was clicked and format URL for AJAX request
         var ride = event.relatedTarget.dataset.ride;
-        var rideInfo = `${window.location.origin}/rides/${ride}`;
+        var rideInfo = `${window.location.origin}/api/rides/${ride}`;
     }
 
     // Add and/or update modal button
     const modalButton = getOrCreateModalButton(modal, type);
     switch (type) {
         case "info":
-            modalButton.href = `${rideInfo}/request`;
+            modalButton.href = route("requests.create", ride);
             break;
         case "posted":
-            modalButton.href = `${window.location.origin}/myrides/delete/${ride}`;
+            modalButton.href = route("rides.destroy", ride);
             break;
         case "joined":
             modalButton.href = `${window.location.origin}/myrides/leave/${ride}`;
@@ -268,7 +190,7 @@ function initModal(event, modal) {
             },
             waypoints: [],
             description: document.getElementById("description").value,
-            start_time: document.getElementById("start-time").value, // TODO: format this OR handle html datetime differently in utils.formatDateTime()
+            start_time: document.getElementById("start-time").value,
             // TODO: add driver info
             // driver: {
             //     first_name: document.getElementById("first-name").value,
@@ -276,6 +198,7 @@ function initModal(event, modal) {
             //     email: document.getElementById("email").value,
             // }
         };
+
         populateModal(data, modal, type);
     } else {
         // AJAX request
@@ -288,6 +211,22 @@ function initModal(event, modal) {
 }
 
 function populateModal(data, modal, type) {
+    if (type === "request") {
+        // Iterate over all waypoint addresses
+        document.querySelectorAll(".address").forEach((input) => {
+            // Add the user's additional waypoints to data.waypoints
+            if (input.value) {
+                data.waypoints.push({
+                    location: input.value,
+                    stopover: true,
+                });
+            }
+        });
+    }
+
+    // Initialize map
+    initMap(data, modal);
+
     // Update the modal's content.
     modal.querySelector(".route").textContent =
         data.origin.address + " \u2192 " + data.destination.address;
@@ -299,20 +238,78 @@ function populateModal(data, modal, type) {
     const { date, time } = formatDateTime(data.start_time);
     modal.querySelector(".date").textContent = date;
     modal.querySelector(".time").textContent = time;
+}
 
-    if (type === "request") {
-        // Add the user's additional waypoints to data.waypoints
-        const waypoints = document.querySelectorAll(".waypoint");
-        waypoints.forEach((waypoint) => {
-            if (waypoint.value) {
-                data.waypoints.push({
-                    location: waypoint.value,
-                    stopover: true,
-                });
+/**
+ * Initialize the Google Maps map element
+ *
+ * @param {JSON} data Contains the route-related data: origin and destination coordinates and, optionally, waypoints
+ * @param {Element} modal Div element containing the map
+ */
+function initMap(data, modal) {
+    const origin = new google.maps.LatLng(
+        data.origin.latitude,
+        data.origin.longitude
+    );
+    const destination = new google.maps.LatLng(
+        data.destination.latitude,
+        data.destination.longitude
+    );
+
+    const myOptions = {
+        center: origin,
+        zoom: 6,
+        disableDefaultUI: true,
+    };
+
+    const map = new google.maps.Map(modal.querySelector(".map"), myOptions);
+
+    const directionsRenderer = new google.maps.DirectionsRenderer();
+    directionsRenderer.setMap(map);
+
+    console.log(data);
+    const directionsService = new google.maps.DirectionsService();
+    directionsService.route(
+        {
+            origin: origin,
+            destination: destination,
+            waypoints: data.waypoints,
+            optimizeWaypoints: true,
+            travelMode: google.maps.TravelMode.DRIVING,
+        },
+        function (result, status) {
+            if (status === "OK") {
+                directionsRenderer.setDirections(result);
+
+                // Calculate distance and duration from start to end
+                var dist = 0;
+                var dur = 0;
+                for (let i = 0; i < result.routes[0].legs.length; i++) {
+                    dist += result.routes[0].legs[i].distance.value;
+                    dur += result.routes[0].legs[i].duration.value;
+                }
+                const miles = (dist / 1609.344).toFixed(1);
+
+                // Format duration to hours and minutes
+                // Author: Wilson Lee, https://stackoverflow.com/a/37096512
+                const h = Math.floor(dur / 3600);
+                const m = Math.floor((dur % 3600) / 60);
+                const s = Math.floor((dur % 3600) % 60);
+
+                const hDisplay =
+                    h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+                const mDisplay =
+                    m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+                const sDisplay =
+                    s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+
+                const time = hDisplay + mDisplay + sDisplay;
+
+                modal.querySelector(".distance").textContent =
+                    miles + " miles (" + time + ")";
+            } else {
+                window.alert("Directions request failed due to " + status);
             }
-        });
-    }
-
-    // Initialize map
-    initMap(data, modal);
+        }
+    );
 }

@@ -1,10 +1,11 @@
 <?php
 
+use App\Models\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
-use App\Models\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,7 +54,7 @@ Route::controller(RideController::class)->middleware('auth')->prefix('rides')->n
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
     Route::post('/', 'store')->name('store'); // TODO: driver middleware? or just check in controller?
-    Route::get('/{ride}', 'show')->name('show');
+    // Route::get('/{ride}', 'show')->name('show');
     Route::get('/{ride}/edit', 'edit')->name('edit');
     Route::put('/{ride}', 'update')->name('update'); // TODO: driver middleware? or just check in controller?
     Route::delete('/{ride}', 'destroy')->name('destroy'); // TODO: driver middleware? or just check in controller?
@@ -65,16 +66,14 @@ Route::controller(RideController::class)->middleware('auth')->prefix('rides')->n
 |--------------------------------------------------------------------------
 */
 
-Route::controller(RequestController::class)->middleware('auth')->group(function () {
-    Route::get('/requests', 'index');
-    Route::get('/rides/{ride}/request', 'create');
-    Route::post('/rides/{ride}', 'store');
-    Route::get('/requests/{request}', 'show');
-    Route::put('/requests/{request}', 'update');
-    Route::delete('/requests/{request}', 'destroy');
+Route::controller(RequestController::class)->middleware('auth')->name('requests.')->group(function () {
+    Route::get('/requests', 'index')->name('index');
+    Route::get('/rides/{ride}/request', 'create')->name('create');
+    Route::post('/rides/{ride}', 'store')->name('store');
+    Route::get('/requests/{request}', 'show')->name('show');
+    Route::put('/requests/{request}', 'update')->name('update');
+    Route::delete('/requests/{request}', 'destroy')->name('destroy');
 });
-
-// Route::get('/requests/{request}', [RequestController::class, 'show'])->middleware('auth');
 
 /*
 |--------------------------------------------------------------------------

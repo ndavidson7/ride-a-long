@@ -17,8 +17,8 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('driver_id')->index('driver_id');
             $table->timestamp('start_time')->nullable();
-            $table->unsignedInteger('origin_address_id')->index('origin_address_id');
-            $table->unsignedInteger('destination_address_id')->index('destination_address_id');
+            $table->unsignedInteger('origin_id')->index('origin_id');
+            $table->unsignedInteger('destination_id')->index('destination_id');
             $table->unsignedInteger('seats_total');
             $table->string('description')->nullable();
         });

@@ -7,12 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Traits\SnakeCaseRelations;
 
 class Ride extends Model
 {
     use HasFactory;
-    use SnakeCaseRelations;
 
     /*
     |--------------------------------------------------------------------------
@@ -28,8 +26,8 @@ class Ride extends Model
     protected $fillable = [
         'driver_id',
         'start_time',
-        'origin_address_id',
-        'destination_address_id',
+        'origin_id',
+        'destination_id',
         'seats_total',
         'description'
     ];
@@ -62,14 +60,19 @@ class Ride extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function originAddress(): BelongsTo
+    public function origin(): BelongsTo
     {
         return $this->belongsTo(Address::class);
     }
 
-    public function destinationAddress(): BelongsTo
+    public function destination(): BelongsTo
     {
         return $this->belongsTo(Address::class);
+    }
+
+    public function waypoints(): HasMany
+    {
+        return $this->hasMany(Waypoint::class);
     }
 
     public function requests(): HasMany

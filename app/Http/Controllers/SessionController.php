@@ -29,7 +29,7 @@ class SessionController extends Controller
         }
 
         $request->session()->regenerate();
-        return redirect()->route('rides.index')->with('status', 'Signed in successfully!');
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Signed in successfully!']);
     }
 
     public function destroy()

@@ -21,7 +21,7 @@ class UserFactory extends Factory
             'email' => fake()->regexify('[a-z]{2,3}[1-9][a-z]{2,3}@virginia\.edu'),
             'first_name' => fake()->firstName(),
             'last_name' => fake()->lastName(),
-            'password' => fake()->word(), // should be hashed automatically
+            'password' => 'password',
             'phone' => fake()->regexify('[1-9]\d{9}'),
             // 'email_verified_at' => now(),
             // 'remember_token' => Str::random(10),
