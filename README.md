@@ -5,6 +5,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 ## :white_check_mark: TODO
 
 -   [ ] Rewrite in Laravel
+-   [ ] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
 -   [ ] Allow riders to request pickup/dropoff spots:
     -   [ ] Preview button not being disabled when both checkboxes checked and one autocomplete filled in (Array.from(checkboxes)?)
     -   [ ] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
