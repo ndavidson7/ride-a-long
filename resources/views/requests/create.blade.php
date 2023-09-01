@@ -21,7 +21,7 @@
             </div>
             <button type="submit" class="btn btn-uva-ob">Request</button>
             <button type="button" id="preview-button" class="btn btn-uva-ob" disabled="true" data-bs-toggle="modal"
-                data-bs-target="#mapModal" data-modal-type="request" data-ride="{{ $ride->id }}">Preview</button>
+                data-bs-target="#mapModal" data-ride="{{ $ride->id }}">Preview</button>
         </form>
 
         <x-modals.map :type="MapType::Request" />
