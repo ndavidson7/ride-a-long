@@ -1,6 +1,7 @@
 <x-layouts.main title="Ride listings" :$entries>
     <main class="container-fluid mt-3">
-        <form id="request-create" class="" method="post">
+        <form action="{{ route('requests.store', $ride->id) }}" id="request-create" class="" method="post">
+            @csrf
             <label class="form-label" for="pickup-checkbox">Pickup</label>
             <input type="checkbox" id="pickup-checkbox" name="pickup-checkbox">
             <div class="autocomplete" id="pickup-div">
@@ -24,6 +25,6 @@
                 data-bs-target="#mapModal" data-ride="{{ $ride->id }}">Preview</button>
         </form>
 
-        <x-modals.map :type="MapType::Request" />
+        <x-modals.map />
     </main>
 </x-layouts.main>

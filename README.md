@@ -5,7 +5,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 ## :white_check_mark: TODO
 
 -   [ ] Rewrite in Laravel
--   [ ] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
+-   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
 -   [ ] Allow riders to request pickup/dropoff spots:
     -   [ ] Preview button not being disabled when both checkboxes checked and one autocomplete filled in (Array.from(checkboxes)?)
     -   [ ] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
@@ -13,7 +13,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
         1. add a waypoint with a unique ID and an order of -1 for each spot
         2. save the ID(s) to the new ride_riders record (so we have a way to know who requested each spot)
         3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
--   [ ] Don't display request button on ride info modal for ride driver
+-   [x] Don't display request button on ride info modal for ride driver
 -   [ ] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Update .htaccess (https://stackoverflow.com/questions/23635746/htaccess-redirect-from-site-root-to-public-folder-hiding-public-in-url and https://stackoverflow.com/questions/704102/how-does-rewritebase-work-in-htaccess)

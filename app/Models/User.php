@@ -114,6 +114,11 @@ class User extends Authenticatable
         }
     }
 
+    public function getIsDriverAttribute(): bool
+    {
+        return $this->car()->exists();
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Relationships

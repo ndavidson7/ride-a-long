@@ -25,6 +25,11 @@ class RideController extends Controller
 
     public function store(Request $request)
     {
+        // Check that user is driver
+        if (!auth()->user()->is_driver) {
+            return redirect()->route('profile.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride!']);
+        }
+
         $fields = $request->validate([
             'start-time' => 'required|date|after:now',
             'seats' => 'required|numeric|min:1',
@@ -62,24 +67,35 @@ class RideController extends Controller
             'description' => $fields['description'],
         ]);
 
-        return redirect()->route('rides.index', ['status' => 'success', 'message' => 'Ride created successfully!']);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created successfully!']);
     }
 
     public function show(Ride $ride)
     {
-        // Return JSON with ride details
+        // Return JSON with relevant ride details
         return $ride->load(['driver', 'origin', 'destination', 'waypoints']);
     }
 
-    public function edit()
+    public function edit(Ride $ride)
     {
+        // TODO: Check that user is driver of ride
+
+
+        // Return view with relevant ride details
+        return view('rides.edit', [
+            'entries' => ['resources/js/google-api.js'],
+            'ride' => $ride->load(['origin', 'destination', 'waypoints', 'passengers'])
+        ]);
     }
 
     public function update()
     {
     }
 
-    public function destroy()
+    public function destroy(Ride $ride)
     {
+        $ride->delete();
+
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted successfully!']);
     }
 }

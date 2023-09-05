@@ -18,5 +18,3 @@ use App\Http\Controllers\RideController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-
-Route::get('/rides/{ride}', [RideController::class, 'show']);

@@ -183,7 +183,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        'MapType' => App\Enums\MapType::class,
     ])->toArray(),
 
 ];

@@ -46,7 +46,19 @@ class Ride extends Model
 
     public function getSeatsOpenAttribute(): int
     {
-        return $this->seats_total - $this->riders()->count();
+        return $this->seats_total - $this->passengers()->count();
+    }
+
+    public function getUserRelationAttribute(): string
+    {
+        if ($this->driver->id == auth()->id())
+            return 'driver';
+        else if ($this->requests()->where('user_id', auth()->id())->exists())
+            return 'requester';
+        else if ($this->passengers()->where('user_id', auth()->id())->exists())
+            return 'passenger';
+        else
+            return 'none';
     }
 
     /*
@@ -80,7 +92,7 @@ class Ride extends Model
         return $this->hasMany(Request::class);
     }
 
-    public function riders(): BelongsToMany
+    public function passengers(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
     }

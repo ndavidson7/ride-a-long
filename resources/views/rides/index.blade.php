@@ -23,7 +23,8 @@
                                 left!
                             </p>
                             <button type="button" class="card-link btn btn-uva-ob stretched-link"
-                                data-bs-toggle="modal" data-bs-target="#mapModal" data-ride="{{ $ride->id }}">More
+                                data-bs-toggle="modal" data-bs-target="#mapModal" data-ride="{{ $ride->id }}"
+                                data-user-relation="{{ $ride->user_relation }}">More
                                 info</button>
                         </div>
                     </div>
@@ -35,6 +36,6 @@
                 </div>
             @endforelse
         </div>
-        <x-modals.map :type="MapType::Info" />
+        <x-modals.map />
     </main>
 </x-layouts.main>

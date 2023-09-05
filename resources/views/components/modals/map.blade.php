@@ -1,5 +1,4 @@
-<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true"
-    data-type="{{ $type }}">
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true" data-ride="">
     <div class="modal-dialog modal-lg modal-fullscreen-md-down">
         <div class="modal-content">
             <div class="modal-header">
@@ -23,6 +22,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a id="modal-button" class="btn btn-primary" role="button" href="#"></a>
             </div>
         </div>
     </div>

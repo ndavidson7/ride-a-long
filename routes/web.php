@@ -54,7 +54,7 @@ Route::controller(RideController::class)->middleware('auth')->prefix('rides')->n
     Route::get('/', 'index')->name('index');
     Route::get('/create', 'create')->name('create');
     Route::post('/', 'store')->name('store'); // TODO: driver middleware? or just check in controller?
-    // Route::get('/{ride}', 'show')->name('show');
+    Route::get('/{ride}', 'show')->name('show');
     Route::get('/{ride}/edit', 'edit')->name('edit');
     Route::put('/{ride}', 'update')->name('update'); // TODO: driver middleware? or just check in controller?
     Route::delete('/{ride}', 'destroy')->name('destroy'); // TODO: driver middleware? or just check in controller?

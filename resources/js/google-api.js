@@ -1,5 +1,5 @@
 import { Loader } from "@googlemaps/js-api-loader";
-import { getOrCreateModalButton, formatDateTime } from "./utils.js";
+import { formatDateTime } from "./utils.js";
 
 /*
 |--------------------------------------------------------------------------
@@ -7,13 +7,15 @@ import { getOrCreateModalButton, formatDateTime } from "./utils.js";
 |--------------------------------------------------------------------------
 */
 
+let map, directionsService, directionsRenderer;
+
 const loader = new Loader({
     apiKey: import.meta.env.VITE_MAPS_API_KEY,
     version: "weekly",
     libraries: ["core", "maps", "places", "routes"],
 });
 
-// These will all add their respective library to the global google.maps namespace
+// These will all add their respective library to the global google.maps namespace for later use
 loader
     .importLibrary("core")
     .catch((e) =>
@@ -24,6 +26,15 @@ loader
 
 loader
     .importLibrary("maps")
+    .then(({ Map }) => {
+        const mapDiv = document.querySelector(".map");
+
+        if (!mapDiv) throw new Error("Map div not found.");
+
+        map = new Map(mapDiv, {
+            disableDefaultUI: true,
+        });
+    })
     .catch((e) =>
         console.error(
             `Google API loader failed when importing Maps library.\n${e}`
@@ -32,6 +43,11 @@ loader
 
 loader
     .importLibrary("routes")
+    .then(({ DirectionsService, DirectionsRenderer }) => {
+        directionsService = new DirectionsService();
+        directionsRenderer = new DirectionsRenderer();
+        directionsRenderer.setMap(map);
+    })
     .catch((e) =>
         console.error(
             `Google API loader failed when importing Routes library.\n${e}`
@@ -60,8 +76,8 @@ if (acElements.length > 0) {
 */
 
 const modal = document.querySelector("#mapModal");
-modal?.addEventListener("show.bs.modal", function (event) {
-    initModal(event, modal);
+modal?.addEventListener("show.bs.modal", (event) => {
+    initModal(modal, event);
 });
 
 /*
@@ -72,14 +88,18 @@ modal?.addEventListener("show.bs.modal", function (event) {
 
 function initAutocompletes(elements, autocomplete) {
     // Google Maps UVA coordinates
-    const center = { latitude: 38.03361737225505, lng: -78.50800895660305 };
+    const center = {
+        latitude: 38.03361737225505,
+        longitude: -78.50800895660305,
+    };
 
     // Bias location autocomplete results to UVA grounds/Charlottesville
+    const radius = 0.15; // degrees
     const bounds = {
-        north: center.latitude + 0.15,
-        south: center.latitude - 0.15,
-        east: center.lng + 0.15,
-        west: center.lng - 0.15,
+        north: center.latitude + radius,
+        south: center.latitude - radius,
+        east: center.longitude + radius,
+        west: center.longitude - radius,
     };
 
     // Autocomplete configuration
@@ -108,7 +128,8 @@ function initAutocompletes(elements, autocomplete) {
         // Add event listener to the Autocomplete object...
         ac.addListener("place_changed", onPlaceChanged);
         // ...as well as the input itself (for when a user unfocuses it without selecting a location)
-        placeInput.addEventListener("change", () => (placeInput.value = "")); // not invoked when a user selects a location from the autocomplete list
+        // Note: change event not triggered when a user selects a location from the autocomplete list
+        placeInput.addEventListener("change", () => (placeInput.value = ""));
 
         // Save Autocomplete object
         autocompletes.push(ac);
@@ -124,7 +145,7 @@ function onPlaceChanged() {
     if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
-        placeInput.value = "";
+        this.placeInput.value = "";
         window.alert("Please select a location from the autocomplete list"); // TODO: Add is-invalid class and an error message instead
     } else {
         this.addressInput.value = place.formatted_address;
@@ -137,107 +158,56 @@ function onPlaceChanged() {
 /**
  * Initialize the map modal
  *
+ * @param {Element} modal The modal element to be initialized
  * @param {Event} event The event that triggered the modal
- * @param {Element} modal The modal's div element (of class "modal")
  */
-function initModal(event, modal) {
-    /**
-     * A string representing the modal's type. Potential values are found in App\Enums\MapType::class and include:
-     * "info": for modals displayed on the home/ride listings page; includes the ride's details and a Request button,
-     * "preview": for modals displayed when previewing a new ride post; includes the ride's details and a Post button,
-     * "request": for modals displayed when requesting to join a ride; includes the ride's details with the user's additional waypoint(s) and a Confirm button,
-     * "posted": for modals displaying a driver's posted ride; includes the ride's details and a Delete button,
-     * "joined": for modals displaying a passenger's joined ride; includes the ride's details and a Leave button
-     * @type {string}
-     */
-    const type = modal.dataset.type;
-    if (!type) throw new Error("Modal type not specified");
-    else if (!["info", "preview", "request", "posted", "joined"].includes(type))
-        throw new Error("Invalid modal type");
+function initModal(modal, event) {
+    // Determine which ride was clicked and format URL for AJAX request
+    const ride = event.relatedTarget.dataset.ride; // relatedTarget is the clicked ride card
 
-    if (type !== "preview") {
-        // Determine which ride was clicked and format URL for AJAX request
-        var ride = event.relatedTarget.dataset.ride;
-        var rideInfo = `${window.location.origin}/api/rides/${ride}`;
-    }
+    if (modal.dataset.ride === ride) return; // the modal still contains info for this ride
+    modal.dataset.ride = ride;
 
-    // Add and/or update modal button
-    const modalButton = getOrCreateModalButton(modal, type);
-    switch (type) {
-        case "info":
-            modalButton.href = route("requests.create", ride);
-            break;
-        case "posted":
-            modalButton.href = route("rides.destroy", ride);
-            break;
-        case "joined":
-            modalButton.href = `${window.location.origin}/myrides/leave/${ride}`;
-            break;
-    }
+    // AJAX request
+    fetch(route("rides.show", ride))
+        .then((response) => response.json())
+        .then((data) => {
+            // Initialize map
+            initMap(data, modal);
 
-    if (type === "preview") {
-        const data = {
-            origin: {
-                address: document.getElementById("origin-address").value,
-                latitude: document.getElementById("origin-latitude").value,
-                longitude: document.getElementById("origin-longitude").value,
-            },
-            destination: {
-                address: document.getElementById("destination-address").value,
-                latitude: document.getElementById("destination-latitude").value,
-                longitude: document.getElementById("destination-longitude")
-                    .value,
-            },
-            waypoints: [],
-            description: document.getElementById("description").value,
-            start_time: document.getElementById("start-time").value,
-            // TODO: add driver info
-            // driver: {
-            //     first_name: document.getElementById("first-name").value,
-            //     last_name: document.getElementById("last-name").value,
-            //     email: document.getElementById("email").value,
-            // }
-        };
-
-        populateModal(data, modal, type);
-    } else {
-        // AJAX request
-        fetch(rideInfo)
-            .then((response) => response.json())
-            .then((data) => {
-                populateModal(data, modal, type);
-            });
-    }
-}
-
-function populateModal(data, modal, type) {
-    if (type === "request") {
-        // Iterate over all waypoint addresses
-        document.querySelectorAll(".address").forEach((input) => {
-            // Add the user's additional waypoints to data.waypoints
-            if (input.value) {
-                data.waypoints.push({
-                    location: input.value,
-                    stopover: true,
-                });
+            // Update the modal's content.
+            const userRelation = event.relatedTarget.dataset.userRelation;
+            const modalButton = document.getElementById("modal-button");
+            switch (userRelation) {
+                case "driver":
+                    modalButton.href = route("rides.edit", ride);
+                    modalButton.textContent = "Edit";
+                    break;
+                case "passenger":
+                    modalButton.href = "#"; //route("rideUser.destroy", ride);
+                    modalButton.textContent = "Leave";
+                    break;
+                case "requester":
+                    modalButton.href = route("requests.destroy", ride);
+                    modalButton.textContent = "Cancel";
+                    break;
+                case "none":
+                default:
+                    modalButton.href = route("requests.create", ride);
+                    modalButton.textContent = "Request";
             }
+
+            modal.querySelector(".route").textContent =
+                data.origin.address + " \u2192 " + data.destination.address;
+            modal.querySelector(".description").textContent = data.description;
+            modal.querySelector(
+                ".driver"
+            ).textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
+
+            const { date, time } = formatDateTime(data.start_time);
+            modal.querySelector(".date").textContent = date;
+            modal.querySelector(".time").textContent = time;
         });
-    }
-
-    // Initialize map
-    initMap(data, modal);
-
-    // Update the modal's content.
-    modal.querySelector(".route").textContent =
-        data.origin.address + " \u2192 " + data.destination.address;
-    modal.querySelector(".description").textContent = data.description;
-    if (type !== "preview")
-        modal.querySelector(
-            ".driver"
-        ).textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
-    const { date, time } = formatDateTime(data.start_time);
-    modal.querySelector(".date").textContent = date;
-    modal.querySelector(".time").textContent = time;
 }
 
 /**
@@ -256,19 +226,6 @@ function initMap(data, modal) {
         data.destination.longitude
     );
 
-    const myOptions = {
-        center: origin,
-        zoom: 6,
-        disableDefaultUI: true,
-    };
-
-    const map = new google.maps.Map(modal.querySelector(".map"), myOptions);
-
-    const directionsRenderer = new google.maps.DirectionsRenderer();
-    directionsRenderer.setMap(map);
-
-    console.log(data);
-    const directionsService = new google.maps.DirectionsService();
     directionsService.route(
         {
             origin: origin,
@@ -308,7 +265,7 @@ function initMap(data, modal) {
                 modal.querySelector(".distance").textContent =
                     miles + " miles (" + time + ")";
             } else {
-                window.alert("Directions request failed due to " + status);
+                window.alert("Directions request failed due to " + status); // TODO: Handle this
             }
         }
     );
