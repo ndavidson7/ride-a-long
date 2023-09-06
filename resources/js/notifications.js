@@ -1,8 +1,11 @@
 const base = window.location.origin;
 
-fetch(`${base}/notifications`)
+fetch(`${base}/requests`)
     .then((response) => response.json())
     .then((data) => {
+        console.log(data);
+        return;
+
         var notifs = [];
 
         // Assoc. array of ride IDs to arrays of rider emails, e.g., [1 => ["nid3dhu@virginia.edu"], 2 => ["nid3dhu@virginia.edu", "abc1def@virginia.edu"]]

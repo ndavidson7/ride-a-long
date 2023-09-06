@@ -39,5 +39,6 @@
             </li>
         </ul>
     </nav>
+    @vite('resources/js/notifications.js')
     {{-- <?php require 'templates/notifications.php'; ?> --}}
 </header>

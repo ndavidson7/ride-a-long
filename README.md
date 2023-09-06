@@ -16,7 +16,6 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Don't display request button on ride info modal for ride driver
 -   [ ] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
--   [ ] Update .htaccess (https://stackoverflow.com/questions/23635746/htaccess-redirect-from-site-root-to-public-folder-hiding-public-in-url and https://stackoverflow.com/questions/704102/how-does-rewritebase-work-in-htaccess)
 -   [ ] Add messaging functionality
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
 -   [ ] Cache recently fetched ride data?

@@ -30,11 +30,11 @@ class Request extends Model
 
     public function pickup(): BelongsTo
     {
-        return $this->belongsTo(Address::class); //, 'pickup_address_id');
+        return $this->belongsTo(Address::class);
     }
 
     public function dropoff(): BelongsTo
     {
-        return $this->belongsTo(Address::class); //, 'dropoff_address_id');
+        return $this->belongsTo(Address::class);
     }
 }

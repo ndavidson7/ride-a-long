@@ -3,22 +3,36 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ride;
+use App\Models\Driver;
 use App\Models\Address;
-use Illuminate\Http\Request;
+use App\Models\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request as HttpRequest;
 
 class RequestController extends Controller
 {
+    public function index()
+    {
+        $driver = Driver::find(Auth::id());
+
+        if (!$driver) {
+            // Return empty JSON
+            return response()->json([]);
+        }
+
+        $userRides = $driver->rides()->get('id');
+
+        if ($userRides->isEmpty()) {
+            // Return empty JSON
+            return response()->json([]);
+        }
+
+        return Request::with(['ride', 'user', 'pickup', 'dropoff'])->select('*')->whereIn('ride_id', $userRides)->get();
+    }
+
     public function create(Ride $ride)
     {
-        switch ($ride->user_relation) {
-            case "driver":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you are driving.']);
-            case "passenger":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you are already a passenger on.']);
-            case "requester":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you have already requested.']);
-        }
+        $this->authorizeRequest($ride);
 
         return view('requests.create', [
             'entries' => ['resources/js/request.js', 'resources/js/google-api.js'],
@@ -26,16 +40,9 @@ class RequestController extends Controller
         ]);
     }
 
-    public function store(Request $request, Ride $ride)
+    public function store(HttpRequest $request, Ride $ride)
     {
-        switch ($ride->user_relation) {
-            case "driver":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you are driving.']);
-            case "passenger":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you are already a passenger on.']);
-            case "requester":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not request a ride that you have already requested.']);
-        }
+        $this->authorizeRequest($ride);
 
         $fields = $request->validate([
             'pickup-address' => 'nullable',
@@ -63,14 +70,35 @@ class RequestController extends Controller
             ]
         )->id : null;
 
-        \App\Models\Request::create([
+        Request::create([
             'ride_id' => $ride->id,
             'user_id' => Auth::id(),
             'pickup_id' => $pickupId,
             'dropoff_id' => $dropoffId,
-            'message' => $fields['message'] ?? null
+            'message' => $fields['message']
         ]);
 
         return redirect()->route('rides.index', $ride)->with(['status' => 'success', 'message' => 'Your request has been submitted.']);
+    }
+
+    public function show(Request $request)
+    {
+        return $request->load(['ride', 'user', 'pickup', 'dropoff']);
+    }
+
+    public function update(HttpRequest $httpRequest, Request $request)
+    {
+    }
+
+    private function authorizeRequest(Ride $ride): \Illuminate\Http\RedirectResponse|null
+    {
+        switch ($ride->user_relation) {
+            case "driver":
+                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are driving this ride.']);
+            case "passenger":
+                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are already a passenger of this ride.']);
+            case "requester":
+                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You have already requested to join this ride.']);
+        }
     }
 }
