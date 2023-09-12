@@ -7,12 +7,13 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Rewrite in Laravel
 -   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
 -   [ ] Allow riders to request pickup/dropoff spots:
-    -   [ ] Preview button not being disabled when both checkboxes checked and one autocomplete filled in (Array.from(checkboxes)?)
     -   [ ] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
     -   [ ] If a rider requests a pickup and/or dropoff spot and the driver accepts:
         1. add a waypoint with a unique ID and an order of -1 for each spot
         2. save the ID(s) to the new ride_riders record (so we have a way to know who requested each spot)
         3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
+-   [ ] Search/filter on navbar
+-   [ ] Event/PubSub system for notifications? As opposed to fetching all on each page load
 -   [x] Don't display request button on ride info modal for ride driver
 -   [ ] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
@@ -26,31 +27,14 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   ES6 JavaScript
 -   MySQL
 
-## :camera: Preview
-
-### Sign in
-
-![Sign in page](https://github.com/ndavidson7/ride-a-long/blob/main/images/signin.png?raw=true)
-
-### Ride listings
-
-![Rides page](https://github.com/ndavidson7/ride-a-long/blob/main/images/rides.png?raw=true)
-
-### Ride info
-
-![Ride info modal](https://github.com/ndavidson7/ride-a-long/blob/main/images/rideinfo.png?raw=true)
-
-### New ride
-
-![New ride page](https://github.com/ndavidson7/ride-a-long/blob/main/images/newride.png?raw=true)
-
 ## Setup development environment
 
 ### Install dependencies
 
-1. Install [composer](https://getcomposer.org/) if you have not already.
-2. Install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) if you have not already.
-3. Open the repository in your terminal and run:
+1. Install PHP, Apache, and MySQL. [XAMPP](https://www.apachefriends.org/) is the easiest cross-platform solution that bundles all of these together.
+1. Install [composer](https://getcomposer.org/).
+1. Install [Node.js and npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm).
+1. Open the repository in your terminal and run:
 
     ```
     composer install
@@ -59,14 +43,35 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 ### Configure
 
-1. Create a new database.
-2. Copy `/.env.example` to `/.env` and modify it to use your new database's connection parameters.
-3. Run `php artisan migrate:fresh --seed`.
+1. Run your MySQL RDBMS (in XAMPP if you chose to use it).
+1. Create a new database (http://localhost/phpmyadmin if you are using XAMPP).
+1. Copy `.env.example` to `.env` and modify it to use your new database's connection parameters.
+1. Run `php artisan migrate:fresh --seed`.
+1. Create a new [Google Cloud Project](https://console.cloud.google.com/).
+1. Within the project, [enable the following APIs](https://console.cloud.google.com/apis/dashboard):
+    - Directions
+    - Geocoding
+    - Maps JavaScript
+    - Places
+1. [Create a new API key](https://console.cloud.google.com/apis/credentials) with the following parameters:
+    - Application restriction: Websites
+    - Website restrictions: "localhost/\*"
+    - API restrictions: The APIs enabled in the above step
+1. Copy and paste the API key into the `MAPS_API_KEY` variable in `.env`.
 
 ### Host
 
--   Optionally, install [XAMPP](https://www.apachefriends.org/) to host Ride-A-Long locally.
+If you followed the above instructions exactly, you can either host Ride-A-Long using XAMPP or Artisan's built-in development server. I would suggest Artisan, as it _just works_ (:crossed_fingers:).
 
-    -   Configure XAMPP's httpd.conf to serve files from this repository's `/public` folder however you prefer.
+1. Start your MySQL server.
+1. In separate terminals, run:
 
--   If you do not wish to use XAMPP, you can use Artisan's built-in development server with `php artisan serve`, but you will need some means of hosting a MySQL database.
+    `php artisan serve`
+
+    and
+
+    `npm run dev`
+
+The application should now be reachable at [http://localhost:8000]([http://localhost:8000]).
+
+There are a number of randomly generated users in the `users` database table. All use the highly secure password "password." My user, "nid3dhu@virginia.edu," owns a ride and the second user, "ab1cd@virginia.edu," has requested to join it. Use these to test the application, or make your own user, rides, requests, etc.

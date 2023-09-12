@@ -44,6 +44,8 @@ class Ride extends Model
     |--------------------------------------------------------------------------
     */
 
+    private $relatedModelId;
+
     public function getSeatsOpenAttribute(): int
     {
         return $this->seats_total - $this->passengers()->count();
@@ -53,12 +55,19 @@ class Ride extends Model
     {
         if ($this->driver->id == auth()->id())
             return 'driver';
-        else if ($this->requests()->where('user_id', auth()->id())->exists())
+        else if (($request = $this->requests()->where('user_id', auth()->id())->first()) != null) {
+            $this->relatedModelId = $request->id;
             return 'requester';
-        else if ($this->passengers()->where('user_id', auth()->id())->exists())
+        } else if (($rideUser = $this->passengers()->where('user_id', auth()->id())->first()) != null) {
+            $this->relatedModelId = $rideUser->pivot->id; // TODO: Ensure this is correct
             return 'passenger';
-        else
+        } else
             return 'none';
+    }
+
+    public function getRelatedModelIdAttribute(): int|null
+    {
+        return $this->relatedModelId;
     }
 
     /*

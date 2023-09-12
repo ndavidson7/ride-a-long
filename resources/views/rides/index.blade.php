@@ -1,6 +1,6 @@
 <x-layouts.main title="Ride listings" :$entries>
     <main class="container-fluid d-flex flex-column mt-3">
-        <div class="row row-cols-1 row-cols-lg-2 row-cols-xl-3 row-cols-xxl-4 g-4">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
             <div class="col">
                 <div class="card text-center h-100">
                     <div class="card-body">
@@ -24,7 +24,8 @@
                             </p>
                             <button type="button" class="card-link btn btn-uva-ob stretched-link"
                                 data-bs-toggle="modal" data-bs-target="#mapModal" data-ride="{{ $ride->id }}"
-                                data-user-relation="{{ $ride->user_relation }}">More
+                                data-user-relation="{{ $ride->user_relation }}"
+                                data-related-model-id="{{ $ride->related_model_id }}">More
                                 info</button>
                         </div>
                     </div>
@@ -36,6 +37,6 @@
                 </div>
             @endforelse
         </div>
-        <x-modals.map />
+        <x-modals.ride />
     </main>
 </x-layouts.main>

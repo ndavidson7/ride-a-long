@@ -39,6 +39,5 @@
                     data-modal-type="preview">Preview</button>
             </div>
         </form>
-        <x-modals.map />
     </main>
 </x-layouts.main>

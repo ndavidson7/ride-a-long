@@ -62,6 +62,7 @@ loader
 
 const acElements = document.querySelectorAll(".autocomplete");
 const autocompletes = [];
+const placeChanged = new Event("change");
 
 if (acElements.length > 0) {
     loader.importLibrary("places").then(({ Autocomplete }) => {
@@ -129,7 +130,14 @@ function initAutocompletes(elements, autocomplete) {
         ac.addListener("place_changed", onPlaceChanged);
         // ...as well as the input itself (for when a user unfocuses it without selecting a location)
         // Note: change event not triggered when a user selects a location from the autocomplete list
-        placeInput.addEventListener("change", () => (placeInput.value = ""));
+        placeInput.addEventListener("change", () => {
+            placeInput.value = "";
+            addressInput.value = "";
+            latitudeInput.value = "";
+            longitudeInput.value = "";
+
+            addressInput.dispatchEvent(placeChanged);
+        });
 
         // Save Autocomplete object
         autocompletes.push(ac);
@@ -146,6 +154,9 @@ function onPlaceChanged() {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
         this.placeInput.value = "";
+        this.addressInput.value = "";
+        this.latitudeInput.value = "";
+        this.longitudeInput.value = "";
         window.alert("Please select a location from the autocomplete list"); // TODO: Add is-invalid class and an error message instead
     } else {
         this.addressInput.value = place.formatted_address;
@@ -153,6 +164,8 @@ function onPlaceChanged() {
         this.latitudeInput.value = location.lat();
         this.longitudeInput.value = location.lng();
     }
+
+    this.addressInput.dispatchEvent(placeChanged);
 }
 
 /**
@@ -164,6 +177,7 @@ function onPlaceChanged() {
 function initModal(modal, event) {
     // Determine which ride was clicked and format URL for AJAX request
     const ride = event.relatedTarget.dataset.ride; // relatedTarget is the clicked ride card
+    const relatedModelId = event.relatedTarget.dataset.relatedModelId;
 
     if (modal.dataset.ride === ride) return; // the modal still contains info for this ride
     modal.dataset.ride = ride;
@@ -177,25 +191,53 @@ function initModal(modal, event) {
 
             // Update the modal's content.
             const userRelation = event.relatedTarget.dataset.userRelation;
-            const modalButton = document.getElementById("modal-button");
+            const deleteFormTemplate =
+                document.getElementById("delete-form").content;
+
+            let modalButton;
             switch (userRelation) {
                 case "driver":
+                    modalButton = document.createElement("a");
                     modalButton.href = route("rides.edit", ride);
-                    modalButton.textContent = "Edit";
+                    modalButton.classList.add("btn", "btn-primary");
+                    modalButton.textContent = "Edit Ride";
                     break;
                 case "passenger":
-                    modalButton.href = "#"; //route("rideUser.destroy", ride);
-                    modalButton.textContent = "Leave";
+                    if ("content" in document.createElement("template")) {
+                        modalButton = deleteFormTemplate.cloneNode(true);
+                        modalButton.querySelector("form").action = route(
+                            "rideUser.destroy",
+                            relatedModelId
+                        );
+                        modalButton.querySelector("button").textContent =
+                            "Leave Ride";
+                    } else {
+                        console.error("HTML template element not supported.");
+                    }
                     break;
                 case "requester":
-                    modalButton.href = route("requests.destroy", ride);
-                    modalButton.textContent = "Cancel";
+                    if ("content" in document.createElement("template")) {
+                        modalButton = deleteFormTemplate.cloneNode(true);
+                        modalButton.querySelector("form").action = route(
+                            "requests.destroy",
+                            relatedModelId
+                        );
+                        modalButton.querySelector("button").textContent =
+                            "Cancel Request";
+                    } else {
+                        console.error("HTML template element not supported.");
+                    }
                     break;
                 case "none":
                 default:
+                    modalButton = document.createElement("a");
                     modalButton.href = route("requests.create", ride);
-                    modalButton.textContent = "Request";
+                    modalButton.classList.add("btn", "btn-primary");
+                    modalButton.textContent = "Request to Join";
             }
+            document
+                .getElementById("modal-button-div")
+                .replaceChildren(modalButton);
 
             modal.querySelector(".route").textContent =
                 data.origin.address + " \u2192 " + data.destination.address;

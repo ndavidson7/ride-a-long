@@ -14,10 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('requests', function (Blueprint $table) {
-            $table->unsignedInteger('ride_id');
+            $table->increments('id');
+            $table->unsignedInteger('ride_id')->index('ride_id');
             $table->unsignedInteger('user_id')->index('user_id');
-            $table->unsignedInteger('pickup_id')->nullable()->index('pickup_id');
-            $table->unsignedInteger('dropoff_id')->nullable()->index('dropoff_id');
+            $table->unsignedInteger('pickup_id')->nullable();
+            $table->unsignedInteger('dropoff_id')->nullable();
             $table->text('message')->nullable();
             $table->boolean('response')->nullable();
             // Updated_at will show when the response was given:
@@ -25,7 +26,7 @@ return new class extends Migration
             // so they will only be updated by the drivers' responses.
             $table->timestamps();
 
-            $table->primary(['ride_id', 'user_id']);
+            $table->unique(['ride_id', 'user_id'], 'ride_user_unique');
         });
     }
 

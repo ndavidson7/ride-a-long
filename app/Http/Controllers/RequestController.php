@@ -11,28 +11,51 @@ use Illuminate\Http\Request as HttpRequest;
 
 class RequestController extends Controller
 {
-    public function index()
+    public function index(HttpRequest $request)
     {
+        // User's requests which have been responded to
+        // $responses = Request::with(['ride.driver'])->select('id', 'ride_id')->where('user_id', Auth::id())->where('response', '!=', null)->get();
+
+        // return $responses;
+
         $driver = Driver::find(Auth::id());
 
         if (!$driver) {
             // Return empty JSON
-            return response()->json([]);
+            return $request->wantsJson() ? response()->json([]) : null; // TODO: Change nulls to views
         }
 
         $userRides = $driver->rides()->get('id');
 
         if ($userRides->isEmpty()) {
             // Return empty JSON
-            return response()->json([]);
+            return $request->wantsJson() ? response()->json([]) : null;
         }
 
-        return Request::with(['ride', 'user', 'pickup', 'dropoff'])->select('*')->whereIn('ride_id', $userRides)->get();
+        // If wants JSON, return request IDs and requesting user info
+        if ($request->wantsJson()) {
+            // Need user_id to get user...
+            $collection = Request::with(['user'])->select('id', 'user_id')->whereIn('ride_id', $userRides)->where('response', null)->get();
+
+            // ...but don't want to include it in the response
+            $collection->transform(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'user' => $item->user
+                ];
+            });
+
+            return $collection;
+        }
+
+        return null;
     }
 
     public function create(Ride $ride)
     {
-        $this->authorizeRequest($ride);
+        if ($redirect = $this->authorizeRequest($ride)) {
+            return $redirect;
+        }
 
         return view('requests.create', [
             'entries' => ['resources/js/request.js', 'resources/js/google-api.js'],
@@ -42,7 +65,9 @@ class RequestController extends Controller
 
     public function store(HttpRequest $request, Ride $ride)
     {
-        $this->authorizeRequest($ride);
+        if ($redirect = $this->authorizeRequest($ride)) {
+            return $redirect;
+        }
 
         $fields = $request->validate([
             'pickup-address' => 'nullable',
@@ -83,14 +108,44 @@ class RequestController extends Controller
 
     public function show(Request $request)
     {
-        return $request->load(['ride', 'user', 'pickup', 'dropoff']);
+        return view('requests.show', [
+            'entries' => ['resources/js/google-api.js'],
+            'request' => $request->load(['ride', 'user', 'pickup', 'dropoff'])
+        ]);
     }
 
     public function update(HttpRequest $httpRequest, Request $request)
     {
+        $fields = $httpRequest->validate([
+            'response' => 'required|boolean'
+        ]);
+
+        if ($request->ride->driver_id !== Auth::id()) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to respond to this request.']);
+        }
+
+        if ($request->response !== null) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You have already responded to this request.']);
+        }
+
+        $request->response = $fields['response'];
+        $request->save();
+
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
     }
 
-    private function authorizeRequest(Ride $ride): \Illuminate\Http\RedirectResponse|null
+    public function destroy(Request $request)
+    {
+        if ($request->user_id !== Auth::id()) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to delete this request.']);
+        }
+
+        $request->delete();
+
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your request has been deleted.']);
+    }
+
+    private function authorizeRequest(Ride $ride): ?\Illuminate\Http\RedirectResponse
     {
         switch ($ride->user_relation) {
             case "driver":
@@ -100,5 +155,7 @@ class RequestController extends Controller
             case "requester":
                 return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You have already requested to join this ride.']);
         }
+
+        return null;
     }
 }
