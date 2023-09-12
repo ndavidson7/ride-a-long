@@ -1,7 +1,7 @@
 <x-layouts.main title="View request" :$entries>
     <main>
-        <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4 py-5">
-            <h2 class="text-center col-12">Request Details</h2>
+        <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4 pt-3">
+            <h2 class="text-center mb-3">Request Details</h2>
             <div class="row">
                 <x-map />
             </div>
@@ -23,14 +23,26 @@
                     <p>{{ $request->message }}</p>
                 </div>
             @endif
-            <form action="{{ route('requests.update', $request->id) }}" method="POST">
-                @method('PUT')
-                @csrf
-                <div class="d-flex justify-content-start gap-2">
-                    <button type="submit" class="btn btn-success" name="response" value="1">Accept</button>
-                    <button type="submit" class="btn btn-danger" name="response" value="0">Deny</button>
+            @if ($request->ride->user_relation === 'driver')
+                <form action="{{ route('requests.update', $request->id) }}" method="POST">
+                    @method('PUT')
+                    @csrf
+                    <div class="d-flex justify-content-start gap-2">
+                        <button type="submit" class="btn btn-success" name="response" value="1">Accept</button>
+                        <button type="submit" class="btn btn-danger" name="response" value="0">Deny</button>
+                    </div>
+                </form>
+            @elseif ($request->response !== null)
+                <div class="row mb-3">
+                    <h3>Response</h3>
+                    <p>{{ $request->response ? 'Accepted' : 'Denied' }}</p>
+                    <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
+                        @method('DELETE')
+                        @csrf
+                        <button type="submit" class="btn btn-danger">Mark as Read</button>
+                    </form>
                 </div>
-            </form>
+            @endif
         </div>
     </main>
 </x-layouts.main>

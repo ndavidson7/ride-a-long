@@ -60,15 +60,26 @@ class DatabaseSeeder extends Seeder
             'description' => 'This is a test ride.',
         ]);
 
-        // Requester
+        // Other user
 
-        $requesterId = User::create([
+        $user2Id = User::create([
             'email' => 'ab1cd@virginia.edu',
             'password' => 'password',
             'phone' => '1112223333',
             'first_name' => 'John',
             'last_name' => 'Doe',
         ])->id;
+
+        $driver2Id = Driver::create([
+            'user_id' => $user2Id,
+        ])->id;
+
+        Car::create([
+            'driver_id' => $driver2Id,
+            'license_plate' => 'XYZ789',
+            'make' => 'Honda',
+            'color' => 'White',
+        ]);
 
         $pickupId = Address::create([
             'address' => "927 Bing Ln, Charlottesville, VA 22903, USA",
@@ -84,13 +95,31 @@ class DatabaseSeeder extends Seeder
 
         Request::create([
             'ride_id' => 1,
-            'user_id' => $requesterId,
+            'user_id' => $user2Id,
             'pickup_id' => $pickupId,
             'dropoff_id' => $dropoffId,
             'message' => 'This is a test request.',
         ]);
 
-        // Other users
+        Ride::create([
+            'driver_id' => $driver2Id,
+            'start_time' => '2023-10-05 12:00:00',
+            'origin_id' => $pickupId,
+            'destination_id' => $dropoffId,
+            'seats_total' => 2,
+            'description' => 'Second test ride.',
+        ]);
+
+        // My user requesting to join other user's ride
+        Request::create([
+            'ride_id' => 2,
+            'user_id' => $userId,
+            'pickup_id' => $originId,
+            'dropoff_id' => $destinationId,
+            'message' => 'Take me with you, please.',
+        ]);
+
+        // Random users
 
         User::factory(10)->create();
     }

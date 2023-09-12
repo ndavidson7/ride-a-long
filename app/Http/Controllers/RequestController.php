@@ -14,41 +14,46 @@ class RequestController extends Controller
     public function index(HttpRequest $request)
     {
         // User's requests which have been responded to
-        // $responses = Request::with(['ride.driver'])->select('id', 'ride_id')->where('user_id', Auth::id())->where('response', '!=', null)->get();
+        $responses = Request::with(['ride.driver'])->select('id', 'ride_id', 'response', 'updated_at')->where('user_id', Auth::id())->where('response', '!=', null)->orderBy('updated_at', 'desc')->get();
 
-        // return $responses;
+        $responses->transform(function ($item) {
+            return [
+                'id' => $item->id,
+                'driver' => $item->ride->driver,
+                'response' => $item->response,
+                'updated_at' => $item->updated_at
+            ];
+        });
 
         $driver = Driver::find(Auth::id());
 
         if (!$driver) {
             // Return empty JSON
-            return $request->wantsJson() ? response()->json([]) : null; // TODO: Change nulls to views
+            return $request->wantsJson() ? $responses : null; // TODO: Change nulls to views
         }
 
         $userRides = $driver->rides()->get('id');
 
         if ($userRides->isEmpty()) {
             // Return empty JSON
-            return $request->wantsJson() ? response()->json([]) : null;
+            return $request->wantsJson() ? $responses : null;
         }
 
-        // If wants JSON, return request IDs and requesting user info
-        if ($request->wantsJson()) {
-            // Need user_id to get user...
-            $collection = Request::with(['user'])->select('id', 'user_id')->whereIn('ride_id', $userRides)->where('response', null)->get();
+        // Need user_id to get user...
+        $requests = Request::with(['user'])->select('id', 'user_id', 'updated_at')->whereIn('ride_id', $userRides)->where('response', null)->get();
 
-            // ...but don't want to include it in the response
-            $collection->transform(function ($item) {
-                return [
-                    'id' => $item->id,
-                    'user' => $item->user
-                ];
-            });
+        // ...but don't want to include it in the response
+        $requests->transform(function ($item) {
+            return [
+                'id' => $item->id,
+                'user' => $item->user,
+                'updated_at' => $item->updated_at
+            ];
+        });
 
-            return $collection;
-        }
+        $collection = $responses->concat($requests);
 
-        return null;
+        return $request->wantsJson() ? $collection : null;
     }
 
     public function create(Ride $ride)
@@ -108,9 +113,15 @@ class RequestController extends Controller
 
     public function show(Request $request)
     {
+        $request = $request->load(['ride', 'user', 'pickup', 'dropoff']);
+
+        if (!in_array($request->ride->user_relation, ["driver", "passenger", "requester"])) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to view this request.']);
+        }
+
         return view('requests.show', [
             'entries' => ['resources/js/google-api.js'],
-            'request' => $request->load(['ride', 'user', 'pickup', 'dropoff'])
+            'request' => $request
         ]);
     }
 
