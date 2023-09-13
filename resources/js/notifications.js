@@ -3,7 +3,8 @@ const base = window.location.origin;
 fetch(`${base}/requests`, { headers: { Accept: "application/json" } })
     .then((response) => response.json())
     .then((data) => {
-        if (import.meta.env.APP_DEBUG) console.log(data);
+        if (import.meta.env.VITE_APP_DEBUG)
+            console.log("Notifications data:", data);
 
         const notifs = [];
 

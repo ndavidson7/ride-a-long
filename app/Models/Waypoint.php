@@ -15,6 +15,8 @@ class Waypoint extends Model
         'order'
     ];
 
+    public $timestamps = false;
+
     public function ride()
     {
         return $this->belongsTo(Ride::class);

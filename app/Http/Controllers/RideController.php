@@ -45,7 +45,9 @@ class RideController extends Controller
     public function show(Ride $ride)
     {
         // Return JSON with relevant ride details
-        return $ride->load(['driver', 'origin', 'destination', 'waypoints']);
+        return $ride->load(['driver', 'origin', 'destination', 'passengers', 'waypoints' => function ($query) {
+            $query->orderBy('order')->with('address');
+        }]);
     }
 
     public function edit(Ride $ride)

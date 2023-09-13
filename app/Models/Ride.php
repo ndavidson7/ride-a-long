@@ -103,6 +103,6 @@ class Ride extends Model
 
     public function passengers(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
     }
 }

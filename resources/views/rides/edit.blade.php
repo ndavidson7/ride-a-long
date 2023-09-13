@@ -4,7 +4,7 @@
             <form id="ride-update" class="row" action="{{ route('rides.update', $ride) }}" method="post">
                 @method('PUT')
                 @csrf
-                <h2 class="text-center col-12">Ride Details</h2>
+                <h2 class="text-center mb-3">Ride Details</h2>
                 <div class="mb-3 col-md-6">
                     <?php date_default_timezone_set('America/New_York'); ?>
                     <label for="start-time" class="form-label">Date and Time</label>

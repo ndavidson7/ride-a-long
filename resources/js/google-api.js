@@ -259,6 +259,8 @@ function initModal(modal, event) {
  * @param {Element} modal Div element containing the map
  */
 function initMap(data, modal) {
+    if (import.meta.env.VITE_APP_DEBUG) console.log("Map data:", data);
+
     const origin = new google.maps.LatLng(
         data.origin.latitude,
         data.origin.longitude
@@ -268,11 +270,24 @@ function initMap(data, modal) {
         data.destination.longitude
     );
 
+    let waypoints = [];
+    if (data.waypoints) {
+        for (const waypoint of data.waypoints) {
+            waypoints.push({
+                location: new google.maps.LatLng(
+                    waypoint.address.latitude,
+                    waypoint.address.longitude
+                ),
+                stopover: true,
+            });
+        }
+    }
+
     directionsService.route(
         {
             origin: origin,
             destination: destination,
-            waypoints: data.waypoints,
+            waypoints: waypoints,
             optimizeWaypoints: true,
             travelMode: google.maps.TravelMode.DRIVING,
         },

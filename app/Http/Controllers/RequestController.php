@@ -142,6 +142,28 @@ class RequestController extends Controller
         $request->response = $fields['response'];
         $request->save();
 
+        // If the driver accepts the request, add the user as a passenger and their pickup and dropoff as waypoints
+        if ($fields['response']) {
+            $pickupWaypointId = $request->pickup_id
+                ? $request->ride->waypoints()->create([
+                    'address_id' => $request->pickup_id,
+                    'order' => -1 // TODO: Get optimized order from httpRequest hidden input once Google Maps works on request preview
+                ])->id
+                : null;
+
+            $dropoffWaypointId = $request->dropoff_id
+                ? $request->ride->waypoints()->create([
+                    'address_id' => $request->dropoff_id,
+                    'order' => -1 // TODO: ^
+                ])->id
+                : null;
+
+            $request->ride->passengers()->attach($request->user_id, [
+                'pickup_waypoint_id' => $pickupWaypointId,
+                'dropoff_waypoint_id' => $dropoffWaypointId
+            ]);
+        }
+
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
     }
 
