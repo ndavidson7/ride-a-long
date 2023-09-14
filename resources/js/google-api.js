@@ -7,15 +7,13 @@ import { formatDateTime } from "./utils.js";
 |--------------------------------------------------------------------------
 */
 
-let map, directionsService, directionsRenderer;
-
 const loader = new Loader({
     apiKey: import.meta.env.VITE_MAPS_API_KEY,
     version: "weekly",
     libraries: ["core", "maps", "places", "routes"],
 });
 
-// These will all add their respective library to the global google.maps namespace for later use
+// This will all add LatLng to the global google.maps namespace for later use
 loader
     .importLibrary("core")
     .catch((e) =>
@@ -24,35 +22,43 @@ loader
         )
     );
 
-loader
-    .importLibrary("maps")
-    .then(({ Map }) => {
+export async function createMap() {
+    try {
+        const { Map } = await loader.importLibrary("maps");
+
         const mapDiv = document.querySelector(".map");
+        if (!mapDiv) {
+            throw new Error("Map div not found.");
+        }
 
-        if (!mapDiv) throw new Error("Map div not found.");
-
-        map = new Map(mapDiv, {
+        return new Map(mapDiv, {
             disableDefaultUI: true,
         });
-    })
-    .catch((e) =>
+    } catch (e) {
         console.error(
             `Google API loader failed when importing Maps library.\n${e}`
-        )
-    );
+        );
+        // throw e;
+    }
+}
 
-loader
-    .importLibrary("routes")
-    .then(({ DirectionsService, DirectionsRenderer }) => {
-        directionsService = new DirectionsService();
-        directionsRenderer = new DirectionsRenderer();
+export async function createDirections(map) {
+    try {
+        const { DirectionsService, DirectionsRenderer } =
+            await loader.importLibrary("routes");
+
+        const directionsService = new DirectionsService();
+        const directionsRenderer = new DirectionsRenderer();
         directionsRenderer.setMap(map);
-    })
-    .catch((e) =>
+
+        return { directionsService, directionsRenderer };
+    } catch (e) {
         console.error(
             `Google API loader failed when importing Routes library.\n${e}`
-        )
-    );
+        );
+        // throw e;
+    }
+}
 
 /*
 |--------------------------------------------------------------------------
@@ -258,7 +264,7 @@ function initModal(modal, event) {
  * @param {JSON} data Contains the route-related data: origin and destination coordinates and, optionally, waypoints
  * @param {Element} modal Div element containing the map
  */
-function initMap(data, modal) {
+function updateMap(data, modal) {
     if (import.meta.env.VITE_APP_DEBUG) console.log("Map data:", data);
 
     const origin = new google.maps.LatLng(
