@@ -22,12 +22,11 @@ loader
         )
     );
 
-export async function createMap() {
+export async function createMap(mapDiv) {
     try {
         const { Map } = await loader.importLibrary("maps");
 
-        const mapDiv = document.querySelector(".map");
-        if (!mapDiv) {
+        if (mapDiv == null) {
             throw new Error("Map div not found.");
         }
 
@@ -42,14 +41,14 @@ export async function createMap() {
     }
 }
 
-export async function createDirections(map) {
+export async function createDirections(googleMap) {
     try {
         const { DirectionsService, DirectionsRenderer } =
             await loader.importLibrary("routes");
 
         const directionsService = new DirectionsService();
         const directionsRenderer = new DirectionsRenderer();
-        directionsRenderer.setMap(map);
+        directionsRenderer.setMap(googleMap);
 
         return { directionsService, directionsRenderer };
     } catch (e) {
@@ -256,80 +255,4 @@ function initModal(modal, event) {
             modal.querySelector(".date").textContent = date;
             modal.querySelector(".time").textContent = time;
         });
-}
-
-/**
- * Initialize the Google Maps map element
- *
- * @param {JSON} data Contains the route-related data: origin and destination coordinates and, optionally, waypoints
- * @param {Element} modal Div element containing the map
- */
-function updateMap(data, modal) {
-    if (import.meta.env.VITE_APP_DEBUG) console.log("Map data:", data);
-
-    const origin = new google.maps.LatLng(
-        data.origin.latitude,
-        data.origin.longitude
-    );
-    const destination = new google.maps.LatLng(
-        data.destination.latitude,
-        data.destination.longitude
-    );
-
-    let waypoints = [];
-    if (data.waypoints) {
-        for (const waypoint of data.waypoints) {
-            waypoints.push({
-                location: new google.maps.LatLng(
-                    waypoint.address.latitude,
-                    waypoint.address.longitude
-                ),
-                stopover: true,
-            });
-        }
-    }
-
-    directionsService.route(
-        {
-            origin: origin,
-            destination: destination,
-            waypoints: waypoints,
-            optimizeWaypoints: true,
-            travelMode: google.maps.TravelMode.DRIVING,
-        },
-        function (result, status) {
-            if (status === "OK") {
-                directionsRenderer.setDirections(result);
-
-                // Calculate distance and duration from start to end
-                var dist = 0;
-                var dur = 0;
-                for (let i = 0; i < result.routes[0].legs.length; i++) {
-                    dist += result.routes[0].legs[i].distance.value;
-                    dur += result.routes[0].legs[i].duration.value;
-                }
-                const miles = (dist / 1609.344).toFixed(1);
-
-                // Format duration to hours and minutes
-                // Author: Wilson Lee, https://stackoverflow.com/a/37096512
-                const h = Math.floor(dur / 3600);
-                const m = Math.floor((dur % 3600) / 60);
-                const s = Math.floor((dur % 3600) % 60);
-
-                const hDisplay =
-                    h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-                const mDisplay =
-                    m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-                const sDisplay =
-                    s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-
-                const time = hDisplay + mDisplay + sDisplay;
-
-                modal.querySelector(".distance").textContent =
-                    miles + " miles (" + time + ")";
-            } else {
-                window.alert("Directions request failed due to " + status); // TODO: Handle this
-            }
-        }
-    );
 }

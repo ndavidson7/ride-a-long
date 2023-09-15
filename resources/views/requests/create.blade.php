@@ -35,7 +35,6 @@
                 <div class="d-flex justify-content-start gap-2">
                     <button type="submit" class="btn btn-uva-ob">Request</button>
                     <button type="button" id="preview-button" class="btn btn-uva-ob" disabled="true"
-                        data-bs-toggle="modal" data-bs-target="#mapModal"
                         data-ride="{{ $ride->id }}">Preview</button>
                 </div>
             </div>

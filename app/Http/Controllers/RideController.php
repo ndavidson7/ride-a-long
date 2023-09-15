@@ -42,12 +42,12 @@ class RideController extends Controller
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created successfully.']);
     }
 
-    public function show(Ride $ride)
+    public function show(Request $request, Ride $ride)
     {
         // Return JSON with relevant ride details
-        return $ride->load(['driver', 'origin', 'destination', 'passengers', 'waypoints' => function ($query) {
+        return $request->wantsJson() ? $ride->load(['driver', 'origin', 'destination', 'passengers', 'waypoints' => function ($query) {
             $query->orderBy('order')->with('address');
-        }]);
+        }]) : null; // TODO: Change null to view
     }
 
     public function edit(Ride $ride)

@@ -28,10 +28,9 @@ function makeNotification(request) {
                 : "declined"
             : null;
 
-    const text =
-        "user" in request
-            ? `${request["user"].first_name} ${request["user"].last_name} requested to join your ride!`
-            : `${request["driver"].first_name} ${request["driver"].last_name} ${response} your request!`;
+    const text = response
+        ? `${request["driver"].first_name} ${request["driver"].last_name} ${response} your request!`
+        : `${request["user"].first_name} ${request["user"].last_name} requested to join your ride!`;
 
     return `<li><a class="dropdown-item" href="${route(
         "requests.show",

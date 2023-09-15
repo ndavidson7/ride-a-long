@@ -20,6 +20,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Add messaging functionality
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
 -   [ ] Cache recently fetched ride data?
+-   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages)
 
 ## :hammer_and_wrench: Built With
 
