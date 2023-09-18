@@ -1,5 +1,4 @@
 import { Loader } from "@googlemaps/js-api-loader";
-import { formatDateTime } from "./utils.js";
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +61,11 @@ export async function createDirections(googleMap) {
 /*
 |--------------------------------------------------------------------------
 | Google Places Autocomplete Initialization
+|
+| Autocomplete inputs will always accompany a map component,
+| and MapComponent is the only place this module is imported.
+| Therefore, we can immediately check for and initiliaze any
+| autocomplete inputs when this module is imported.
 |--------------------------------------------------------------------------
 */
 
@@ -74,17 +78,6 @@ if (acElements.length > 0) {
         initAutocompletes(acElements, Autocomplete);
     });
 }
-
-/*
-|--------------------------------------------------------------------------
-| Modal Initialization
-|--------------------------------------------------------------------------
-*/
-
-const modal = document.querySelector("#mapModal");
-modal?.addEventListener("show.bs.modal", (event) => {
-    initModal(modal, event);
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -171,88 +164,4 @@ function onPlaceChanged() {
     }
 
     this.addressInput.dispatchEvent(placeChanged);
-}
-
-/**
- * Initialize the map modal
- *
- * @param {Element} modal The modal element to be initialized
- * @param {Event} event The event that triggered the modal
- */
-function initModal(modal, event) {
-    // Determine which ride was clicked and format URL for AJAX request
-    const ride = event.relatedTarget.dataset.ride; // relatedTarget is the clicked ride card
-    const relatedModelId = event.relatedTarget.dataset.relatedModelId;
-
-    if (modal.dataset.ride === ride) return; // the modal still contains info for this ride
-    modal.dataset.ride = ride;
-
-    // AJAX request
-    fetch(route("rides.show", ride))
-        .then((response) => response.json())
-        .then((data) => {
-            // Initialize map
-            initMap(data, modal);
-
-            // Update the modal's content.
-            const userRelation = event.relatedTarget.dataset.userRelation;
-            const deleteFormTemplate =
-                document.getElementById("delete-form").content;
-
-            let modalButton;
-            switch (userRelation) {
-                case "driver":
-                    modalButton = document.createElement("a");
-                    modalButton.href = route("rides.edit", ride);
-                    modalButton.classList.add("btn", "btn-primary");
-                    modalButton.textContent = "Edit Ride";
-                    break;
-                case "passenger":
-                    if ("content" in document.createElement("template")) {
-                        modalButton = deleteFormTemplate.cloneNode(true);
-                        modalButton.querySelector("form").action = route(
-                            "rideUser.destroy",
-                            relatedModelId
-                        );
-                        modalButton.querySelector("button").textContent =
-                            "Leave Ride";
-                    } else {
-                        console.error("HTML template element not supported.");
-                    }
-                    break;
-                case "requester":
-                    if ("content" in document.createElement("template")) {
-                        modalButton = deleteFormTemplate.cloneNode(true);
-                        modalButton.querySelector("form").action = route(
-                            "requests.destroy",
-                            relatedModelId
-                        );
-                        modalButton.querySelector("button").textContent =
-                            "Cancel Request";
-                    } else {
-                        console.error("HTML template element not supported.");
-                    }
-                    break;
-                case "none":
-                default:
-                    modalButton = document.createElement("a");
-                    modalButton.href = route("requests.create", ride);
-                    modalButton.classList.add("btn", "btn-primary");
-                    modalButton.textContent = "Request to Join";
-            }
-            document
-                .getElementById("modal-button-div")
-                .replaceChildren(modalButton);
-
-            modal.querySelector(".route").textContent =
-                data.origin.address + " \u2192 " + data.destination.address;
-            modal.querySelector(".description").textContent = data.description;
-            modal.querySelector(
-                ".driver"
-            ).textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
-
-            const { date, time } = formatDateTime(data.start_time);
-            modal.querySelector(".date").textContent = date;
-            modal.querySelector(".time").textContent = time;
-        });
 }

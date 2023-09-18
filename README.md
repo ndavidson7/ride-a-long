@@ -19,7 +19,8 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Add messaging functionality
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
--   [ ] Cache recently fetched ride data?
+-   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
+-   [ ] If user requests pickup and dropoff that are in the opposite general direction of the ride route, Google Maps will optimize the waypoints to make the dropoff come before the pickup
 -   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages)
 
 ## :hammer_and_wrench: Built With

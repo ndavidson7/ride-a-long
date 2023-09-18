@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\RideResource;
 use App\Models\Ride;
 use App\Models\Driver;
 use App\Models\Address;
@@ -32,9 +33,9 @@ class RequestController extends Controller
             return $request->wantsJson() ? $responses : null; // TODO: Change nulls to views
         }
 
-        $userRides = $driver->rides()->get('id');
+        $userRides = $driver->rides()->pluck('id')->toArray();
 
-        if ($userRides->isEmpty()) {
+        if (empty($userRides)) {
             // Return empty JSON
             return $request->wantsJson() ? $responses : null;
         }
@@ -63,8 +64,8 @@ class RequestController extends Controller
         }
 
         return view('requests.create', [
-            'entries' => ['resources/js/request.js', 'resources/js/google-api.js'],
-            'ride' => $ride
+            'entries' => ['resources/js/views/requests/create.js'],
+            'ride' => new RideResource($ride),
         ]);
     }
 
@@ -120,7 +121,7 @@ class RequestController extends Controller
         }
 
         return view('requests.show', [
-            'entries' => ['resources/js/google-api.js'],
+            'entries' => ['resources/js/views/requests/show.js'],
             'request' => $request
         ]);
     }

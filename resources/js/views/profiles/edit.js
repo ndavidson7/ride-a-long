@@ -1,4 +1,4 @@
-import { enableFormSubmitOnInput } from "./form-enable.js";
+import { enableFormSubmitOnInput } from "@modules/form.js";
 
 const addNewButton = document.getElementById("add-new-contact");
 addNewButton.addEventListener("click", addNewContact);

@@ -12,7 +12,7 @@ class UserController extends Controller
     public function create()
     {
         return view('signup', [
-            'entries' => ['resources/js/form-enable.js']
+            'entries' => ['resources/js/form.js']
         ]);
     }
 
@@ -55,7 +55,7 @@ class UserController extends Controller
         $user = Auth::user()->load('emergencyContacts', 'car');
 
         return view('profiles.edit', [
-            'entries' => ['resources/js/form-enable.js', 'resources/js/emergency-contacts.js'],
+            'entries' => ['resources/js/views/profiles/edit.js'],
             'user' => $user,
             'car' => $user->car,
             'contacts' => $user->emergencyContacts,

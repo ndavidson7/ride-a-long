@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreOrUpdateRideRequest;
 use App\Models\Ride;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreOrUpdateRideRequest;
 
 class RideController extends Controller
 {
     public function index()
     {
         return view('rides.index', [
-            'entries' => ['resources/js/google-api.js'],
+            'entries' => ['resources/js/views/rides/index.js'],
             'rides' => Ride::with(['driver', 'origin', 'destination'])->get()
         ]);
     }
@@ -25,7 +26,7 @@ class RideController extends Controller
         }
 
         return view('rides.create', [
-            'entries' => ['resources/js/google-api.js']
+            'entries' => ['resources/js/views/rides/create.js']
         ]);
     }
 
@@ -45,9 +46,7 @@ class RideController extends Controller
     public function show(Request $request, Ride $ride)
     {
         // Return JSON with relevant ride details
-        return $request->wantsJson() ? $ride->load(['driver', 'origin', 'destination', 'passengers', 'waypoints' => function ($query) {
-            $query->orderBy('order')->with('address');
-        }]) : null; // TODO: Change null to view
+        return $request->wantsJson() ? new RideResource($ride) : null; // TODO: Change null to view
     }
 
     public function edit(Ride $ride)
@@ -58,12 +57,12 @@ class RideController extends Controller
 
         // Return view with relevant ride details
         return view('rides.edit', [
-            'entries' => ['resources/js/google-api.js'],
-            'ride' => $ride->load(['origin', 'destination', 'waypoints', 'passengers'])
+            'entries' => ['resources/js/views/rides/edit.js'],
+            'ride' => new RideResource($ride->load('passengers'))
         ]);
     }
 
-    public function update(Request $request, Ride $ride)
+    public function update(StoreOrUpdateRideRequest $request, Ride $ride)
     {
         if (Auth::user()->cannot('update', $ride)) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to update it.']);

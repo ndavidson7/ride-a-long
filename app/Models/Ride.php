@@ -32,6 +32,19 @@ class Ride extends Model
         'description'
     ];
 
+    protected $hidden = [
+        'driver_id',
+        'origin_id',
+        'destination_id',
+    ];
+
+    protected $with = [
+        'driver',
+        'origin',
+        'destination',
+        'waypoints',
+    ];
+
     protected $casts = [
         'start_time' => 'datetime',
     ];
@@ -59,7 +72,7 @@ class Ride extends Model
             $this->relatedModelId = $request->id;
             return 'requester';
         } else if (($rideUser = $this->passengers()->where('user_id', auth()->id())->first()) != null) {
-            $this->relatedModelId = $rideUser->pivot->id; // TODO: Ensure this is correct
+            $this->relatedModelId = $rideUser->pivot->id;
             return 'passenger';
         } else
             return 'none';
@@ -93,7 +106,7 @@ class Ride extends Model
 
     public function waypoints(): HasMany
     {
-        return $this->hasMany(Waypoint::class);
+        return $this->hasMany(Waypoint::class)->orderBy('order')->with('address');
     }
 
     public function requests(): HasMany

@@ -1,10 +1,13 @@
 <x-layouts.main title="View request" :$entries>
-    <main>
-        <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4 pt-3">
-            <h2 class="text-center mb-3">Request Details</h2>
+    <main class="py-4">
+        <div class="container col-sm-10 col-md-8 col-lg-6 mb-3">
+            <h2 class="text-center mb-3">Preview</h2>
             <div class="row">
                 <x-map />
             </div>
+        </div>
+        <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4">
+            <h2 class="text-center mb-3">Request Details</h2>
             @if ($request->pickup->address)
                 <div class="row mb-3">
                     <h3>Pickup address</h3>
@@ -43,6 +46,9 @@
                     </form>
                 </div>
             @endif
+            <script>
+                var request = @json($request);
+            </script>
         </div>
     </main>
 </x-layouts.main>

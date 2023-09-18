@@ -10,5 +10,4 @@
     <div class="row">
         <p><span class="description"></span> - <span class="driver"></span></p>
     </div>
-    @vite('resources/js/map.js')
 </div>

@@ -53,6 +53,7 @@ export default defineConfig({
                 __dirname,
                 "node_modules/bootstrap-icons"
             ),
+            "@modules": path.resolve(__dirname, "resources/js"),
         },
     },
 });
