@@ -59,8 +59,8 @@ class RequestController extends Controller
 
     public function create(Ride $ride)
     {
-        if ($redirect = $this->authorizeRequest($ride)) {
-            return $redirect;
+        if (Auth::user()->cannot('create', [Request::class, $ride])) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not create a request for this ride.']);
         }
 
         return view('requests.create', [
@@ -71,8 +71,8 @@ class RequestController extends Controller
 
     public function store(HttpRequest $request, Ride $ride)
     {
-        if ($redirect = $this->authorizeRequest($ride)) {
-            return $redirect;
+        if (Auth::user()->cannot('create', [Request::class, $ride])) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not create a request for this ride.']);
         }
 
         $fields = $request->validate([
@@ -116,7 +116,7 @@ class RequestController extends Controller
     {
         $request = $request->load(['ride', 'user', 'pickup', 'dropoff']);
 
-        if (!in_array($request->ride->user_relation, ["driver", "passenger", "requester"])) {
+        if (Auth::user()->cannot('show', $request)) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to view this request.']);
         }
 
@@ -128,17 +128,13 @@ class RequestController extends Controller
 
     public function update(HttpRequest $httpRequest, Request $request)
     {
+        if (Auth::user()->cannot('update', $request)) {
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not respond to this request.']);
+        }
+
         $fields = $httpRequest->validate([
             'response' => 'required|boolean'
         ]);
-
-        if ($request->ride->driver_id !== Auth::id()) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to respond to this request.']);
-        }
-
-        if ($request->response !== null) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You have already responded to this request.']);
-        }
 
         $request->response = $fields['response'];
         $request->save();
@@ -170,26 +166,12 @@ class RequestController extends Controller
 
     public function destroy(Request $request)
     {
-        if ($request->user_id !== Auth::id()) {
+        if (Auth::user()->cannot('destroy', $request)) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to delete this request.']);
         }
 
         $request->delete();
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your request has been deleted.']);
-    }
-
-    private function authorizeRequest(Ride $ride): ?\Illuminate\Http\RedirectResponse
-    {
-        switch ($ride->user_relation) {
-            case "driver":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are driving this ride.']);
-            case "passenger":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are already a passenger of this ride.']);
-            case "requester":
-                return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You have already requested to join this ride.']);
-        }
-
-        return null;
     }
 }
