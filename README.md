@@ -75,4 +75,4 @@ If you followed the above instructions exactly, you can either host Ride-A-Long 
 
 The application should now be reachable at [http://localhost:8000]([http://localhost:8000]).
 
-There are a number of randomly generated users in the `users` database table. All use the highly secure password "password." My user, "nid3dhu@virginia.edu," owns a ride and the second user, "ab1cd@virginia.edu," has requested to join it. Use these to test the application, or make your own user, rides, requests, etc.
+There are a number of randomly generated users in the `users` database table. All use the highly secure password _password_. My user, _nid3dhu@virginia.edu_, owns a ride and the second user, _ab1cd@virginia.edu_, has requested to join it. Use these to test the application, or make your own user, rides, requests, etc.
