@@ -4,14 +4,14 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 ## :white_check_mark: TODO
 
--   [ ] Rewrite in Laravel
+-   [x] Rewrite in Laravel
 -   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
 -   [ ] Allow riders to request pickup/dropoff spots:
     -   [x] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
     -   [ ] If a rider requests a pickup and/or dropoff spot and the driver accepts:
-        1. add a waypoint with a unique ID and an order of -1 for each spot
-        2. save the ID(s) to the new ride_riders record (so we have a way to know who requested each spot)
-        3. when the ride info is requested, if there are any waypoints with an order of -1, optimize the waypoints and update their order accordingly; otherwise, order by order and display without optimizations
+        1. Create a waypoint for each spot
+        1. Create a passenger with pickup and dropoff IDs if exist
+        1. Update the existing waypoints' orders according to the DirectionsResult
 -   [ ] Search/filter on navbar
 -   [ ] Event/PubSub system for notifications? As opposed to fetching all on each page load
 -   [x] Don't display request button on ride info modal for ride driver
@@ -20,8 +20,8 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Add messaging functionality
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
--   [ ] If user requests pickup and dropoff that are in the opposite general direction of the ride route, Google Maps will optimize the waypoints to make the dropoff come before the pickup
--   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages)
+-   [ ] (Bug) If user requests pickup and dropoff that are in the opposite general direction of the ride route, Google Maps will optimize the waypoints to make the dropoff come before the pickup
+-   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
 
 ## :hammer_and_wrench: Built With
 
