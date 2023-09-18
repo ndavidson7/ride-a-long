@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;

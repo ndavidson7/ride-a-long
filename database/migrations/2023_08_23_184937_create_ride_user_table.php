@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('ride_user', function (Blueprint $table) {
-            $table->unsignedInteger('ride_id');
+            $table->unsignedInteger('ride_id')->index('ride_id');
             $table->unsignedInteger('user_id')->index('user_id');
             $table->unsignedInteger('pickup_waypoint_id')->nullable()->index('pickup_waypoint_id');
             $table->unsignedInteger('dropoff_waypoint_id')->nullable()->index('dropoff_waypoint_id');
