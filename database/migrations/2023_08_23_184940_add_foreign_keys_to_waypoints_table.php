@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::table('waypoints', function (Blueprint $table) {
+            $table->foreign(['address_id'], 'waypoints_ibfk_2')->references(['id'])->on('addresses')->onDelete('CASCADE');
+            $table->foreign(['ride_id'], 'waypoints_ibfk_1')->references(['id'])->on('rides')->onDelete('CASCADE');
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::table('waypoints', function (Blueprint $table) {
+            $table->dropForeign('waypoints_ibfk_1');
+        });
+    }
+};
