@@ -12,6 +12,8 @@ Ride sharing web app designed by and for college students. Carpool with your cla
         1. Create a waypoint for each spot
         1. Create a passenger with pickup and dropoff IDs if exist
         1. Update the existing waypoints' orders according to the DirectionsResult
+-   [ ] Email verification
+-   [ ] Route for leave ride button
 -   [ ] Search/filter on navbar
 -   [ ] Event/PubSub system for notifications? As opposed to fetching all on each page load
 -   [x] Don't display request button on ride info modal for ride driver
