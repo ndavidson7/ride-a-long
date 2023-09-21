@@ -26,7 +26,7 @@ return new class extends Migration
             // so they will only be updated by the drivers' responses.
             $table->timestamps();
 
-            $table->unique(['ride_id', 'user_id'], 'ride_user_unique');
+            $table->unique(['ride_id', 'user_id']);
         });
     }
 

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\RideResource;
 use App\Models\Ride;
 use App\Models\Driver;
 use App\Models\Address;
 use App\Models\Request;
+use App\Services\RideService;
+use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request as HttpRequest;
 
@@ -126,7 +127,7 @@ class RequestController extends Controller
         ]);
     }
 
-    public function update(HttpRequest $httpRequest, Request $request)
+    public function update(HttpRequest $httpRequest, Request $request, RideService $rideService)
     {
         if (Auth::user()->cannot('update', $request)) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not respond to this request.']);
@@ -139,29 +140,13 @@ class RequestController extends Controller
         $request->response = $fields['response'];
         $request->save();
 
-        // If the driver accepts the request, add the user as a passenger and their pickup and dropoff as waypoints
-        if ($fields['response']) {
-            $pickupWaypointId = $request->pickup_id
-                ? $request->ride->waypoints()->create([
-                    'address_id' => $request->pickup_id,
-                    'order' => -1 // TODO: Get optimized order from httpRequest hidden input once Google Maps works on request preview
-                ])->id
-                : null;
-
-            $dropoffWaypointId = $request->dropoff_id
-                ? $request->ride->waypoints()->create([
-                    'address_id' => $request->dropoff_id,
-                    'order' => -1 // TODO: ^
-                ])->id
-                : null;
-
-            $request->ride->passengers()->attach($request->user_id, [
-                'pickup_waypoint_id' => $pickupWaypointId,
-                'dropoff_waypoint_id' => $dropoffWaypointId
-            ]);
+        if (!$fields['response']) {
+            return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
         }
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
+        // If the driver accepts, add the passenger
+        $rideService->addPassenger($request);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added successfully.']);
     }
 
     public function destroy(Request $request)

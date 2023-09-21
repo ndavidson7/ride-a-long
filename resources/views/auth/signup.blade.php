@@ -1,4 +1,4 @@
-<x-layouts.splash title="Sign up" :entries="$entries">
+<x-layouts.splash title="Sign up" :$entries>
     <main>
         <div class="d-flex justify-content-center">
             <div class="col-10 col-md-8 col-lg-6 col-lg-5 col-xxl-4 text-center">

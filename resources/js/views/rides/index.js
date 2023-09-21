@@ -5,8 +5,8 @@ const map = new RideModalMapComponent(document.getElementById("map-component"));
 const modal = document.querySelector("#mapModal");
 modal?.addEventListener("show.bs.modal", (event) => {
     const rideId = event.relatedTarget.dataset.ride; // relatedTarget is the clicked ride card
-    const relatedModelId = event.relatedTarget.dataset.relatedModelId;
     const userRelation = event.relatedTarget.dataset.userRelation;
+    const relatedModelId = event.relatedTarget.dataset.relatedModelId;
 
     map.update(rideId);
     updateButton(userRelation, rideId, relatedModelId);
@@ -25,10 +25,11 @@ function updateButton(userRelation, rideId, relatedModelId) {
             break;
         case "passenger":
             if ("content" in document.createElement("template")) {
+                console.log(relatedModelId);
                 modalButton = deleteFormTemplate.cloneNode(true);
                 modalButton.querySelector("form").action = route(
-                    "rideUser.destroy",
-                    relatedModelId
+                    "ride-user.destroy",
+                    [rideId, relatedModelId]
                 );
                 modalButton.querySelector("button").textContent = "Leave Ride";
             } else {

@@ -31,6 +31,8 @@ class StoreOrUpdateRideRequest extends FormRequest
             'destination-address' => 'required',
             'destination-latitude' => 'required|numeric',
             'destination-longitude' => 'required|numeric',
+            'pricing' => 'required|in:seat,mile',
+            'price_per_mile' => 'required|decimal:0,2|min:0',
             'description' => 'nullable|string',
         ];
     }

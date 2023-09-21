@@ -84,6 +84,9 @@ export class MapComponent {
     getRoute(data) {
         this.directionsService.route(data, (result, status) => {
             if (status === "OK") {
+                if (import.meta.env.VITE_APP_DEBUG)
+                    console.log("DirectionsResult:", result);
+
                 this.directionsRenderer.setDirections(result);
 
                 const { miles, time } = MapComponent.calculateDistance(result);

@@ -2,18 +2,18 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /*
     |--------------------------------------------------------------------------
@@ -145,9 +145,8 @@ class User extends Authenticatable
         return $this->belongsToMany(Ride::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
     }
 
-    public function waypoints()
-    {
-        // TODO: Get all waypoints for all rides the user joined? Or make ride ID a parameter?
-        // Use pivot table or some sort of through()?
-    }
+    // public function waypoints(): HasManyThrough
+    // {
+    //     return $this->hasManyThrough(Waypoint::class, );
+    // }
 }

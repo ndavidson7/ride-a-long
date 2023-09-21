@@ -1,4 +1,5 @@
 import { RideCreateMapComponent } from "@modules/map.js";
+import * as bootstrap from "bootstrap";
 
 const map = new RideCreateMapComponent(
     document.getElementById("map-component")
@@ -24,3 +25,11 @@ requiredInputs.forEach((input) => {
         previewButton.disabled = !allFilled;
     });
 });
+
+// Tooltips
+const tooltipTriggerList = document.querySelectorAll(
+    '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+    (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);

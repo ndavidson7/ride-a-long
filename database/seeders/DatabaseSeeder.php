@@ -57,6 +57,8 @@ class DatabaseSeeder extends Seeder
             'origin_id' => $originId,
             'destination_id' => $destinationId,
             'seats_total' => 4,
+            'detours_allowed' => true,
+            'price_per_mile' => 0.30,
             'description' => 'This is a test ride.',
         ]);
 
@@ -107,6 +109,8 @@ class DatabaseSeeder extends Seeder
             'origin_id' => $pickupId,
             'destination_id' => $dropoffId,
             'seats_total' => 2,
+            'detours_allowed' => true,
+            'price_per_mile' => 0.25,
             'description' => 'Second test ride.',
         ]);
 

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->unsignedInteger('origin_id')->index('origin_id');
             $table->unsignedInteger('destination_id')->index('destination_id');
             $table->unsignedInteger('seats_total');
+            $table->boolean('detours_allowed')->default(false);
+            $table->unsignedDecimal('price_per_mile', 4, 2);
             $table->string('description')->nullable();
         });
     }

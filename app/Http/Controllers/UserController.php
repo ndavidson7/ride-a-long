@@ -6,12 +6,13 @@ use App\Models\User;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Auth\Events\Registered;
 
 class UserController extends Controller
 {
     public function create()
     {
-        return view('signup', [
+        return view('auth.signup', [
             'entries' => ['resources/js/form.js']
         ]);
     }
@@ -33,7 +34,9 @@ class UserController extends Controller
             $fields
         );
 
-        $user = User::create($fields); // TODO: Require email verification
+        $user = User::create($fields);
+
+        event(new Registered($user));
 
         Auth::login($user);
 
@@ -82,7 +85,8 @@ class UserController extends Controller
             'car-color' => 'nullable|required_with:car-license-plate,car-make|string|alpha|max:63',
         ]);
 
-        if ($carFields) {
+        // if any are not null, all must be present
+        if ($carFields['car-license-plate']) {
             $driverId = Driver::firstOrCreate(['user_id' => Auth::user()->id])->id;
 
             // Returns default car if none

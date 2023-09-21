@@ -36,9 +36,7 @@ class RideController extends Controller
             return redirect()->route('profile.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
         }
 
-        $fields = $request->validated();
-
-        $this->storeOrUpdateRide($fields);
+        $this->storeOrUpdateRide($request);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created successfully.']);
     }
@@ -68,9 +66,7 @@ class RideController extends Controller
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to update it.']);
         }
 
-        $fields = $request->validated();
-
-        $this->storeOrUpdateRide($fields, $ride);
+        $this->storeOrUpdateRide($request, $ride);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride updated successfully!']);
     }
@@ -86,8 +82,10 @@ class RideController extends Controller
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted successfully.']);
     }
 
-    private function storeOrUpdateRide($fields, Ride $ride = null)
+    private function storeOrUpdateRide(StoreOrUpdateRideRequest $request, Ride $ride = null)
     {
+        $fields = $request->validated();
+
         $originId = Address::firstOrCreate(
             ['address' => $fields['origin-address']],
             [
@@ -104,12 +102,16 @@ class RideController extends Controller
             ]
         )->id;
 
+        $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
+
         if ($ride) {
             $ride->update([
                 'start_time' => $fields['start-time'],
                 'origin_id' => $originId,
                 'destination_id' => $destinationId,
                 'seats_total' => $fields['seats'],
+                'detours_allowed' => $request->has('detours'),
+                'price_per_mile' => $fields['price'],
                 'description' => $fields['description'],
             ]);
         } else {
@@ -119,6 +121,8 @@ class RideController extends Controller
                 'origin_id' => $originId,
                 'destination_id' => $destinationId,
                 'seats_total' => $fields['seats'],
+                'detours_allowed' => $request->has('detours'),
+                'price_per_mile' => $fields['price'],
                 'description' => $fields['description'],
             ]);
         }

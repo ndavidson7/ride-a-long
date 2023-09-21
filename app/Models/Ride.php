@@ -29,6 +29,8 @@ class Ride extends Model
         'origin_id',
         'destination_id',
         'seats_total',
+        'detours_allowed',
+        'price_per_mile',
         'description'
     ];
 
@@ -71,8 +73,8 @@ class Ride extends Model
         else if (($request = $this->requests()->where('user_id', auth()->id())->first()) != null) {
             $this->relatedModelId = $request->id;
             return 'requester';
-        } else if (($rideUser = $this->passengers()->where('user_id', auth()->id())->first()) != null) {
-            $this->relatedModelId = $rideUser->pivot->id;
+        } else if (($passenger = $this->passengers()->where('user_id', auth()->id())->first()) != null) {
+            $this->relatedModelId = $passenger->id;
             return 'passenger';
         } else
             return 'none';
