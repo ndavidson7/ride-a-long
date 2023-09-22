@@ -14,8 +14,8 @@
                 <div class="col">
                     <div class="card text-center h-100">
                         <div class="card-body">
-                            <h5 class="card-title">{{ $ride->origin->address }} &#8594;
-                                {{ $ride->destination->address }}
+                            <h5 class="card-title">{{ $ride->origin->city }}, {{ $ride->origin->state }} &#8594;
+                                {{ $ride->destination->city }}, {{ $ride->destination->state }}
                             </h5>
                             <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
                             </h6>

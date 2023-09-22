@@ -16,6 +16,9 @@ return new class extends Migration
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
             $table->string('address')->unique();
+            $table->string('city'); // ->nullable()?
+            $table->string('state'); // ->nullable()?
+            $table->string('country'); // ->nullable()?
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
         });

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->unsignedInteger('destination_id')->index('destination_id');
             $table->unsignedInteger('seats_total');
             $table->boolean('detours_allowed')->default(false);
-            $table->unsignedDecimal('price_per_mile', 4, 2);
+            $table->unsignedDecimal('price_per_mile', 4, 2)->nullable();
             $table->string('description')->nullable();
         });
     }
