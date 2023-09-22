@@ -21,6 +21,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Pagination on rides.index
 -   [ ] Preview map hidden until updated
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
+-   [ ] Profile picture upload
 -   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
 -   [x] Display button relevant to user on ride modal
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal

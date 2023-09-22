@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ride;
-use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Services\RideService;
 use App\Http\Resources\RideResource;
@@ -16,7 +15,7 @@ class RideController extends Controller
     {
         return view('rides.index', [
             'entries' => ['resources/js/views/rides/index.js'],
-            'rides' => Ride::with(['driver', 'origin', 'destination'])->get()
+            'rides' => Ride::with(['driver', 'origin', 'destination'])->paginate(7)
         ]);
     }
 
