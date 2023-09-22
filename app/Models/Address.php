@@ -11,7 +11,10 @@ class Address extends Model
 
     protected $fillable = [
         'address',
-        'latitude', // Coordinates should probably not be fillable...
+        'city',
+        'state',
+        'country',
+        'latitude',
         'longitude',
     ];
 

@@ -41,12 +41,18 @@ class DatabaseSeeder extends Seeder
 
         $originId = Address::create([
             'address' => "85 Engineer's Way, Charlottesville, VA 22903, USA",
+            'city' => 'Charlottesville',
+            'state' => 'Virginia',
+            'country' => 'United States',
             'latitude' => '38.0316188',
             'longitude' => '-78.5108459',
         ])->id;
 
         $destinationId = Address::create([
             'address' => "Blacksburg, VA 24061, USA",
+            'city' => 'Blacksburg',
+            'state' => 'Virginia',
+            'country' => 'United States',
             'latitude' => '37.2283843',
             'longitude' => '-80.4234167',
         ])->id;
@@ -58,7 +64,6 @@ class DatabaseSeeder extends Seeder
             'destination_id' => $destinationId,
             'seats_total' => 4,
             'detours_allowed' => true,
-            'price_per_mile' => 0.30,
             'description' => 'This is a test ride.',
         ]);
 
@@ -85,12 +90,18 @@ class DatabaseSeeder extends Seeder
 
         $pickupId = Address::create([
             'address' => "927 Bing Ln, Charlottesville, VA 22903, USA",
+            'city' => 'Charlottesville',
+            'state' => 'Virginia',
+            'country' => 'United States',
             'latitude' => '38.0205122',
             'longitude' => '-78.5074510'
         ])->id;
 
         $dropoffId = Address::create([
             'address' => "1204 Wertland St, Charlottesville, VA 22903, USA",
+            'city' => 'Charlottesville',
+            'state' => 'Virginia',
+            'country' => 'United States',
             'latitude' => '38.0339064',
             'longitude' => '-78.4966265'
         ])->id;
@@ -110,7 +121,6 @@ class DatabaseSeeder extends Seeder
             'destination_id' => $dropoffId,
             'seats_total' => 2,
             'detours_allowed' => true,
-            'price_per_mile' => 0.25,
             'description' => 'Second test ride.',
         ]);
 

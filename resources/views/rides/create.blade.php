@@ -23,9 +23,13 @@
                 </div>
             </div>
             <div class="mb-3 autocomplete">
+                {{-- ID needed for inputs that supply information to map.js MapComponent --}}
                 <label for="origin" class="form-label">Origin</label>
                 <input type="text" class="form-control place" id="origin" name="origin" required />
                 <input type="hidden" class="address" id="origin-address" name="origin-address" maxlength="255" />
+                <input type="hidden" class="city" name="origin-city" />
+                <input type="hidden" class="state" name="origin-state" />
+                <input type="hidden" class="country" name="origin-country" />
                 <input type="hidden" class="latitude" id="origin-latitude" name="origin-latitude" />
                 <input type="hidden" class="longitude" id="origin-longitude" name="origin-longitude" />
             </div>
@@ -34,6 +38,9 @@
                 <input type="text" class="form-control place" id="destination" name="destination" required />
                 <input type="hidden" class="address" id="destination-address" name="destination-address"
                     maxlength="255" />
+                <input type="hidden" class="city" name="destination-city" />
+                <input type="hidden" class="state" name="destination-state" />
+                <input type="hidden" class="country" name="destination-country" />
                 <input type="hidden" class="latitude" id="destination-latitude" name="destination-latitude" />
                 <input type="hidden" class="longitude" id="destination-longitude" name="destination-longitude" />
             </div>

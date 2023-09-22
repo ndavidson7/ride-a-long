@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ride;
 use App\Models\Address;
 use Illuminate\Http\Request;
+use App\Services\RideService;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrUpdateRideRequest;
@@ -30,13 +31,13 @@ class RideController extends Controller
         ]);
     }
 
-    public function store(StoreOrUpdateRideRequest $request)
+    public function store(StoreOrUpdateRideRequest $request, RideService $rideService)
     {
         if (Auth::user()->cannot('store', Ride::class)) {
             return redirect()->route('profile.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
         }
 
-        $this->storeOrUpdateRide($request);
+        $rideService->storeRide($request);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created successfully.']);
     }
@@ -60,13 +61,13 @@ class RideController extends Controller
         ]);
     }
 
-    public function update(StoreOrUpdateRideRequest $request, Ride $ride)
+    public function update(StoreOrUpdateRideRequest $request, Ride $ride, RideService $rideService)
     {
         if (Auth::user()->cannot('update', $ride)) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to update it.']);
         }
 
-        $this->storeOrUpdateRide($request, $ride);
+        $rideService->updateRide($request, $ride);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride updated successfully!']);
     }
@@ -80,51 +81,5 @@ class RideController extends Controller
         $ride->delete();
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted successfully.']);
-    }
-
-    private function storeOrUpdateRide(StoreOrUpdateRideRequest $request, Ride $ride = null)
-    {
-        $fields = $request->validated();
-
-        $originId = Address::firstOrCreate(
-            ['address' => $fields['origin-address']],
-            [
-                'latitude' => $fields['origin-latitude'],
-                'longitude' => $fields['origin-longitude']
-            ]
-        )->id;
-
-        $destinationId = Address::firstOrCreate(
-            ['address' => $fields['destination-address']],
-            [
-                'latitude' => $fields['destination-latitude'],
-                'longitude' => $fields['destination-longitude']
-            ]
-        )->id;
-
-        $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
-
-        if ($ride) {
-            $ride->update([
-                'start_time' => $fields['start-time'],
-                'origin_id' => $originId,
-                'destination_id' => $destinationId,
-                'seats_total' => $fields['seats'],
-                'detours_allowed' => $request->has('detours'),
-                'price_per_mile' => $fields['price'],
-                'description' => $fields['description'],
-            ]);
-        } else {
-            Ride::create([
-                'driver_id' => Auth::user()->id,
-                'start_time' => $fields['start-time'],
-                'origin_id' => $originId,
-                'destination_id' => $destinationId,
-                'seats_total' => $fields['seats'],
-                'detours_allowed' => $request->has('detours'),
-                'price_per_mile' => $fields['price'],
-                'description' => $fields['description'],
-            ]);
-        }
     }
 }

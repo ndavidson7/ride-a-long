@@ -78,9 +78,15 @@ class RequestController extends Controller
 
         $fields = $request->validate([
             'pickup-address' => 'nullable',
+            'pickup-city' => 'nullable|required_with:pickup-address',
+            'pickup-state' => 'nullable|required_with:pickup-address',
+            'pickup-country' => 'nullable|required_with:pickup-address',
             'pickup-latitude' => 'nullable|required_with:pickup-address|numeric',
             'pickup-longitude' => 'nullable|required_with:pickup-address|numeric',
             'dropoff-address' => 'nullable',
+            'dropoff-city' => 'nullable|required_with:dropoff-address',
+            'dropoff-state' => 'nullable|required_with:dropoff-address',
+            'dropoff-country' => 'nullable|required_with:dropoff-address',
             'dropoff-latitude' => 'nullable|required_with:dropoff-address|numeric',
             'dropoff-longitude' => 'nullable|required_with:dropoff-address|numeric',
             'message' => 'nullable|string'
@@ -89,6 +95,9 @@ class RequestController extends Controller
         $pickupId = $fields['pickup-address'] ? Address::firstOrCreate(
             ['address' => $fields['pickup-address']],
             [
+                'city' => $fields['pickup-city'],
+                'state' => $fields['pickup-state'],
+                'country' => $fields['pickup-country'],
                 'latitude' => $fields['pickup-latitude'],
                 'longitude' => $fields['pickup-longitude']
             ]
@@ -97,6 +106,9 @@ class RequestController extends Controller
         $dropoffId = $fields['dropoff-address'] ? Address::firstOrCreate(
             ['address' => $fields['dropoff-address']],
             [
+                'city' => $fields['dropoff-city'],
+                'state' => $fields['dropoff-state'],
+                'country' => $fields['dropoff-country'],
                 'latitude' => $fields['dropoff-latitude'],
                 'longitude' => $fields['dropoff-longitude']
             ]

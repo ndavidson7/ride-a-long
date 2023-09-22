@@ -105,7 +105,7 @@ function initAutocompletes(elements, autocomplete) {
     const options = {
         bounds: bounds,
         componentRestrictions: { country: "us" },
-        fields: ["formatted_address", "geometry"],
+        fields: ["formatted_address", "geometry", "address_components"],
         strictBounds: false,
         types: [],
     };
@@ -114,6 +114,9 @@ function initAutocompletes(elements, autocomplete) {
         // Get all autocomplete-related elements
         const placeInput = element.querySelector(".place");
         const addressInput = element.querySelector(".address");
+        const cityInput = element.querySelector(".city");
+        const stateInput = element.querySelector(".state");
+        const countryInput = element.querySelector(".country");
         const latitudeInput = element.querySelector(".latitude");
         const longitudeInput = element.querySelector(".longitude");
 
@@ -121,6 +124,9 @@ function initAutocompletes(elements, autocomplete) {
         const ac = new autocomplete(placeInput, options);
         ac.placeInput = placeInput;
         ac.addressInput = addressInput;
+        ac.cityInput = cityInput;
+        ac.stateInput = stateInput;
+        ac.countryInput = countryInput;
         ac.latitudeInput = latitudeInput;
         ac.longitudeInput = longitudeInput;
 
@@ -131,6 +137,9 @@ function initAutocompletes(elements, autocomplete) {
         placeInput.addEventListener("change", () => {
             placeInput.value = "";
             addressInput.value = "";
+            cityInput.value = "";
+            stateInput.value = "";
+            countryInput.value = "";
             latitudeInput.value = "";
             longitudeInput.value = "";
 
@@ -147,12 +156,22 @@ function initAutocompletes(elements, autocomplete) {
  */
 function onPlaceChanged() {
     const place = this.getPlace();
+    const addressComponents = place.address_components;
+
+    const componentMap = {
+        locality: "cityInput",
+        administrative_area_level_1: "stateInput",
+        country: "countryInput",
+    };
 
     if (!place.geometry || !place.geometry.location) {
         // User entered the name of a Place that was not suggested and
         // pressed the Enter key, or the Place Details request failed.
         this.placeInput.value = "";
         this.addressInput.value = "";
+        this.cityInput.value = "";
+        this.stateInput.value = "";
+        this.countryInput.value = "";
         this.latitudeInput.value = "";
         this.longitudeInput.value = "";
         window.alert("Please select a location from the autocomplete list"); // TODO: Add is-invalid class and an error message instead
@@ -161,6 +180,14 @@ function onPlaceChanged() {
         const location = place.geometry.location;
         this.latitudeInput.value = location.lat();
         this.longitudeInput.value = location.lng();
+
+        for (const component of addressComponents) {
+            for (const type of component.types) {
+                if (componentMap.hasOwnProperty(type)) {
+                    this[componentMap[type]].value = component.long_name;
+                }
+            }
+        }
     }
 
     this.addressInput.dispatchEvent(placeChanged);

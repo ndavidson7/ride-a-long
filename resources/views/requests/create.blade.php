@@ -15,6 +15,9 @@
                     <label class="form-label" for="pickup">Specific pickup location</label>
                     <input type="text" class="form-control place" name="pickup" id="pickup" />
                     <input type="hidden" class="address" id="pickup-address" name="pickup-address" maxlength="255" />
+                    <input type="hidden" class="city" name="pickup-city" />
+                    <input type="hidden" class="state" name="pickup-state" />
+                    <input type="hidden" class="country" name="pickup-country" />
                     <input type="hidden" class="latitude" id="pickup-latitude" name="pickup-latitude" />
                     <input type="hidden" class="longitude" id="pickup-longitude" name="pickup-longitude" />
                 </div>
@@ -22,6 +25,9 @@
                     <label class="form-label" for="dropoff">Specific dropoff location</label>
                     <input type="text" class="form-control place" name="dropoff" id="dropoff" />
                     <input type="hidden" class="address" id="dropoff-address" name="dropoff-address" maxlength="255" />
+                    <input type="hidden" class="city" name="dropoff-city" />
+                    <input type="hidden" class="state" name="dropoff-state" />
+                    <input type="hidden" class="country" name="dropoff-country" />
                     <input type="hidden" class="latitude" id="dropoff-latitude" name="dropoff-latitude" />
                     <input type="hidden" class="longitude" id="dropoff-longitude" name="dropoff-longitude" />
                 </div>
