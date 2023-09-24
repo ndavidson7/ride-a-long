@@ -8,7 +8,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
 -   [ ] Allow riders to request pickup/dropoff spots:
     -   [x] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
-    -   [ ] Use Mapbox to optimize the route because Google Directions does not support pickup and dropoff waypoints
+    -   [ ] Use Mapbox optimization API for pickup and dropoff waypoints
     -   [ ] If a rider requests a pickup and/or dropoff spot and the driver accepts:
         1. Create a waypoint for each spot
         1. Create a passenger with pickup and dropoff IDs if exist
