@@ -17,8 +17,8 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [x] Local mailer
     -   [ ] Prod mailer
 -   [x] Route for leave ride button
--   [ ] Search/filter on navbar
--   [ ] Pagination on rides.index
+-   [x] Search/filter on navbar
+-   [x] Pagination on rides.index
 -   [ ] Preview map hidden until updated
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [ ] Profile picture upload
@@ -27,6 +27,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Add messaging functionality
+-   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
 -   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Price should fluctuate with number of passengers in ride

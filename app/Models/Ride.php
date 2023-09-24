@@ -53,6 +53,27 @@ class Ride extends Model
 
     public $timestamps = false;
 
+    public function scopeFilter($query, array $filters)
+    {
+        $query->when($filters['origin-city'] ?? false, function ($query, $city) {
+            $query->whereHas('origin', function ($query) use ($city) {
+                $query->where('city', 'like', '%' . $city . '%');
+            });
+        });
+
+        $query->when($filters['destination-city'] ?? false, function ($query, $city) {
+            $query->whereHas('destination', function ($query) use ($city) {
+                $query->where('city', 'like', '%' . $city . '%');
+            });
+        });
+
+        $query->when($filters['start-date'] ?? false, function ($query, $date) {
+            $query->whereDate('start_time', '=', $date);
+        });
+
+        $query->when($filters['detours'] ?? false, fn ($query) => $query->where('detours_allowed', true));
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Mutators and Accessors

@@ -19,7 +19,7 @@ class Driver extends Model
 
     public function car(): HasOne
     {
-        return $this->hasOne(Car::class);
+        return $this->hasOne(Car::class)->withDefault();
     }
 
     public function rides(): HasMany

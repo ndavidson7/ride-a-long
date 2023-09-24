@@ -20,7 +20,7 @@ class RideFactory extends Factory
     {
         return [
             'driver_id' => Driver::inRandomOrder()->first(),
-            'start_time' => fake()->dateTimeBetween('now', '+1 year'),
+            'start_time' => fake()->dateTimeBetween('now', '+2 months'),
             'origin_id' => Address::inRandomOrder()->first(),
             'destination_id' => Address::inRandomOrder()->first(), // will sometimes be the same as origin_id lol
             'seats_total' => fake()->numberBetween(1, 7),
