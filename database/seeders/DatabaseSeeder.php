@@ -19,13 +19,13 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // My user
-
         $userId = User::create([
             'email' => 'nid3dhu@virginia.edu',
             'password' => 'password',
             'phone' => '1234567890',
             'first_name' => 'Nicholas',
             'last_name' => 'Davidson',
+            'email_verified_at' => now(),
         ])->id;
 
         $driverId = Driver::create([
@@ -68,13 +68,13 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Other user
-
         $user2Id = User::create([
             'email' => 'ab1cd@virginia.edu',
             'password' => 'password',
             'phone' => '1112223333',
             'first_name' => 'John',
             'last_name' => 'Doe',
+            'email_verified_at' => now(),
         ])->id;
 
         $driver2Id = Driver::create([
@@ -134,7 +134,9 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Random users
-
         User::factory(10)->create();
+
+        // Random rides
+        Ride::factory(20)->create();
     }
 }

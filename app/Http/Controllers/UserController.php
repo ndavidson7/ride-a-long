@@ -7,6 +7,7 @@ use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -79,23 +80,27 @@ class UserController extends Controller
             Auth::user()->update($nonEmptyUserFields);
         }
 
-        $carFields = $request->validate([
-            'car-license-plate' => 'nullable|required_with:car-make,car-color|string|alpha_num|max:7|unique:cars,license_plate',
-            'car-make' => 'nullable|required_with:car-license-plate,car-color|string|alpha|max:63',
-            'car-color' => 'nullable|required_with:car-license-plate,car-make|string|alpha|max:63',
-        ]);
+        if ($request->has(['car-license-plate', 'car-make', 'car-color'])) {
+            $driver = Driver::firstOrNew(['user_id' => Auth::user()->id]);
 
-        // if any are not null, all must be present
-        if ($carFields['car-license-plate']) {
-            $driverId = Driver::firstOrCreate(['user_id' => Auth::user()->id])->id;
+            $carFields = $request->validate([
+                'car-license-plate' => [
+                    'nullable', 'required_with:car-make,car-color', 'string', 'alpha_num', 'max:7',
+                    Rule::unique('cars', 'license_plate')->ignore($driver->id),
+                ],
+                'car-make' => 'nullable|required_with:car-license-plate,car-color|string|alpha|max:63',
+                'car-color' => 'nullable|required_with:car-license-plate,car-make|string|alpha|max:63',
+            ]);
 
             // Returns default car if none
-            $car = Auth::user()->car;
-            $car->driver_id = $driverId;
+            $car = $driver->car;
+            $car->driver_id = $driver->id;
             $car->license_plate = $carFields['car-license-plate'];
             $car->make = $carFields['car-make'];
             $car->color = $carFields['car-color'];
             $car->save();
+
+            $driver->save();
         }
 
         return redirect()->route('profile.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!']);

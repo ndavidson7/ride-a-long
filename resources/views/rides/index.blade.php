@@ -1,42 +1,64 @@
 <x-layouts.main title="Ride listings" :$entries>
-    <main class="container-fluid d-flex flex-column mt-3">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
-            <div class="col">
-                <div class="card text-center h-100">
-                    <div class="card-body">
-                        <a href="{{ route('rides.create') }}" class="stretched-link" title="Create new ride"><i
-                                class="bi bi-plus-circle-fill" title="Plus icon" aria-hidden="true"
-                                style="font-size: 5em;"></i></a>
+    <main
+        class="flex-grow-1 @if ($rides->isEmpty()) d-flex justify-content-center align-items-center @else container-fluid py-3 @endif">
+        @if ($rides->count())
+            <form action="#" method="get" class="mb-3">
+                <div class="row align-items-center">
+                    <div class="col">
+                        {{-- <label class="form-label" for="origin-city">Origin City</label> --}}
+                        <input type="text" class="form-control" name="origin-city" id="origin-city"
+                            placeholder="Origin City" value="{{ request('origin-city') }}" />
+                    </div>
+                    <div class="col">
+                        {{-- <label class="form-label" for="destination-city">Destination City</label> --}}
+                        <input type="text" class="form-control" name="destination-city" id="destination-city"
+                            placeholder="Destination City" value="{{ request('destination-city') }}" />
+                    </div>
+                    <div class="col">
+                        <?php date_default_timezone_set('America/New_York'); ?>
+                        {{-- <label class="form-label" for="start-date">Date</label> --}}
+                        <input type="date" class="form-control" name="start-date" id="start-date"
+                            placeholder="Origin City" min="{{ date('Y-m-d') }}" value="{{ request('start-date') }}" />
+                    </div>
+                    <div class="col-auto form-check">
+                        <label class="form-check-label" for="detours-checkbox"><a href="#"
+                                data-bs-toggle="tooltip"
+                                data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination">Detours</a>
+                            Allowed</label>
+                        <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours"
+                            value="1" @if (request('detours')) checked @endif />
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-uva-ob fs-5 fw-bold">Filter</button>
                     </div>
                 </div>
-            </div>
-            @forelse ($rides as $ride)
+            </form>
+            <hr class="border-2">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-3">
                 <div class="col">
                     <div class="card text-center h-100">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $ride->origin->city }}, {{ $ride->origin->state }} &#8594;
-                                {{ $ride->destination->city }}, {{ $ride->destination->state }}
-                            </h5>
-                            <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
-                            </h6>
-                            <p class="card-text"> {{ $ride->seats_open }} out of {{ $ride->seats_total }} seats
-                                left!
-                            </p>
-                            <button type="button" class="card-link btn btn-uva-ob stretched-link"
-                                data-bs-toggle="modal" data-bs-target="#mapModal" data-ride="{{ $ride->id }}"
-                                data-user-relation="{{ $ride->user_relation }}"
-                                data-related-model-id="{{ $ride->related_model_id }}">More
-                                info</button>
+                        <div class="card-body d-flex flex-column">
+                            <a href="{{ route('rides.create') }}" class="stretched-link my-auto"
+                                title="Create new ride"><i class="bi bi-plus-circle-fill" title="Plus icon"
+                                    aria-hidden="true" style="font-size: 5em;"></i></a>
                         </div>
                     </div>
                 </div>
-            @empty
-                <div class="text-center">
-                    <h3>There are no upcoming rides :(</h3>
-                    <h4>Be the first to post one!</h4>
-                </div>
-            @endforelse
-        </div>
-        <x-modals.ride />
+                @foreach ($rides as $ride)
+                    <div class="col">
+                        <x-ride-card :$ride />
+                    </div>
+                @endforeach
+            </div>
+            <div class="row">
+                {{ $rides->links() }}
+            </div>
+            <x-modals.ride />
+        @else
+            <div class="text-center">
+                <h3>There are no upcoming rides :(</h3>
+                <h4>Be the first to <a href="{{ route('rides.create') }}">post</a> one!</h4>
+            </div>
+        @endif
     </main>
 </x-layouts.main>

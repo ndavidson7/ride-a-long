@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <x-head :$title :$entries />
 
-<body class="d-flex flex-column h-100">
+<body class="d-flex flex-column min-vh-100">
 
     <x-headers.navbar />
 

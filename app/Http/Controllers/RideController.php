@@ -3,20 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ride;
-use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Services\RideService;
+use Illuminate\Support\Carbon;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RideFilterRequest;
 use App\Http\Requests\StoreOrUpdateRideRequest;
 
 class RideController extends Controller
 {
-    public function index()
+    public function index(RideFilterRequest $request)
     {
         return view('rides.index', [
             'entries' => ['resources/js/views/rides/index.js'],
-            'rides' => Ride::with(['driver', 'origin', 'destination'])->get()
+            'rides' =>
+            Ride::with(['driver', 'origin', 'destination'])
+                ->filter($request->validated())
+                ->where('start_time', '>', Carbon::now())
+                ->oldest('start_time')->paginate(7)
+                ->withQueryString()
         ]);
     }
 
