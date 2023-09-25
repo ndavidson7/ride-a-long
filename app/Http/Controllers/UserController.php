@@ -5,9 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Driver;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -74,10 +74,11 @@ class UserController extends Controller
             'bio' => 'nullable|string|max:255',
         ]);
 
-        $nonEmptyUserFields = array_filter($userFields);
+        Auth::user()->update($userFields);
 
-        if ($nonEmptyUserFields) {
-            Auth::user()->update($nonEmptyUserFields);
+        $request->validate(['pfp' => 'nullable|image|max:2048|dimensions:min_width=200,min_height=200']);
+        if ($request['pfp']) {
+            Auth::user()->updateMedia($request->file('pfp'), ['upload_preset' => env('CLOUDINARY_UPLOAD_PRESET')]);
         }
 
         if ($request->has(['car-license-plate', 'car-make', 'car-color'])) {

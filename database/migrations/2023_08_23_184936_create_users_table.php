@@ -26,7 +26,6 @@ return new class extends Migration
             $table->unsignedInteger('year')->nullable();
             $table->string('major', 63)->nullable();
             $table->string('bio')->nullable();
-            $table->binary('picture')->nullable();
         });
     }
 
