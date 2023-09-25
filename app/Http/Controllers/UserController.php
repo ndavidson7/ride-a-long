@@ -76,8 +76,12 @@ class UserController extends Controller
 
         Auth::user()->update($userFields);
 
+        if ($request->has('delete-pfp') && $request['delete-pfp']) {
+            Auth::user()->detachMedia(Auth::user()->fetchFirstMedia());
+        }
+
         $request->validate(['pfp' => 'nullable|image|max:2048|dimensions:min_width=200,min_height=200']);
-        if ($request['pfp']) {
+        if ($request->hasFile('pfp')) {
             Auth::user()->updateMedia($request->file('pfp'), ['upload_preset' => env('CLOUDINARY_UPLOAD_PRESET')]);
         }
 

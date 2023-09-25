@@ -1,12 +1,26 @@
 import { enableFormSubmitOnInput } from "@modules/form.js";
 
+const pfpLabel = document.getElementById("pfp-label");
 const pfpField = document.getElementById("pfp");
+const pfpInvalidFeedback = document.getElementById("pfp-invalid-feedback");
+const deletePfpButton = document.getElementById("delete-pfp-button");
+const deletePfpInput = document.getElementById("delete-pfp");
 
 pfpField.onchange = function () {
     if (this.files[0].size > 2097152) {
-        alert("File is too big!");
+        this.classList.add("is-invalid");
+        pfpInvalidFeedback.innerText = "File size too large.";
         this.value = "";
+    } else {
+        this.classList.remove("is-invalid");
+        pfpInvalidFeedback.innerText = "";
     }
+};
+
+deletePfpButton.onclick = function () {
+    deletePfpInput.value = "1";
+    deletePfpInput.dispatchEvent(new Event("change"));
+    pfpLabel.innerHTML = `<i class="bi bi-person-circle" style="font-size: 200px"></i>`;
 };
 
 // const addNewButton = document.getElementById("add-new-contact");
