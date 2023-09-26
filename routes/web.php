@@ -74,15 +74,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 |--------------------------------------------------------------------------
 */
 
-Route::controller(RideController::class)->middleware(['auth', 'verified'])->prefix('rides')->name('rides.')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::get('/create', 'create')->name('create');
-    Route::post('/', 'store')->name('store'); // TODO: driver middleware? or just check in controller?
-    Route::get('/{ride}', 'show')->name('show');
-    Route::get('/{ride}/edit', 'edit')->name('edit');
-    Route::put('/{ride}', 'update')->name('update'); // TODO: driver middleware? or just check in controller?
-    Route::delete('/{ride}', 'destroy')->name('destroy'); // TODO: driver middleware? or just check in controller?
-});
+Route::resource('rides', RideController::class)->middleware(['auth', 'verified']);
 
 /*
 |--------------------------------------------------------------------------
