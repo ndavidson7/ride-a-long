@@ -1,9 +1,18 @@
-export function formatDateTime(datetime) {
-    // This commented-out code is for MySQL datetime format, but Laravel can cast to HTML datetime format
-    // const dateTimeParts = datetime.split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
-    // dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
-    // const d = new Date(...dateTimeParts); // our Date object
-    const d = new Date(datetime);
+/**
+ *
+ * @param {Date} datetime HTML datetime-local input value or MySQL datetime value
+ * @param {*} mysql Whether the datetime value is a MySQL datetime value
+ * @returns {Array} [date, time] where date is a string in the format "Month Day, Year" and time is a string in the format "hh:mm AM/PM"
+ */
+export function formatDateTime(datetime, mysql = false) {
+    let d;
+    if (mysql) {
+        const dateTimeParts = datetime.split(/[- :]/); // regular expression split that creates array with: year, month, day, hour, minutes, seconds values
+        dateTimeParts[1]--; // monthIndex begins with 0 for January and ends with 11 for December so we need to decrement by one
+        d = new Date(...dateTimeParts); // our Date object
+    } else {
+        d = new Date(datetime);
+    }
     const month = [
         "January",
         "February",
@@ -26,7 +35,7 @@ export function formatDateTime(datetime) {
         hour12: true,
         timeZone: "America/New_York",
     });
-    return { date, time };
+    return [date, time];
 }
 
 export function docReady(fn) {

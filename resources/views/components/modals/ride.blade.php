@@ -1,4 +1,4 @@
-<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true" data-ride="">
+<div class="modal fade" id="mapModal" tabindex="-1" aria-labelledby="mapModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-fullscreen-md-down">
         <div class="modal-content">
             <div class="modal-header">

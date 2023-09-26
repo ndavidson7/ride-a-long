@@ -9,7 +9,6 @@ export class MapComponent {
             );
         }
 
-        this.routeDirections = component.querySelector("#route-directions");
         this.route = component.querySelector(".route");
         this.distance = component.querySelector(".distance");
         this.date = component.querySelector(".date");
@@ -40,12 +39,9 @@ export class MapComponent {
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("MapComponent routeData:", routeData);
 
-        const routeResult = await this.getRoute(routeData);
+        this.getRoute(routeData);
 
-        if (import.meta.env.VITE_APP_DEBUG)
-            console.log("DirectionsResult:", routeResult);
-
-        this.renderData(data, routeResult);
+        this.renderData(data);
     }
 
     getData() {
@@ -85,52 +81,28 @@ export class MapComponent {
         };
     }
 
-    async getRoute(data) {
-        return this.directionsService.route(data, (result, status) => {
-            if (status !== "OK") {
-                throw new Error("Directions request failed due to " + status);
+    getRoute(data) {
+        this.directionsService.route(data, (result, status) => {
+            if (status === "OK") {
+                if (import.meta.env.VITE_APP_DEBUG)
+                    console.log("DirectionsResult:", result);
+
+                this.directionsRenderer.setDirections(result);
+
+                const { miles, time } = MapComponent.calculateDistance(result);
+
+                this.distance.textContent = miles + " miles (" + time + ")";
+            } else {
+                window.alert("Directions request failed due to " + status); // TODO: Handle this
             }
-
-            this.directionsRenderer.setDirections(result);
-
-            return result;
         });
     }
 
-    renderData(data, routeResult) {
-        const itinerary = [
-            data.origin,
-            ...data.waypoints?.map((waypoint) => waypoint.address),
-            data.destination,
-        ];
+    renderData(data) {
+        this.route.textContent =
+            data.origin.address + " \u2192 " + data.destination.address;
 
-        this.routeDirections.href =
-            MapComponent.constructDirectionsUrl(itinerary);
-
-        const liTemplate = document.getElementById("li-template");
-        const routeChildren = [];
-        itinerary.forEach((item, index) => {
-            const li = liTemplate.content.cloneNode(true);
-
-            const addressDirections = li.querySelector("#address-directions");
-            addressDirections.textContent = item.address;
-            addressDirections.href = MapComponent.constructDirectionsUrl(item);
-
-            const detail = li.querySelector("#detail");
-            if (index === 0) detail.textContent = "Origin";
-            else if (index === itinerary.length - 1)
-                detail.textContent = "Destination";
-            else detail.textContent = `Waypoint ${index}`; //"Pickup/Dropoff person's name"
-
-            routeChildren.push(li);
-        });
-        this.route.replaceChildren(...routeChildren);
-
-        const [miles, duration] =
-            MapComponent.calculateTotalDistance(routeResult);
-        this.distance.textContent = miles + " miles (" + duration + ")";
-
-        const [date, time] = formatDateTime(data.start_time);
+        const { date, time } = formatDateTime(data.start_time);
         this.date.textContent = date;
         this.time.textContent = time;
 
@@ -155,7 +127,7 @@ export class MapComponent {
             });
     }
 
-    static calculateTotalDistance(routeResult) {
+    static calculateDistance(routeResult) {
         // Calculate distance and duration from start to end
         let dist = 0;
         let dur = 0;
@@ -175,49 +147,9 @@ export class MapComponent {
         const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
         const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
 
-        const duration = hDisplay + mDisplay + sDisplay;
+        const time = hDisplay + mDisplay + sDisplay;
 
-        return [miles, duration];
-    }
-
-    static constructDirectionsUrl(addresses) {
-        const apple = navigator.userAgent.includes("Mac OS");
-
-        if (Array.isArray(addresses)) {
-            return apple
-                ? `maps://https://maps.apple.com/?dirflg=d&saddr=${
-                      addresses[0].latitude
-                  }%2C${addresses[0].longitude}&daddr=${addresses
-                      .flatMap((address, index) =>
-                          index > 0
-                              ? `${address.latitude}%2C${address.longitude}`
-                              : []
-                      )
-                      .join("&daddr=")}`
-                : `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
-                      addresses[0].latitude
-                  }%2C${addresses[0].longitude}&destination=${
-                      addresses[addresses.length - 1].latitude
-                  }%2C${addresses[addresses.length - 1].longitude}&waypoints=${
-                      addresses.length > 2
-                          ? addresses
-                                .flatMap((address, index) =>
-                                    index > 0 && index < addresses.length - 1
-                                        ? `${address.latitude}%2C${address.longitude}`
-                                        : []
-                                )
-                                .join("%7C")
-                          : ""
-                  }`;
-        } else if (typeof addresses === "object") {
-            return apple
-                ? `maps://https://maps.apple.com/?q=${addresses.latitude}%2C${addresses.longitude}`
-                : `https://www.google.com/maps/search/?api=1&query=${addresses.latitude}%2C${addresses.longitude}`;
-        } else {
-            throw new TypeError(
-                "MapComponent.constructDirectionsUrl() requires an object or array of objects."
-            );
-        }
+        return { miles, time };
     }
 }
 
@@ -233,7 +165,7 @@ export class RideModalMapComponent extends MapComponent {
         super.update();
     }
 
-    async getData() {
+    getData() {
         return MapComponent.fetchData(this.rideId);
     }
 }

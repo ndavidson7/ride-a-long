@@ -25,19 +25,19 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
 -   [x] Display button relevant to user on ride modal
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
--   [ ] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
+-   [x] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Add messaging functionality
+-   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
+-   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
+-   [ ] Make PFP upload async and display loading symbol on new PFP until notified upload finished
+-   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
+-   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Fix emergency contacts JavaScript
     -   [ ] Account for already existing emergency contacts
     -   [ ] Use template to insert correct HTML? Also insert in correct place
--   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
--   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
--   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
--   [ ] Price should fluctuate with number of passengers in ride
--   [ ] Make PFP upload async and display loading symbol on new PFP until notified upload finished
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
--   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
 -   [ ] Rides index on large map, show routes when filter applied
+-   [ ] Pricing model
 
 ## :hammer_and_wrench: Built With
 
