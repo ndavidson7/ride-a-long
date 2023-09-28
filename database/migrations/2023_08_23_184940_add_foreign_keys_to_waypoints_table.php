@@ -16,6 +16,8 @@ return new class extends Migration
         Schema::table('waypoints', function (Blueprint $table) {
             $table->foreign(['address_id'], 'waypoints_ibfk_2')->references(['id'])->on('addresses')->onDelete('CASCADE');
             $table->foreign(['ride_id'], 'waypoints_ibfk_1')->references(['id'])->on('rides')->onDelete('CASCADE');
+            $table->foreign(['before'], 'waypoints_ibfk_3')->references(['id'])->on('waypoints')->onDelete('CASCADE');
+            $table->foreign(['after'], 'waypoints_ibfk_4')->references(['id'])->on('waypoints')->onDelete('CASCADE');
         });
     }
 
@@ -28,6 +30,9 @@ return new class extends Migration
     {
         Schema::table('waypoints', function (Blueprint $table) {
             $table->dropForeign('waypoints_ibfk_1');
+            $table->dropForeign('waypoints_ibfk_2');
+            $table->dropForeign('waypoints_ibfk_3');
+            $table->dropForeign('waypoints_ibfk_4');
         });
     }
 };

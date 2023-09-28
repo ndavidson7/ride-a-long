@@ -6,6 +6,7 @@ const map = new RequestCreateMapComponent(
 
 const previewButton = document.getElementById("preview-button");
 previewButton.addEventListener("click", () => {
+    previewButton.disabled = true;
     map.update();
 });
 

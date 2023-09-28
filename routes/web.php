@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RideUserController;
+use App\Http\Controllers\RoutePlannerController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
@@ -100,6 +101,16 @@ Route::controller(RequestController::class)->middleware(['auth', 'verified'])->n
 Route::controller(RideUserController::class)->middleware(['auth', 'verified'])->name('ride-user.')->group(function () {
     Route::post('/rides/{ride}/users', 'store')->name('store');
     Route::delete('/rides/{ride}/users/{user}', 'destroy')->name('destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| RoutePlannerController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'])->group(function () {
+    Route::post('/optimize', 'optimize')->name('route.optimize');
 });
 
 /*

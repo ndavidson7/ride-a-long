@@ -31,14 +31,14 @@ class RequestController extends Controller
 
         if (!$driver) {
             // Return empty JSON
-            return $request->wantsJson() ? $responses : null; // TODO: Change nulls to views
+            return $request->expectsJson() ? $responses : null; // TODO: Change nulls to views
         }
 
         $userRides = $driver->rides()->pluck('id')->toArray();
 
         if (empty($userRides)) {
             // Return empty JSON
-            return $request->wantsJson() ? $responses : null;
+            return $request->expectsJson() ? $responses : null;
         }
 
         // Need user_id to get user...
@@ -55,7 +55,7 @@ class RequestController extends Controller
 
         $collection = $responses->concat($requests);
 
-        return $request->wantsJson() ? $collection : null;
+        return $request->expectsJson() ? $collection : null;
     }
 
     public function create(Ride $ride)

@@ -51,7 +51,7 @@ class RideController extends Controller
     public function show(Request $request, Ride $ride)
     {
         // Return JSON with relevant ride details
-        return $request->wantsJson() ? new RideResource($ride) : null; // TODO: Change null to view
+        return $request->expectsJson() ? new RideResource($ride) : null; // TODO: Change null to view
     }
 
     public function edit(Ride $ride)

@@ -32,18 +32,15 @@ export class MapComponent {
     async update() {
         const data = await this.getData();
 
-        if (import.meta.env.VITE_APP_DEBUG)
-            console.log("MapComponent data:", data);
-
         const routeData = this.formatData(data);
-
-        if (import.meta.env.VITE_APP_DEBUG)
-            console.log("MapComponent routeData:", routeData);
 
         const routeResult = await this.getRoute(routeData);
 
-        if (import.meta.env.VITE_APP_DEBUG)
+        if (import.meta.env.VITE_APP_DEBUG) {
+            console.log("MapComponent data:", data);
+            console.log("MapComponent routeData:", routeData);
             console.log("DirectionsResult:", routeResult);
+        }
 
         this.renderData(data, routeResult);
     }
@@ -153,6 +150,41 @@ export class MapComponent {
             .then((data) => {
                 return data;
             });
+    }
+
+    static async optimizeWaypoints(data, pickup, dropoff) {
+        let response;
+        try {
+            response = await fetch(route("route.optimize"), {
+                headers: {
+                    Accept: "application/json",
+                    "X-CSRF-Token": document.querySelector(
+                        'input[name="_token"]'
+                    ).value,
+                },
+                method: "POST",
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    route: [data.origin, ...data.waypoints, data.destination],
+                    pickup: pickup,
+                    dropoff: dropoff,
+                }),
+            });
+        } catch (error) {
+            alert(
+                "Error optimizing route. Try different pickup and/or dropoff locations, or try again later."
+            );
+            throw error;
+        }
+
+        response = await response.json();
+
+        if (response["error"]) {
+            alert(`Error optimizing route. ${response["content"]}}`);
+            throw new Error(response["content"]);
+        }
+
+        return response["content"];
     }
 
     static calculateTotalDistance(routeResult) {
@@ -284,70 +316,70 @@ export class RequestCreateMapComponent extends MapComponent {
         super.update();
     }
 
-    getData() {
+    async getData() {
         // Ride will be defined in a script tag in the Blade view
         // Deep copy to avoid saving old pickup/dropoff in event that user removes or changes one or both
         const data = JSON.parse(JSON.stringify(ride)); // TODO: Probably not the most efficient way to do this. Maybe destructure?
 
+        let pickup;
+        const pickupAddress = document.getElementById("pickup-address");
         const pickupLatitude = document.getElementById("pickup-latitude");
         const pickupLongitude = document.getElementById("pickup-longitude");
         if (
-            pickupLatitude &&
-            pickupLatitude.value &&
-            pickupLongitude &&
-            pickupLongitude.value
+            pickupAddress?.value &&
+            pickupLatitude?.value &&
+            pickupLongitude?.value
         ) {
-            data.pickup = {
-                latitude: pickupLatitude.value,
-                longitude: pickupLongitude.value,
+            pickup = data.waypoints.find(
+                (waypoint) => waypoint.address.address === pickupAddress.value
+            ) ?? {
+                id: -2, // arbitrarily negative so as to not collide with an existing waypoint
+                address: {
+                    address: pickupAddress.value,
+                    latitude: pickupLatitude.value,
+                    longitude: pickupLongitude.value,
+                },
             };
         }
 
+        let dropoff;
+        const dropoffAddress = document.getElementById("dropoff-address");
         const dropoffLatitude = document.getElementById("dropoff-latitude");
         const dropoffLongitude = document.getElementById("dropoff-longitude");
         if (
-            dropoffLatitude &&
-            dropoffLatitude.value &&
-            dropoffLongitude &&
-            dropoffLongitude.value
+            dropoffAddress?.value &&
+            dropoffLatitude?.value &&
+            dropoffLongitude?.value
         ) {
-            data.dropoff = {
-                latitude: dropoffLatitude.value,
-                longitude: dropoffLongitude.value,
+            dropoff = data.waypoints.find(
+                (waypoint) => waypoint.address.address === dropoffAddress.value
+            ) ?? {
+                id: -1, // arbitrarily negative so as to not collide with an existing waypoint
+                address: {
+                    address: dropoffAddress.value,
+                    latitude: dropoffLatitude.value,
+                    longitude: dropoffLongitude.value,
+                },
             };
         }
 
+        if (!pickup && !dropoff) return data; // neither pickup nor dropoff
+        else if (
+            ((pickup && !dropoff) || (!pickup && dropoff)) &&
+            !data.waypoints.length
+        ) {
+            // only pickup or only dropoff and no other waypoints
+            data.waypoints.push(pickup ?? dropoff);
+            return data;
+        }
+
+        data.waypoints = await MapComponent.optimizeWaypoints(
+            data,
+            pickup,
+            dropoff
+        );
+
         return data;
-    }
-
-    formatData(data) {
-        const routeData = super.formatData(data);
-
-        // Add pickup and dropoff waypoints to data and optimize route if they exist
-        routeData.optimizeWaypoints =
-            data.pickup != null || data.dropoff != null;
-
-        if (data.pickup) {
-            routeData.waypoints.push({
-                location: new google.maps.LatLng(
-                    data.pickup.latitude,
-                    data.pickup.longitude
-                ),
-                stopover: true,
-            });
-        }
-
-        if (data.dropoff) {
-            routeData.waypoints.push({
-                location: new google.maps.LatLng(
-                    data.dropoff.latitude,
-                    data.dropoff.longitude
-                ),
-                stopover: true,
-            });
-        }
-
-        return routeData;
     }
 }
 

@@ -12,7 +12,9 @@ class Waypoint extends Model
     protected $fillable = [
         'ride_id',
         'address_id',
-        'order'
+        'order',
+        'before',
+        'after',
     ];
 
     public $timestamps = false;

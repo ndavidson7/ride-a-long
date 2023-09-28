@@ -82,7 +82,7 @@ class UserController extends Controller
 
         $request->validate(['pfp' => 'nullable|image|max:2048|dimensions:min_width=200,min_height=200']);
         if ($request->hasFile('pfp')) {
-            Auth::user()->updateMedia($request->file('pfp'), ['upload_preset' => env('CLOUDINARY_UPLOAD_PRESET')]);
+            Auth::user()->updateMedia($request->file('pfp'), ['upload_preset' => config('cloudinary.upload_preset')]);
         }
 
         if ($request->has(['car-license-plate', 'car-make', 'car-color'])) {

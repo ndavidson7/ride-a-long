@@ -18,6 +18,8 @@ return new class extends Migration
             $table->unsignedInteger('ride_id');
             $table->unsignedInteger('address_id');
             $table->tinyInteger('order');
+            $table->unsignedInteger('before')->nullable();
+            $table->unsignedInteger('after')->nullable();
 
             $table->unique(['ride_id', 'address_id']);
             $table->index(['ride_id', 'order'], 'ordering');
