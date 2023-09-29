@@ -8,16 +8,24 @@
         </div>
         <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4">
             <h2 class="text-center mb-3">Request Details</h2>
-            @if ($request->pickup)
+            @if ($request->ride->detours_allowed)
+                <h3>Pickup address</h3>
                 <div class="row mb-3">
-                    <h3>Pickup address</h3>
-                    <p>{{ $request->pickup->address }}</p>
+                    @if ($request->pickup)
+                        <p>{{ $request->pickup->address }}</p>
+                    @else
+                        <p>None</p>
+                    @endif
                 </div>
             @endif
-            @if ($request->dropoff)
+            @if ($request->ride->detours_allowed)
+                <h3>Dropoff address</h3>
                 <div class="row mb-3">
-                    <h3>Dropoff address</h3>
-                    <p>{{ $request->dropoff->address }}</p>
+                    @if ($request->dropoff)
+                        <p>{{ $request->dropoff->address }}</p>
+                    @else
+                        <p>None</p>
+                    @endif
                 </div>
             @endif
             @if ($request->message)

@@ -51,7 +51,7 @@
                         data-bs-title="Allowing detours means users can request pickup and/or dropoff locations that are different than your ride's origin and destination">Detours</a></label>
                 <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours" />
             </div>
-            <div class="row mb-3">
+            {{-- <div class="row mb-3">
                 <div class="col-sm-4 mb-3 mb-sm-0">
                     <label for="price" class="form-label">Price</label>
                     <input type="number" class="form-control" id="price" name="price" min="0"
@@ -65,7 +65,7 @@
                         autocomplete="off" required />
                     <label class="btn btn-uva-ob" for="pricing2">Per Mile</label>
                 </div>
-            </div>
+            </div> --}}
             <div class="mb-3">
                 <label class="form-label" for="description">Description/Additional info</label>
                 <textarea class="form-control" id="description" name="description" rows=3 maxlength="255"></textarea>

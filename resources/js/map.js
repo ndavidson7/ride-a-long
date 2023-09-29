@@ -32,15 +32,18 @@ export class MapComponent {
     async update() {
         const data = await this.getData();
 
+        if (import.meta.env.VITE_APP_DEBUG)
+            console.log("MapComponent data:", data);
+
         const routeData = this.formatData(data);
+
+        if (import.meta.env.VITE_APP_DEBUG)
+            console.log("MapComponent routeData:", routeData);
 
         const routeResult = await this.getRoute(routeData);
 
-        if (import.meta.env.VITE_APP_DEBUG) {
-            console.log("MapComponent data:", data);
-            console.log("MapComponent routeData:", routeData);
+        if (import.meta.env.VITE_APP_DEBUG)
             console.log("DirectionsResult:", routeResult);
-        }
 
         this.renderData(data, routeResult);
     }
@@ -68,15 +71,14 @@ export class MapComponent {
                 data.destination.latitude,
                 data.destination.longitude
             ),
-            waypoints: data.waypoints
-                ? data.waypoints.map((waypoint) => ({
-                      location: new google.maps.LatLng(
-                          waypoint.address.latitude,
-                          waypoint.address.longitude
-                      ),
-                      stopover: true,
-                  }))
-                : [],
+            waypoints:
+                data.waypoints?.map((waypoint) => ({
+                    location: new google.maps.LatLng(
+                        waypoint.address.latitude,
+                        waypoint.address.longitude
+                    ),
+                    stopover: true,
+                })) ?? [],
             optimizeWaypoints: false,
             travelMode: google.maps.TravelMode.DRIVING,
         };
@@ -97,7 +99,7 @@ export class MapComponent {
     renderData(data, routeResult) {
         const itinerary = [
             data.origin,
-            ...data.waypoints?.map((waypoint) => waypoint.address),
+            ...(data.waypoints?.map((waypoint) => waypoint.address) ?? []),
             data.destination,
         ];
 
@@ -158,14 +160,18 @@ export class MapComponent {
             response = await fetch(route("route.optimize"), {
                 headers: {
                     Accept: "application/json",
-                    "X-CSRF-Token": document.querySelector(
-                        'input[name="_token"]'
-                    ).value,
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
                 },
                 method: "POST",
                 credentials: "same-origin",
                 body: JSON.stringify({
-                    route: [data.origin, ...data.waypoints, data.destination],
+                    route: [
+                        data.origin,
+                        ...(data.waypoints ?? []),
+                        data.destination,
+                    ],
                     pickup: pickup,
                     dropoff: dropoff,
                 }),
@@ -384,12 +390,22 @@ export class RequestCreateMapComponent extends MapComponent {
 }
 
 export class RequestShowMapComponent extends RequestCreateMapComponent {
-    getData() {
+    async getData() {
         // Request will be defined in a script tag in the Blade view
         const data = JSON.parse(JSON.stringify(request.ride)); // TODO: Probably not the most efficient way to do this. Maybe destructure?
+        console.log(request.ride);
+        console.log(data);
 
-        data.pickup = request.pickup;
-        data.dropoff = request.dropoff;
+        const pickup = { id: -2, address: request.pickup };
+        const dropoff = { id: -1, address: request.dropoff };
+        console.log(pickup, dropoff);
+
+        if (pickup || dropoff)
+            data.waypoints = await MapComponent.optimizeWaypoints(
+                data,
+                pickup,
+                dropoff
+            );
 
         return data;
     }

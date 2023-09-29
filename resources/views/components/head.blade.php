@@ -5,6 +5,7 @@
     <meta name="author" content="Nicholas Davidson">
     <meta name="description" content="Ride-A-Long: Carpool with your classmates! {{ $title }}">
     <meta name="keywords" content="Ride-a-long, ridealong, ride, uva, carpool, hoosdriving, hoosriding">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ride-A-Long - {{ $title }}</title>
     <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
     @routes

@@ -17,7 +17,7 @@ return new class extends Migration
             $table->increments('id');
             $table->unsignedInteger('ride_id');
             $table->unsignedInteger('address_id');
-            $table->tinyInteger('order');
+            $table->tinyInteger('order')->default(0);
             $table->unsignedInteger('before')->nullable();
             $table->unsignedInteger('after')->nullable();
 

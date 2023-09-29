@@ -9,6 +9,7 @@ use App\Models\Request;
 use App\Services\RideService;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RequestStoreRequest;
 use Illuminate\Http\Request as HttpRequest;
 
 class RequestController extends Controller
@@ -70,29 +71,15 @@ class RequestController extends Controller
         ]);
     }
 
-    public function store(HttpRequest $request, Ride $ride)
+    public function store(RequestStoreRequest $request, Ride $ride)
     {
         if (Auth::user()->cannot('create', [Request::class, $ride])) {
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not create a request for this ride.']);
         }
 
-        $fields = $request->validate([
-            'pickup-address' => 'nullable',
-            'pickup-city' => 'nullable|required_with:pickup-address',
-            'pickup-state' => 'nullable|required_with:pickup-address',
-            'pickup-country' => 'nullable|required_with:pickup-address',
-            'pickup-latitude' => 'nullable|required_with:pickup-address|numeric',
-            'pickup-longitude' => 'nullable|required_with:pickup-address|numeric',
-            'dropoff-address' => 'nullable',
-            'dropoff-city' => 'nullable|required_with:dropoff-address',
-            'dropoff-state' => 'nullable|required_with:dropoff-address',
-            'dropoff-country' => 'nullable|required_with:dropoff-address',
-            'dropoff-latitude' => 'nullable|required_with:dropoff-address|numeric',
-            'dropoff-longitude' => 'nullable|required_with:dropoff-address|numeric',
-            'message' => 'nullable|string'
-        ]);
+        $fields = $request->validated();
 
-        $pickupId = $fields['pickup-address'] ? Address::firstOrCreate(
+        $pickupId = $fields['pickup-address'] ?? false ? Address::firstOrCreate(
             ['address' => $fields['pickup-address']],
             [
                 'city' => $fields['pickup-city'],
@@ -103,7 +90,7 @@ class RequestController extends Controller
             ]
         )->id : null;
 
-        $dropoffId = $fields['dropoff-address'] ? Address::firstOrCreate(
+        $dropoffId = $fields['dropoff-address'] ?? false ? Address::firstOrCreate(
             ['address' => $fields['dropoff-address']],
             [
                 'city' => $fields['dropoff-city'],
@@ -148,6 +135,8 @@ class RequestController extends Controller
         $fields = $httpRequest->validate([
             'response' => 'required|boolean'
         ]);
+
+        dd($request);
 
         $request->response = $fields['response'];
         $request->save();
