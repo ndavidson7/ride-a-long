@@ -132,7 +132,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function car(): HasOneThrough
     {
-        return $this->hasOneThrough(Car::class, Driver::class);
+        return $this->hasOneThrough(Car::class, Driver::class)->withDefault();
     }
 
     public function requests(): HasMany

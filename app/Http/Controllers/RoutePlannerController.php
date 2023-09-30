@@ -11,12 +11,8 @@ class RoutePlannerController extends Controller
     {
         $data = json_decode($request->getContent(), true);
 
-        $route = $data['route'];
-        $pickup = $data['pickup'];
-        $dropoff = $data['dropoff'];
-
         try {
-            $optimizedWaypoints = $routeService->optimizeRequest($route, $pickup, $dropoff);
+            $optimizedWaypoints = $routeService->optimizeRoute($data['route'], $data['pickup'] ?? null, $data['dropoff'] ?? null);
             return response()->json([
                 'error' => false,
                 'content' => $optimizedWaypoints,

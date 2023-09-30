@@ -394,11 +394,13 @@ export class RequestShowMapComponent extends RequestCreateMapComponent {
         // Request will be defined in a script tag in the Blade view
         const data = JSON.parse(JSON.stringify(request.ride)); // TODO: Probably not the most efficient way to do this. Maybe destructure?
         console.log(request.ride);
-        console.log(data);
 
-        const pickup = { id: -2, address: request.pickup };
-        const dropoff = { id: -1, address: request.dropoff };
-        console.log(pickup, dropoff);
+        const pickup = request.pickup
+            ? { id: -2, address: request.pickup }
+            : null;
+        const dropoff = request.dropoff
+            ? { id: -1, address: request.dropoff }
+            : null;
 
         if (pickup || dropoff)
             data.waypoints = await MapComponent.optimizeWaypoints(

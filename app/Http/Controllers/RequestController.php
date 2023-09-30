@@ -7,6 +7,7 @@ use App\Models\Driver;
 use App\Models\Address;
 use App\Models\Request;
 use App\Services\RideService;
+use Illuminate\Support\Facades\DB;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RequestStoreRequest;
@@ -136,18 +137,28 @@ class RequestController extends Controller
             'response' => 'required|boolean'
         ]);
 
-        dd($request);
+        // Wrap all DB operations in a transaction in case of error
+        try {
+            DB::beginTransaction();
 
-        $request->response = $fields['response'];
-        $request->save();
+            $request->response = $fields['response'];
+            $request->save();
 
-        if (!$fields['response']) {
-            return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
+            if (!$fields['response']) {
+                DB::commit();
+                return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
+            }
+
+            // If the driver accepts, add the passenger
+            $rideService->addPassenger($request);
+
+            DB::commit();
+
+            return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added successfully.']);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'There was an error adding the passenger.']);
         }
-
-        // If the driver accepts, add the passenger
-        $rideService->addPassenger($request);
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added successfully.']);
     }
 
     public function destroy(Request $request)

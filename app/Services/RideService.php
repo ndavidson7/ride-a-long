@@ -6,6 +6,7 @@ use App\Models\Ride;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Request;
+use App\Models\Waypoint;
 use App\Services\RouteService;
 use App\Http\Requests\StoreOrUpdateRideRequest;
 
@@ -44,11 +45,15 @@ class RideService
             : null;
 
         $request->ride->passengers()->attach($request->user_id, [
-            'pickup_waypoint_id' => $pickupWaypoint->id,
-            'dropoff_waypoint_id' => $dropoffWaypoint->id
+            'pickup_waypoint_id' => $pickupWaypoint?->id,
+            'dropoff_waypoint_id' => $dropoffWaypoint?->id
         ]);
 
         if (!$pickupWaypoint && !$dropoffWaypoint) return;
+        else if ($pickupWaypoint xor $dropoffWaypoint) {
+            $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
+            return;
+        }
 
         if ($pickupWaypoint?->before && $dropoffWaypoint?->after) {
             throw new \Exception('Catastrophic failure.');
@@ -58,8 +63,7 @@ class RideService
             $pickupWaypoint->update(['before' => $dropoffWaypoint->id]);
         }
 
-        // need route = [origin, waypoints, destinaion] and pickup and/or dropoff = {id, address: {address, latitude, longitude}, }
-        $this->reorderWaypoints($request->ride);
+        $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
     }
 
     public function removePassenger(Ride $ride, User $user)
@@ -125,13 +129,26 @@ class RideService
         }
     }
 
-    private function reorderWaypoints(Ride $ride)
+    private function reorderWaypoints(Ride $ride, Waypoint $pickupWaypoint = null, Waypoint $dropoffWaypoint = null)
     {
-        $origin = $ride->origin()->first();
-        $waypoints = $ride->waypoints()->get();
-        $destination = $ride->destination()->first();
+        $origin = $ride->origin;
+        $destination = $ride->destination;
+        $waypoints = $ride->waypoints;
 
-        $route = [$origin, ...$waypoints, $destination];
-        // $newRoute = $this->routeService->optimizeRide($route);
+        if ($pickupWaypoint) {
+            $waypoints->push($pickupWaypoint);
+        }
+
+        if ($dropoffWaypoint) {
+            $waypoints->push($dropoffWaypoint);
+        }
+
+        $optimizedWaypoints = $this->routeService->optimizeRoute([$origin->toArray(), ...$waypoints->load('address')->toArray(), $destination->toArray()]);
+        foreach ($optimizedWaypoints as $waypoint) {
+            // find waypoint in $waypoints by $waypoint->id
+            $model = $waypoints->firstWhere('id', $waypoint['id']);
+            $model->order = $waypoint['order'];
+            $model->save();
+        }
     }
 }
