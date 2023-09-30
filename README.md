@@ -6,13 +6,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 -   [x] Rewrite in Laravel
 -   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
--   [ ] Allow riders to request pickup/dropoff spots:
-    -   [x] Update request notifications to show the rider's requested pickup and/or dropoff if either exists (maybe reuse map modal)
-    -   [ ] Use Mapbox optimization API for pickup and dropoff waypoints
-    -   [ ] If a rider requests a pickup and/or dropoff spot and the driver accepts:
-        1. Create a waypoint for each spot
-        1. Create a passenger with pickup and dropoff IDs if exist
-        1. Update the existing waypoints' orders according to the Mapbox route
+-   [x] Allow riders to request pickup/dropoff spots:
 -   [ ] Email verification
     -   [x] Local mailer
     -   [ ] Prod mailer
