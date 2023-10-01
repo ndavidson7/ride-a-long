@@ -161,7 +161,7 @@ class RouteService
                 $pickup["before"] = $dropoff["id"];
                 $dropoff["after"] = $pickup["id"];
 
-                $this->appendWaypoints($route, [$pickup, $dropoff]);
+                $this->appendWaypoints($route, $pickup, $dropoff);
             }
         }
     }

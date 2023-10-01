@@ -35,12 +35,16 @@ class RideService
         $pickupWaypoint = $request->pickup_id
             ? $request->ride->waypoints()->firstOrCreate([
                 'address_id' => $request->pickup_id,
+            ], [
+                'order' => 1
             ])
             : null;
 
         $dropoffWaypoint = $request->dropoff_id
             ? $request->ride->waypoints()->firstOrCreate([
                 'address_id' => $request->dropoff_id,
+            ], [
+                'order' => 1
             ])
             : null;
 
@@ -49,15 +53,21 @@ class RideService
             'dropoff_waypoint_id' => $dropoffWaypoint?->id
         ]);
 
+        // if no pickup or dropoff was specified, done
         if (!$pickupWaypoint && !$dropoffWaypoint) return;
+        // if only one was specified, it doesn't need to be restricted
         else if ($pickupWaypoint xor $dropoffWaypoint) {
-            $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
-            return;
+            // if there are no other waypoints, done
+            if ($request->ride->waypoints()->count() <= 1) return;
+
+            // if there are other waypoints, reorder all
+            return $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
         }
 
-        if ($pickupWaypoint?->before && $dropoffWaypoint?->after) {
+        // at this point, both waypoints must exist
+        if ($pickupWaypoint->before && $dropoffWaypoint->after) {
             throw new \Exception('Catastrophic failure.');
-        } else if ($pickupWaypoint?->before) {
+        } else if ($pickupWaypoint->before) {
             $dropoffWaypoint->update(['after' => $pickupWaypoint->id]);
         } else {
             $pickupWaypoint->update(['before' => $dropoffWaypoint->id]);

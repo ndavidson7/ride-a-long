@@ -154,45 +154,6 @@ export class MapComponent {
             });
     }
 
-    static async optimizeWaypoints(data, pickup, dropoff) {
-        let response;
-        try {
-            response = await fetch(route("route.optimize"), {
-                headers: {
-                    Accept: "application/json",
-                    "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
-                    ).content,
-                },
-                method: "POST",
-                credentials: "same-origin",
-                body: JSON.stringify({
-                    route: [
-                        data.origin,
-                        ...(data.waypoints ?? []),
-                        data.destination,
-                    ],
-                    pickup: pickup,
-                    dropoff: dropoff,
-                }),
-            });
-        } catch (error) {
-            alert(
-                "Error optimizing route. Try different pickup and/or dropoff locations, or try again later."
-            );
-            throw error;
-        }
-
-        response = await response.json();
-
-        if (response["error"]) {
-            alert(`Error optimizing route. ${response["content"]}}`);
-            throw new Error(response["content"]);
-        }
-
-        return response["content"];
-    }
-
     static calculateTotalDistance(routeResult) {
         // Calculate distance and duration from start to end
         let dist = 0;
@@ -314,7 +275,7 @@ export class RideEditMapComponent extends RideCreateMapComponent {
     }
 }
 
-export class RequestCreateMapComponent extends MapComponent {
+class RequestMapComponent extends MapComponent {
     async init(component) {
         // Update as soon as map is initialized
         await super.init(component);
@@ -322,6 +283,74 @@ export class RequestCreateMapComponent extends MapComponent {
         super.update();
     }
 
+    static getOrCreateWaypoint(waypoints, address, id) {
+        return (
+            waypoints.find(
+                (waypoint) => waypoint.address.address === address.address
+            ) ?? {
+                id: id,
+                address: address,
+            }
+        );
+    }
+
+    static async optimizeWaypoints(data, pickup, dropoff) {
+        let response;
+        try {
+            response = await fetch(route("route.optimize"), {
+                headers: {
+                    Accept: "application/json",
+                    "X-CSRF-TOKEN": document.querySelector(
+                        'meta[name="csrf-token"]'
+                    ).content,
+                },
+                method: "POST",
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    route: [
+                        data.origin,
+                        ...(data.waypoints ?? []),
+                        data.destination,
+                    ],
+                    pickup: pickup,
+                    dropoff: dropoff,
+                }),
+            });
+        } catch (error) {
+            alert(
+                "Error optimizing route. Try different pickup and/or dropoff locations, or try again later."
+            );
+            throw error;
+        }
+
+        response = await response.json();
+
+        if (response["error"]) {
+            alert(`Error optimizing route. ${response["content"]}}`);
+            throw new Error(response["content"]);
+        }
+
+        return response["content"];
+    }
+
+    static async handleWaypoints(data, pickup, dropoff) {
+        if (!pickup && !dropoff) return data; // neither pickup nor dropoff
+
+        if (data.waypoints.length || (pickup && dropoff)) {
+            data.waypoints = await RequestMapComponent.optimizeWaypoints(
+                data,
+                pickup,
+                dropoff
+            );
+        } else {
+            data.waypoints.push(pickup ?? dropoff);
+        }
+
+        return data;
+    }
+}
+
+export class RequestCreateMapComponent extends RequestMapComponent {
     async getData() {
         // Ride will be defined in a script tag in the Blade view
         // Deep copy to avoid saving old pickup/dropoff in event that user removes or changes one or both
@@ -336,16 +365,15 @@ export class RequestCreateMapComponent extends MapComponent {
             pickupLatitude?.value &&
             pickupLongitude?.value
         ) {
-            pickup = data.waypoints.find(
-                (waypoint) => waypoint.address.address === pickupAddress.value
-            ) ?? {
-                id: -2, // arbitrarily negative so as to not collide with an existing waypoint
-                address: {
+            pickup = RequestMapComponent.getOrCreateWaypoint(
+                data.waypoints,
+                {
                     address: pickupAddress.value,
                     latitude: pickupLatitude.value,
                     longitude: pickupLongitude.value,
                 },
-            };
+                -2
+            );
         }
 
         let dropoff;
@@ -357,58 +385,41 @@ export class RequestCreateMapComponent extends MapComponent {
             dropoffLatitude?.value &&
             dropoffLongitude?.value
         ) {
-            dropoff = data.waypoints.find(
-                (waypoint) => waypoint.address.address === dropoffAddress.value
-            ) ?? {
-                id: -1, // arbitrarily negative so as to not collide with an existing waypoint
-                address: {
+            dropoff = RequestMapComponent.getOrCreateWaypoint(
+                data.waypoints,
+                {
                     address: dropoffAddress.value,
                     latitude: dropoffLatitude.value,
                     longitude: dropoffLongitude.value,
                 },
-            };
+                -1
+            );
         }
 
-        if (!pickup && !dropoff) return data; // neither pickup nor dropoff
-        else if (
-            ((pickup && !dropoff) || (!pickup && dropoff)) &&
-            !data.waypoints.length
-        ) {
-            // only pickup or only dropoff and no other waypoints
-            data.waypoints.push(pickup ?? dropoff);
-            return data;
-        }
-
-        data.waypoints = await MapComponent.optimizeWaypoints(
-            data,
-            pickup,
-            dropoff
-        );
-
-        return data;
+        return await RequestMapComponent.handleWaypoints(data, pickup, dropoff);
     }
 }
 
-export class RequestShowMapComponent extends RequestCreateMapComponent {
+export class RequestShowMapComponent extends RequestMapComponent {
     async getData() {
         // Request will be defined in a script tag in the Blade view
         const data = JSON.parse(JSON.stringify(request.ride)); // TODO: Probably not the most efficient way to do this. Maybe destructure?
-        console.log(request.ride);
 
         const pickup = request.pickup
-            ? { id: -2, address: request.pickup }
+            ? RequestMapComponent.getOrCreateWaypoint(
+                  data.waypoints,
+                  request.pickup,
+                  -2
+              )
             : null;
         const dropoff = request.dropoff
-            ? { id: -1, address: request.dropoff }
+            ? RequestMapComponent.getOrCreateWaypoint(
+                  data.waypoints,
+                  request.dropoff,
+                  -1
+              )
             : null;
 
-        if (pickup || dropoff)
-            data.waypoints = await MapComponent.optimizeWaypoints(
-                data,
-                pickup,
-                dropoff
-            );
-
-        return data;
+        return await RequestMapComponent.handleWaypoints(data, pickup, dropoff);
     }
 }
