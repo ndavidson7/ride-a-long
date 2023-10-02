@@ -28,6 +28,11 @@
                         <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours"
                             value="1" @if (request('detours')) checked @endif />
                     </div>
+                    {{-- <div class="col-auto form-check">
+                        <label class="form-check-label" for="exclude-full-checkbox">Exclude Full Rides</label>
+                        <input type="checkbox" class="form-check-input" id="exclude-full-checkbox" name="exclude-full"
+                            value="1" @if (request('exclude-full')) checked @endif />
+                    </div> --}}
                     <div class="col-auto">
                         <button type="submit" class="btn btn-uva-ob fs-6 fw-bold">Filter</button>
                     </div>

@@ -4,9 +4,6 @@
         {{ $ride->destination->city }}, {{ $ride->destination->state }}
     </h5>
     <div class="card-body d-flex flex-column">
-        {{-- <h5 class="card-title">{{ $ride->origin->city }}, {{ $ride->origin->state }} &#8594;
-                                {{ $ride->destination->city }}, {{ $ride->destination->state }}
-                            </h5> --}}
         <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
         </h6>
         <h6 class="card-subtitle mb-2"> {{ $ride->seats_open }} out of {{ $ride->seats_total }}
@@ -30,7 +27,23 @@
     <div class="card-footer">
         <button type="button" class="card-link btn btn-uva-ob stretched-link" data-bs-toggle="modal"
             data-bs-target="#mapModal" data-ride="{{ $ride->id }}" data-user-relation="{{ $ride->user_relation }}"
-            data-related-model-id="{{ $ride->related_model_id }}">More
-            info</button>
+            data-related-model-id="{{ $ride->related_model_id }}">
+            @switch($ride->user_relation)
+                @case('driver')
+                    <i class="bi bi-car-front-fill"></i> Driving
+                @break
+
+                @case('requester')
+                    <i class="bi bi-hourglass-split"></i> Requested
+                @break
+
+                @case('passenger')
+                    <i class="bi bi-car-front-fill"></i> Riding
+                @break
+
+                @default
+                    <i class="bi bi-info-circle-fill"></i> More info
+            @endswitch
+        </button>
     </div>
 </div>

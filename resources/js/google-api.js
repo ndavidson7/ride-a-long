@@ -64,7 +64,7 @@ export async function createDirections(googleMap) {
 |
 | Autocomplete inputs will always accompany a map component,
 | and MapComponent is the only place this module is imported.
-| Therefore, we can immediately check for and initiliaze any
+| Therefore, we can immediately check for and initialize any
 | autocomplete inputs when this module is imported.
 |--------------------------------------------------------------------------
 */

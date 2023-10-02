@@ -18,12 +18,12 @@ class RequestPolicy
 
     public function create(User $user, Ride $ride): bool
     {
-        return $ride->user_relation === 'none';
+        return $ride->user_relation === 'none' && $ride->seats_open > 0;
     }
 
     public function store(User $user, Ride $ride): bool
     {
-        return $ride->user_relation === 'none';
+        return $this->create($user, $ride);
     }
 
     // public function edit(User $user, Ride $ride): bool

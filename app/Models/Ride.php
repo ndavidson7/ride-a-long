@@ -38,6 +38,7 @@ class Ride extends Model
         'driver_id',
         'origin_id',
         'destination_id',
+        'passengers',
     ];
 
     protected $with = [
@@ -45,6 +46,11 @@ class Ride extends Model
         'origin',
         'destination',
         'waypoints',
+        'passengers',
+    ];
+
+    protected $appends = [
+        'seats_open',
     ];
 
     protected $casts = [
@@ -72,6 +78,14 @@ class Ride extends Model
         });
 
         $query->when($filters['detours'] ?? false, fn ($query) => $query->where('detours_allowed', true));
+
+        // $query->when($filters['exclude-full'] ?? false, fn ($query) => $query->where('seats_open', '>', 0));
+    }
+
+    public function scopeUpcoming($query)
+    {
+        $query->where('start_time', '>', now())
+            ->oldest('start_time');
     }
 
     /*

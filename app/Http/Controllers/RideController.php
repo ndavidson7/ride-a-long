@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\Ride;
 use Illuminate\Http\Request;
 use App\Services\RideService;
-use Illuminate\Support\Carbon;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RideFilterRequest;
@@ -18,10 +17,9 @@ class RideController extends Controller
         return view('rides.index', [
             'entries' => ['resources/js/views/rides/index.js'],
             'rides' =>
-            Ride::with(['driver', 'origin', 'destination'])
+            Ride::query()
                 ->filter($request->validated())
-                ->where('start_time', '>', Carbon::now())
-                ->oldest('start_time')->paginate(7)
+                ->upcoming()->paginate(7)
                 ->withQueryString()
         ]);
     }

@@ -6,7 +6,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 -   [x] Rewrite in Laravel
 -   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
--   [x] Allow riders to request pickup/dropoff spots:
+-   [x] Allow riders to request pickup/dropoff spots
 -   [ ] Email verification
     -   [x] Local mailer
     -   [ ] Prod mailer
@@ -21,9 +21,14 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [x] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Add messaging functionality
+-   [ ] My rides page
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
+-   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
 -   [ ] Make PFP upload async and display loading symbol on new PFP until notified upload finished
+-   [ ] Allow users to create alerts:
+    -   [ ] When seat becomes available in previously full ride
+    -   [ ] New ride is created matching desired route
 -   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
 -   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Fix emergency contacts JavaScript
