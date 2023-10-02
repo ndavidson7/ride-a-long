@@ -6,7 +6,8 @@
     <ol class="route list-group list-group-numbered list-group-flush"></ol>
     <h4 class="distance"></h4>
     <h5><span class="date"></span> @ <span class="time"></span></h5>
-    <p><span class="description"></span> - <span class="driver"></span></p>
+    {{-- <p><span class="description"></span> - <span class="driver"></span></p> --}}
+    <p class="description"></p>
 </div>
 
 <template id="li-template">

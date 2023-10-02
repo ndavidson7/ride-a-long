@@ -15,7 +15,7 @@ export class MapComponent {
         this.date = component.querySelector(".date");
         this.time = component.querySelector(".time");
         this.description = component.querySelector(".description");
-        this.driver = component.querySelector(".driver");
+        // this.driver = component.querySelector(".driver");
 
         this.init(component);
     }
@@ -136,8 +136,8 @@ export class MapComponent {
         this.description.textContent = data.description;
 
         // TODO: Remove this "if" when driver fetching implemented
-        if (data.driver)
-            this.driver.textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
+        // if (data.driver)
+        //     this.driver.textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
     }
 
     static async fetchData(rideId) {
@@ -253,7 +253,7 @@ export class RideCreateMapComponent extends MapComponent {
             },
             description: document.getElementById("description").value,
             start_time: document.getElementById("start-time").value,
-            driver: null, // TODO: Fetch driver data?
+            // driver: null, // TODO: Fetch driver data?
         };
     }
 }
