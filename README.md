@@ -29,7 +29,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Allow users to create alerts:
     -   [ ] When seat becomes available in previously full ride
     -   [ ] New ride is created matching desired route
--   [ ] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
+-   [x] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
 -   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Fix emergency contacts JavaScript
     -   [ ] Account for already existing emergency contacts

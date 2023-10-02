@@ -4,7 +4,6 @@
             <div class="text-center" style="width: 26rem;">
                 <form class="mb-3 form-disabled" action="{{ route('sessions.store') }}" method="post">
                     @csrf
-                    <h1 class="mb-4 fw-normal text-white">Sign In</h1>
                     @error('incorrect')
                         <div class="alert alert-danger" role="alert">
                             {{ $message }}
@@ -26,7 +25,7 @@
                         <div class="col-sm-6 d-flex justify-content-center">
                             <div class="form-check mb-3 mb-md-0 align-items-center">
                                 <input class="form-check-input" type="checkbox" id="remember" name="remember" />
-                                <label class="form-check-label" for="remember">Remember me</label>
+                                <label class="form-check-label" for="remember" value="1">Remember me</label>
                             </div>
                         </div>
                         <div class="col-sm-6 d-flex justify-content-center">

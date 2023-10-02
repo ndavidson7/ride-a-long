@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en" class="h-100">
+<html lang="en">
 
 <x-head :$title :$entries />
 
-<body class="splash">
+<body class="splash d-flex flex-column min-vh-100">
 
     <x-headers.splash />
 
