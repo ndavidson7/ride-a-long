@@ -21,7 +21,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [x] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
 -   [ ] Add messaging functionality
--   [ ] My rides page
+-   [x] My rides page (sort of hacked... but works well enough)
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)

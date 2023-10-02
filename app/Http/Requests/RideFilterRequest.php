@@ -26,6 +26,7 @@ class RideFilterRequest extends FormRequest
             'destination-city' => 'nullable|string',
             'start-date' => 'nullable|date',
             'detours' => 'nullable|boolean',
+            'my-rides' => 'nullable|boolean',
             // 'exclude-full' => 'nullable|boolean',
         ];
     }

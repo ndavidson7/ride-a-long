@@ -3,7 +3,6 @@
         <a class="navbar-brand fw-bold fs-1 text-white" href="{{ route('rides.index') }}"
             title="Return to ride listings">Ride-A-Long<sub class="orange">@UVA</sub></a>
         <ul class="navbar-nav ms-auto align-items-center">
-            {{-- TODO: Search/filter --}}
             <li class="nav-item me-2">
                 <div class="dropdown nav-link">
                     <a class="nav-link" href="#" role="button" id="notificationsDropdown"
@@ -26,8 +25,9 @@
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
                         <li><a class="dropdown-item" href="{{ route('profile.show') }}">Profile</a></li>
-                        <li><a class="dropdown-item" href="#">My Rides</a></li>
-                        <li><a class="dropdown-item" href="{{ route('requests.index') }}">Requests</a></li>
+                        <li><a class="dropdown-item" href="{{ route('rides.index', ['my-rides' => 1]) }}">My Rides</a>
+                        </li>
+                        {{-- <li><a class="dropdown-item" href="{{ route('requests.index') }}">Requests</a></li> --}}
                         <li><a class="dropdown-item" href="#">Messages</a></li>
                         <li>
                             <form action="/signout" method="POST">

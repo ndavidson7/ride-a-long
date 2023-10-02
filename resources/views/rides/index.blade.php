@@ -33,6 +33,11 @@
                         <input type="checkbox" class="form-check-input" id="exclude-full-checkbox" name="exclude-full"
                             value="1" @if (request('exclude-full')) checked @endif />
                     </div> --}}
+                    <div class="col-auto form-check">
+                        <label class="form-check-label" for="my-rides-checkbox">My Rides</label>
+                        <input type="checkbox" class="form-check-input" id="my-rides-checkbox" name="my-rides"
+                            value="1" @if (request('my-rides')) checked @endif />
+                    </div>
                     <div class="col-auto">
                         <button type="submit" class="btn btn-uva-ob fs-6 fw-bold">Filter</button>
                     </div>

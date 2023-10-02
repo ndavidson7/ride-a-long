@@ -80,6 +80,12 @@ class Ride extends Model
         $query->when($filters['detours'] ?? false, fn ($query) => $query->where('detours_allowed', true));
 
         // $query->when($filters['exclude-full'] ?? false, fn ($query) => $query->where('seats_open', '>', 0));
+
+        $query->when($filters['my-rides'] ?? false, function ($query) {
+            $query->where('driver_id', auth()->id())
+                ->orWhereHas('passengers', fn ($query) => $query->where('user_id', auth()->id()))
+                ->orWhereHas('requests', fn ($query) => $query->where('user_id', auth()->id()));
+        });
     }
 
     public function scopeUpcoming($query)
