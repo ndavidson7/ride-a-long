@@ -42,7 +42,11 @@
                 @break
 
                 @default
-                    <i class="bi bi-info-circle-fill"></i> More info
+                    @if ($ride->seats_open > 0)
+                        <i class="bi bi-info-circle-fill"></i> More info
+                    @else
+                        <i class="bi bi-x-circle-fill"></i> Full
+                    @endif
             @endswitch
         </button>
     </div>
