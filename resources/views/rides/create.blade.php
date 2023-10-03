@@ -3,7 +3,7 @@
         <div class="container col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4">
             <h2 class="text-center mb-3">Preview</h2>
             <div class="row mb-3">
-                <x-map />
+                <x-map class="d-none" />
             </div>
         </div>
         <form id="ride-create" class="container col-sm-10 col-md-8 col-lg-6" action="{{ route('rides.store') }}"

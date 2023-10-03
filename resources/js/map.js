@@ -9,19 +9,24 @@ export class MapComponent {
             );
         }
 
-        this.routeDirections = component.querySelector("#route-directions");
-        this.route = component.querySelector(".route");
-        this.distance = component.querySelector(".distance");
-        this.date = component.querySelector(".date");
-        this.time = component.querySelector(".time");
-        this.description = component.querySelector(".description");
-        // this.driver = component.querySelector(".driver");
+        this.component = component;
 
-        this.init(component);
+        this.elements = {
+            mapElement: component.querySelector(".map"),
+            routeDirections: component.querySelector("#route-directions"),
+            route: component.querySelector(".route"),
+            distance: component.querySelector(".distance"),
+            date: component.querySelector(".date"),
+            time: component.querySelector(".time"),
+            description: component.querySelector(".description"),
+            // driver: component.querySelector(".driver"),
+        };
+
+        this.init();
     }
 
-    async init(component) {
-        this.map = await createMap(component.querySelector(".map"));
+    async init() {
+        this.map = await createMap(this.elements.mapElement);
 
         const { directionsService, directionsRenderer } =
             await createDirections(this.map);
@@ -30,22 +35,44 @@ export class MapComponent {
     }
 
     async update() {
+        // Show loading spinner
+        this.setLoading(true);
+
+        // Get data
         const data = await this.getData();
 
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("MapComponent data:", data);
 
+        // Format data for directions request
         const routeData = this.formatData(data);
 
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("MapComponent routeData:", routeData);
 
+        // Get directions
         const routeResult = await this.getRoute(routeData);
 
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("DirectionsResult:", routeResult);
 
+        // Hide loading spinner
+        this.setLoading(false);
+
+        // Render data
         this.renderData(data, routeResult);
+    }
+
+    setLoading(loading) {
+        if (loading) {
+            for (const element of Object.values(this.elements)) {
+                element.classList.add("placeholder");
+            }
+        } else {
+            for (const element of Object.values(this.elements)) {
+                element.classList.remove("placeholder");
+            }
+        }
     }
 
     getData() {
@@ -103,7 +130,7 @@ export class MapComponent {
             data.destination,
         ];
 
-        this.routeDirections.href =
+        this.elements.routeDirections.href =
             MapComponent.constructDirectionsUrl(itinerary);
 
         const liTemplate = document.getElementById("li-template");
@@ -123,21 +150,22 @@ export class MapComponent {
 
             routeChildren.push(li);
         });
-        this.route.replaceChildren(...routeChildren);
+        this.elements.route.replaceChildren(...routeChildren);
 
         const [miles, duration] =
             MapComponent.calculateTotalDistance(routeResult);
-        this.distance.textContent = miles + " miles (" + duration + ")";
+        this.elements.distance.textContent =
+            miles + " miles (" + duration + ")";
 
         const [date, time] = formatDateTime(data.start_time);
-        this.date.textContent = date;
-        this.time.textContent = time;
+        this.elements.date.textContent = date;
+        this.elements.time.textContent = time;
 
-        this.description.textContent = data.description;
+        this.elements.description.textContent = data.description;
 
         // TODO: Remove this "if" when driver fetching implemented
         // if (data.driver)
-        //     this.driver.textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
+        //     this.elements.driver.textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
     }
 
     static async fetchData(rideId) {
@@ -238,6 +266,12 @@ export class RideModalMapComponent extends MapComponent {
 }
 
 export class RideCreateMapComponent extends MapComponent {
+    async update() {
+        this.component.classList.remove("d-none");
+
+        super.update();
+    }
+
     getData() {
         return {
             origin: {
@@ -259,9 +293,9 @@ export class RideCreateMapComponent extends MapComponent {
 }
 
 export class RideEditMapComponent extends RideCreateMapComponent {
-    async init(component) {
+    async init() {
         // Update as soon as map is initialized
-        await super.init(component);
+        await super.init();
 
         super.update();
     }
@@ -276,9 +310,9 @@ export class RideEditMapComponent extends RideCreateMapComponent {
 }
 
 class RequestMapComponent extends MapComponent {
-    async init(component) {
+    async init() {
         // Update as soon as map is initialized
-        await super.init(component);
+        await super.init();
 
         super.update();
     }

@@ -13,7 +13,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Route for leave ride button
 -   [x] Search/filter on navbar
 -   [x] Pagination on rides.index
--   [ ] Preview map hidden until updated
+-   [x] Preview map hidden until updated
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [x] Profile picture upload
 -   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
