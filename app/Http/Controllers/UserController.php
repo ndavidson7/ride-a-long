@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Jobs\UploadProfilePicture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
 
@@ -81,8 +82,13 @@ class UserController extends Controller
         }
 
         $request->validate(['pfp' => 'nullable|image|max:2048|dimensions:min_width=200,min_height=200']);
-        if ($request->hasFile('pfp')) {
-            Auth::user()->updateMedia($request->file('pfp'), ['upload_preset' => config('cloudinary.upload_preset')]);
+        $hasPfp = $request->hasFile('pfp');
+        if ($hasPfp) {
+            // temporarily save to storage
+            $file = $request->file('pfp');
+            $path = $file->storeAs('queuedPfps', Auth::user()->id . "." . $file->extension());
+            // dispatch job to upload to cloudinary
+            UploadProfilePicture::dispatch(Auth::user(), $path);
         }
 
         if ($request->has(['car-license-plate', 'car-make', 'car-color'])) {
@@ -108,7 +114,7 @@ class UserController extends Controller
             $driver->save();
         }
 
-        return redirect()->route('profile.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!']);
+        return redirect()->route('profile.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!', 'uploadedPfp' => $hasPfp]);
     }
 
     public function destroy()

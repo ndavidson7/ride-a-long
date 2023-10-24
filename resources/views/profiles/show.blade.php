@@ -6,12 +6,16 @@
                     <div class="col-md-4 gradient-custom text-center"
                         style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
                         {{-- Only wrapped in div because can't give font icon margin for some reason --}}
-                        <div class="my-4 w-75 mx-auto">
+                        <div class="my-4 w-75 mx-auto placeholder-glow">
                             @if ($pfp = $user->fetchFirstMedia())
                                 <img src="{{ $pfp['file_url'] }}" alt="Profile picture"
                                     class="img-fluid rounded-circle shadow-lg">
                             @else
-                                <i class="bi bi-person-circle" style="font-size: 6em;"></i>
+                                <i @class([
+                                    'bi',
+                                    'bi-person-circle',
+                                    'placeholder' => $uploadedPfp ?? false,
+                                ]) style="font-size: 6em;"></i>
                             @endif
                         </div>
                         <h4 class="display-6 mb-4">{{ $user->name }}</h4>

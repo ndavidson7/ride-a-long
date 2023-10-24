@@ -31,6 +31,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [ ] New ride is created matching desired route
 -   [x] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
 -   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
+-   [ ] Infinite scroll pagination
 -   [ ] Fix emergency contacts JavaScript
     -   [ ] Account for already existing emergency contacts
     -   [ ] Use template to insert correct HTML? Also insert in correct place

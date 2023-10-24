@@ -112,17 +112,3 @@ Route::controller(RideUserController::class)->middleware(['auth', 'verified'])->
 Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'])->group(function () {
     Route::post('/optimize', 'optimize')->name('route.optimize');
 });
-
-/*
-|--------------------------------------------------------------------------
-| WaypointController Routes
-|--------------------------------------------------------------------------
-*/
-
-
-
-/*
-|--------------------------------------------------------------------------
-| ReportController Routes
-|--------------------------------------------------------------------------
-*/
