@@ -10,12 +10,12 @@
                             @if ($pfp = $user->fetchFirstMedia())
                                 <img src="{{ $pfp['file_url'] }}" alt="Profile picture"
                                     class="img-fluid rounded-circle shadow-lg">
+                            @elseif ($uploadedPfp)
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
                             @else
-                                <i @class([
-                                    'bi',
-                                    'bi-person-circle',
-                                    'placeholder' => $uploadedPfp ?? false,
-                                ]) style="font-size: 6em;"></i>
+                                <i class="bi bi-person-circle" style="font-size: 6em;"></i>
                             @endif
                         </div>
                         <h4 class="display-6 mb-4">{{ $user->name }}</h4>

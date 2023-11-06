@@ -25,7 +25,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
--   [ ] Make PFP upload async and display loading symbol on new PFP until notified upload finished
+-   [x] Make PFP upload async
 -   [ ] Allow users to create alerts:
     -   [ ] When seat becomes available in previously full ride
     -   [ ] New ride is created matching desired route

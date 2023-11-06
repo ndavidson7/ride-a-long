@@ -17,11 +17,13 @@ pfpField.onchange = function () {
     }
 };
 
-deletePfpButton.onclick = function () {
-    deletePfpInput.value = "1";
-    deletePfpInput.dispatchEvent(new Event("change"));
-    pfpLabel.innerHTML = `<i class="bi bi-person-circle" style="font-size: 200px"></i>`;
-};
+if (deletePfpButton) {
+    deletePfpButton.onclick = function () {
+        deletePfpInput.value = "1";
+        deletePfpInput.dispatchEvent(new Event("change"));
+        pfpLabel.innerHTML = `<i class="bi bi-person-circle" style="font-size: 200px"></i>`;
+    };
+}
 
 // const addNewButton = document.getElementById("add-new-contact");
 // addNewButton.addEventListener("click", addNewContact);

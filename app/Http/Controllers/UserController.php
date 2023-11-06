@@ -50,8 +50,9 @@ class UserController extends Controller
         $user = $id ? User::findOrFail($id) : Auth::user();
 
         return view('profiles.show', [
-            'entries' => [],
+            'entries' => ['resources/js/views/profiles/show.js'],
             'user' => $user,
+            'uploadedPfp' => session('uploadedPfp') ?? false,
         ]);
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Events\ProfilePictureUploaded;
 use Illuminate\Bus\Queueable;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Queue\SerializesModels;
@@ -35,5 +36,6 @@ class UploadProfilePicture implements ShouldQueue
             'upload_preset' => config('cloudinary.upload_preset')
         ]);
         Storage::delete($this->path);
+        ProfilePictureUploaded::dispatch($this->user);
     }
 }

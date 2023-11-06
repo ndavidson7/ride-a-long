@@ -8,6 +8,9 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Ride-A-Long - {{ $title }}</title>
     <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
+    <script>
+        window.userId = {{ auth()->user()->id }}
+    </script>
     @routes
     @vite(array_merge(['resources/scss/app.scss', 'resources/js/app.js'], $entries))
 </head>
