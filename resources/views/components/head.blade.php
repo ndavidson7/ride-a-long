@@ -9,7 +9,7 @@
     <title>Ride-A-Long - {{ $title }}</title>
     <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
     <script>
-        window.userId = {{ auth()->user()->id }}
+        window.userId = {{ auth()->user()->id ?? null }}
     </script>
     @routes
     @vite(array_merge(['resources/scss/app.scss', 'resources/js/app.js'], $entries))
