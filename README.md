@@ -14,23 +14,22 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Search/filter on navbar
 -   [x] Pagination on rides.index
 -   [x] Preview map hidden until updated
--   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [x] Profile picture upload
--   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
+-   [x] Make PFP upload async
 -   [x] Display button relevant to user on ride modal
 -   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
 -   [x] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
--   [ ] Add messaging functionality
 -   [x] My rides page (sort of hacked... but works well enough)
+-   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
+-   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
+-   [ ] Add messaging functionality
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
--   [x] Make PFP upload async
+-   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [ ] Allow users to create alerts:
     -   [ ] When seat becomes available in previously full ride
     -   [ ] New ride is created matching desired route
--   [x] Update footer ("Made with <3 by a former Hoo" & visible on all pages where included)
--   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Infinite scroll pagination
 -   [ ] Fix emergency contacts JavaScript
     -   [ ] Account for already existing emergency contacts

@@ -10,6 +10,8 @@ use App\Services\RideService;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
+use App\Notifications\RequestCreated;
+use App\Notifications\RequestUpdated;
 use App\Http\Requests\RequestStoreRequest;
 use Illuminate\Http\Request as HttpRequest;
 
@@ -102,13 +104,15 @@ class RequestController extends Controller
             ]
         )->id : null;
 
-        Request::create([
+        $request = Request::create([
             'ride_id' => $ride->id,
             'user_id' => Auth::id(),
             'pickup_id' => $pickupId,
             'dropoff_id' => $dropoffId,
             'message' => $fields['message']
         ]);
+
+        $ride->driver->notify(new RequestCreated($request));
 
         return redirect()->route('rides.index', $ride)->with(['status' => 'success', 'message' => 'Your request has been submitted.']);
     }
@@ -146,6 +150,9 @@ class RequestController extends Controller
 
             if (!$fields['response']) {
                 DB::commit();
+
+                $request->user->notify(new RequestUpdated($request));
+
                 return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your response has been submitted.']);
             }
 
@@ -153,6 +160,8 @@ class RequestController extends Controller
             $rideService->addPassenger($request);
 
             DB::commit();
+
+            $request->user->notify(new RequestUpdated($request));
 
             return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added successfully.']);
         } catch (\Throwable $th) {

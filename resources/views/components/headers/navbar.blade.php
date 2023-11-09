@@ -9,11 +9,25 @@
                         data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications Dropdown">
                         <i class="bi bi-car-front-fill" style="font-size: 2.5rem"></i>
                         <span id="notifsBadge" class="notification badge rounded-pill bg-danger">
-                            <span id="numNotifs"></span>
+                            <span id="numNotifs">{{ auth()->user()->unreadNotifications()->count() }}</span>
                             <span class="visually-hidden">unread notifications</span>
                         </span>
                     </a>
                     <ul id="notifs" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
+                        @foreach (auth()->user()->unreadNotifications as $notification)
+                            @if ($notification['type'] == 'App\\Notifications\\RequestCreated')
+                                <li><a class="dropdown-item"
+                                        href="{{ route('requests.show', $notification['data']['id']) }}">{{ $notification['data']['user']['first_name'] }}
+                                        {{ $notification['data']['user']['last_name'] }} requested to join your ride!
+                                        <span class="text-muted"></span></a></li>
+                            @else
+                                <li><a class="dropdown-item"
+                                        href="{{ route('requests.show', $notification['data']['id']) }}">{{ $notification['data']['driver']['first_name'] }}
+                                        {{ $notification['data']['driver']['last_name'] }}
+                                        {{ $notification['data']['response'] == 1 ? 'accepted' : 'declined' }} your
+                                        request! <span class="text-muted"></span></a></li>
+                            @endif
+                        @endforeach
                     </ul>
                 </div>
             </li>
@@ -34,6 +48,9 @@
                         </li>
                         {{-- <li><a class="dropdown-item" href="{{ route('requests.index') }}">Requests</a></li> --}}
                         <li><a class="dropdown-item" href="#">Messages</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
                         <li>
                             <form action="/signout" method="POST">
                                 @method('DELETE')

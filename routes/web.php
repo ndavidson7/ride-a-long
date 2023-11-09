@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RideUserController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoutePlannerController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
@@ -111,4 +112,16 @@ Route::controller(RideUserController::class)->middleware(['auth', 'verified'])->
 
 Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'])->group(function () {
     Route::post('/optimize', 'optimize')->name('route.optimize');
+});
+
+/*
+|--------------------------------------------------------------------------
+| NotificationController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(NotificationController::class)->middleware(['auth', 'verified'])->name('notifications.')->prefix('notifications')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::put('/{notification}', 'update')->name('update');
+    Route::delete('/{notification}', 'destroy')->name('destroy');
 });
