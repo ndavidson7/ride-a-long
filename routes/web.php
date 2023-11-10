@@ -121,7 +121,6 @@ Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'
 */
 
 Route::controller(NotificationController::class)->middleware(['auth', 'verified'])->name('notifications.')->prefix('notifications')->group(function () {
-    Route::get('/', 'index')->name('index');
-    Route::put('/{notification}', 'update')->name('update');
+    Route::get('/{notification}', 'show')->name('show');
     Route::delete('/{notification}', 'destroy')->name('destroy');
 });

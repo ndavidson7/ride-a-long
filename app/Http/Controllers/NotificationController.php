@@ -4,19 +4,23 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
 {
-    public function index(Request $request)
+    public function show(DatabaseNotification $notification)
     {
-        return $request->expectsJson() ? Auth::user()->unreadNotifications : null; // TODO: Change nulls to views
+        if ($notification['read_at'] === null) {
+            $notification->markAsRead();
+        }
+
+        return redirect()->route('requests.show', $notification->data['id']);
     }
 
-    public function update()
+    public function destroy(DatabaseNotification $notification)
     {
-    }
+        $notification->delete();
 
-    public function destroy()
-    {
+        return redirect()->back()->with(['status' => 'success', 'message' => 'Notification deleted.']);
     }
 }

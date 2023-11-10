@@ -11,6 +11,7 @@ previewButton.addEventListener("click", () => {
     previewButton.disabled = true;
 });
 
+// TODO: Extract this to form.js?
 // Enable preview button if all required inputs are filled
 const requiredInputs = document.querySelectorAll("[required]");
 requiredInputs.forEach((input) => {

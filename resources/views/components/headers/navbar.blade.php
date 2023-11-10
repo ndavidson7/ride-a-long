@@ -7,26 +7,39 @@
                 <div class="dropdown nav-link">
                     <a class="nav-link" href="#" role="button" id="notificationsDropdown"
                         data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications Dropdown">
-                        <i class="bi bi-car-front-fill" style="font-size: 2.5rem"></i>
+                        <i class="bi bi-bell-fill" style="font-size: 2rem"></i>
                         <span id="notifsBadge" class="notification badge rounded-pill bg-danger">
                             <span id="numNotifs">{{ auth()->user()->unreadNotifications()->count() }}</span>
                             <span class="visually-hidden">unread notifications</span>
                         </span>
                     </a>
                     <ul id="notifs" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
-                        @foreach (auth()->user()->unreadNotifications as $notification)
-                            @if ($notification['type'] == 'App\\Notifications\\RequestCreated')
-                                <li><a class="dropdown-item"
-                                        href="{{ route('requests.show', $notification['data']['id']) }}">{{ $notification['data']['user']['first_name'] }}
+                        @foreach (auth()->user()->notifications as $notification)
+                            <li class="d-flex justify-content-center align-items-center">
+                                @if ($notification['read_at'] === null)
+                                    <i class="bi bi-circle-fill text-danger ms-3" style="font-size: 0.5rem"></i>
+                                @endif
+                                {{-- blade-formatter-disable --}}
+                                <a class='dropdown-item'
+                                    @if ($notification['type'] == 'App\\Notifications\\RequestCreated')
+                                        href="{{ route('notifications.show', $notification['id']) }}">{{ $notification['data']['user']['first_name'] }}
                                         {{ $notification['data']['user']['last_name'] }} requested to join your ride!
-                                        <span class="text-muted"></span></a></li>
-                            @else
-                                <li><a class="dropdown-item"
-                                        href="{{ route('requests.show', $notification['data']['id']) }}">{{ $notification['data']['driver']['first_name'] }}
+                                        <span class="text-muted"></span>
+                                    @else
+                                        href="{{ route('notifications.show', $notification['id']) }}">{{ $notification['data']['driver']['first_name'] }}
                                         {{ $notification['data']['driver']['last_name'] }}
                                         {{ $notification['data']['response'] == 1 ? 'accepted' : 'declined' }} your
-                                        request! <span class="text-muted"></span></a></li>
-                            @endif
+                                        request! <span class="text-muted"></span>
+                                    @endif
+                                </a>
+                                {{-- blade-formatter-enable --}}
+                                <form action="{{ route('notifications.destroy', $notification['id']) }}" method="POST">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="dropdown-item"><i
+                                            class="bi bi-x-lg text-muted"></i></button>
+                                </form>
+                            </li>
                         @endforeach
                     </ul>
                 </div>
@@ -63,5 +76,12 @@
             </li>
         </ul>
     </nav>
+    <template id="notif-delete-form">
+        <form action="" method="POST">
+            @csrf
+            @method('DELETE')
+            <button type="submit" class="dropdown-item"><i class="bi bi-x-lg text-muted"></i></button>
+        </form>
+    </template>
     @vite('resources/js/notifications.js')
 </header>

@@ -11,30 +11,7 @@ const notifsBadge = document.getElementById("notifsBadge");
 const numNotifsEl = document.getElementById("numNotifs");
 let numNotifs = parseInt(numNotifsEl.textContent);
 
-// First, fetch any unread database notifications...
-// fetch(`${base}/notifications`, { headers: { Accept: "application/json" } })
-//     .then((response) => response.json())
-//     .then((data) => {
-//         if (import.meta.env.VITE_APP_DEBUG)
-//             console.log("Notifications data:", data);
-
-//         for (const notification of data) {
-//             notifsEl.insertAdjacentHTML(
-//                 "beforeend",
-//                 makeNotification(notification)
-//             );
-//             numNotifs++;
-//         }
-
-//         if (numNotifs == 0) {
-//             // hide notifsBadge by setting display to none
-//             notifsBadge.style.display = "none";
-//         } else {
-//             numNotifsEl.textContent = numNotifs;
-//         }
-//     });
-
-// ...then, listen for any new notifications
+// Listen for any incoming notifications
 Echo.private("App.Models.User." + userId).notification((notification) => {
     if (import.meta.env.VITE_APP_DEBUG)
         console.log("Incoming notification:", notification);
@@ -60,10 +37,23 @@ function makeNotification(notification) {
         } your request!`;
     }
 
-    return `<li><a class="dropdown-item" href="${route(
-        "requests.show",
-        data["id"]
+    const deleteButton = document
+        .getElementById("notif-delete-form")
+        .content.cloneNode(true);
+    deleteButton.querySelector("form").action = route(
+        "notifications.destroy",
+        notification["id"]
+    );
+
+    const tempDiv = document.createElement("div");
+    tempDiv.appendChild(deleteButton);
+
+    return `<li class="d-flex justify-content-center align-items-center">
+    <i class="bi bi-circle-fill text-danger ms-3" style="font-size: 0.5rem"></i>
+    <a class="dropdown-item" href="${route(
+        "notifications.show",
+        notification["id"]
     )}">${text} <span class="text-muted">${timeAgo.format(
         new Date(notification["created_at"])
-    )}</span></a></li>`;
+    )}</span></a>${tempDiv.innerHTML}</li>`;
 }
