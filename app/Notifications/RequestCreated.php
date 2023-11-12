@@ -5,8 +5,6 @@ namespace App\Notifications;
 use App\Models\Request;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
 class RequestCreated extends Notification
@@ -46,7 +44,7 @@ class RequestCreated extends Notification
     {
         return new BroadcastMessage([
             'data' => [
-                'id' => $this->request->id,
+                'url' => route('requests.show', $this->request->id),
                 'user' => $this->request->user
             ],
             'created_at' => now(),
@@ -61,7 +59,7 @@ class RequestCreated extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'id' => $this->request->id,
+            'url' => route('requests.show', $this->request->id),
             'user' => $this->request->user,
         ];
     }

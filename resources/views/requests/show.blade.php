@@ -34,7 +34,7 @@
                     <p>{{ $request->message }}</p>
                 </div>
             @endif
-            @if ($request->ride->user_relation === 'driver')
+            @if ($request->ride->user_relation === 'driver' && $request->response === null)
                 <form action="{{ route('requests.update', $request->id) }}" method="POST">
                     @method('PUT')
                     @csrf
@@ -47,11 +47,13 @@
                 <div class="row mb-3">
                     <h3>Response</h3>
                     <p>{{ $request->response ? 'Accepted' : 'Denied' }}</p>
-                    <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
-                        @method('DELETE')
-                        @csrf
-                        <button type="submit" class="btn btn-danger">Mark as Read</button>
-                    </form>
+                    @if ($request->user_id === auth()->user()->id)
+                        <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="btn btn-danger">Mark as Read</button>
+                        </form>
+                    @endif
                 </div>
             @endif
             <script>

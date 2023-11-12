@@ -48,9 +48,10 @@
                 <div class="col">
                     <div class="card text-center h-100">
                         <div class="card-body d-flex flex-column">
-                            <a href="{{ route('rides.create') }}" class="stretched-link my-auto"
-                                title="Create new ride"><i class="bi bi-plus-circle-fill" title="Plus icon"
-                                    aria-hidden="true" style="font-size: 5em;"></i></a>
+                            <a href="{{ route('rides.create') }}"
+                                class="stretched-link my-auto orange orange-darken-hover" title="Create new ride"><i
+                                    class="bi bi-plus-circle-fill" title="Plus icon" aria-hidden="true"
+                                    style="font-size: 5em;"></i></a>
                         </div>
                     </div>
                 </div>

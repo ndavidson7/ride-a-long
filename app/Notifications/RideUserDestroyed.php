@@ -2,12 +2,13 @@
 
 namespace App\Notifications;
 
-use App\Models\Request;
+use App\Models\Ride;
+use App\Models\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class RequestUpdated extends Notification
+class RideUserDestroyed extends Notification
 {
     use Queueable;
 
@@ -15,7 +16,8 @@ class RequestUpdated extends Notification
      * Create a new notification instance.
      */
     public function __construct(
-        public Request $request
+        public Ride $ride,
+        public User $user
     ) {
     }
 
@@ -35,18 +37,18 @@ class RequestUpdated extends Notification
     // public function toMail(object $notifiable): MailMessage
     // {
     //     return (new MailMessage)
-    //                 ->line('The introduction to the notification.')
-    //                 ->action('Notification Action', url('/'))
-    //                 ->line('Thank you for using our application!');
+    //         ->line('The introduction to the notification.')
+    //         ->action('Notification Action', url('/'))
+    //         ->line('Thank you for using our application!');
     // }
 
     public function toBroadcast(object $notifiable)
     {
         return new BroadcastMessage([
             'data' => [
-                'url' => route('requests.show', $this->request->id),
-                'driver' => $this->request->ride->driver,
-                'response' => $this->request->response
+                'url' => route('rides.show', $this->ride->id),
+                'ride' => $this->ride,
+                'user' => $this->user
             ],
             'created_at' => now(),
         ]);
@@ -60,9 +62,9 @@ class RequestUpdated extends Notification
     public function toArray(object $notifiable): array
     {
         return [
-            'url' => route('requests.show', $this->request->id),
-            'driver' => $this->request->ride->driver,
-            'response' => $this->request->response,
+            'url' => route('rides.show', $this->ride->id),
+            'ride' => $this->ride,
+            'user' => $this->user
         ];
     }
 }

@@ -14,7 +14,7 @@ class NotificationController extends Controller
             $notification->markAsRead();
         }
 
-        return redirect()->route('requests.show', $notification->data['id']);
+        return redirect($notification->data['url']);
     }
 
     public function destroy(DatabaseNotification $notification)

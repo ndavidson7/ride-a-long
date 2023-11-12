@@ -27,14 +27,22 @@ function makeNotification(notification) {
     const data = notification["data"];
     let text = "";
 
-    if (notification["type"] === "App\\Notifications\\RequestCreated") {
-        const user = data["user"];
-        text = `${user.first_name} ${user.last_name} requested to join your ride!`;
-    } else {
-        const driver = data["driver"];
-        text = `${driver.first_name} ${driver.last_name} ${
-            data["response"] == 1 ? "accepted" : "declined"
-        } your request!`;
+    switch (notification["type"]) {
+        case "App\\Notifications\\RequestCreated":
+            const requester = data["user"];
+            text = `${requester.first_name} ${requester.last_name} requested to join your ride!`;
+            break;
+        case "App\\Notifications\\RequestUpdated":
+            const driver = data["driver"];
+            text = `${driver.first_name} ${driver.last_name} ${
+                data["response"] == 1 ? "accepted" : "declined"
+            } your request!`;
+            break;
+        case "App\\Notifications\\RideUserDestroyed":
+            const ride = data["ride"];
+            const user = data["user"];
+            text = `${user.first_name} ${user.last_name} left your ride from ${ride.origin.city} to ${ride.destination.city}!`;
+            break;
     }
 
     const deleteButton = document
@@ -53,7 +61,7 @@ function makeNotification(notification) {
     <a class="dropdown-item" href="${route(
         "notifications.show",
         notification["id"]
-    )}">${text} <span class="text-muted">${timeAgo.format(
+    )}">${text} <small class="text-muted">${timeAgo.format(
         new Date(notification["created_at"])
-    )}</span></a>${tempDiv.innerHTML}</li>`;
+    )}</small></a>${tempDiv.innerHTML}</li>`;
 }
