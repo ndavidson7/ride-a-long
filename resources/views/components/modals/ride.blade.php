@@ -10,7 +10,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <div id="modal-button-div"></div>
+                <div class="d-flex gap-2" id="modal-button-div"></div>
                 <template id="delete-form">
                     <form action="" method="POST">
                         @csrf

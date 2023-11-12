@@ -10,52 +10,62 @@ modal?.addEventListener("show.bs.modal", (event) => {
     const relatedModelId = event.relatedTarget.dataset.relatedModelId;
 
     map.update(rideId);
-    updateButton(userRelation, rideId, relatedModelId);
+    updateButtons(userRelation, rideId, relatedModelId);
 });
 
-function updateButton(userRelation, rideId, relatedModelId) {
+function updateButtons(userRelation, rideId, relatedModelId) {
     const deleteFormTemplate = document.getElementById("delete-form").content;
 
-    let modalButton;
+    const viewRideBtn = document.createElement("a");
+    viewRideBtn.href = route("rides.show", rideId);
+    viewRideBtn.classList.add("btn", "btn-primary");
+    viewRideBtn.textContent = "View Ride";
+
+    let modalButtons = [viewRideBtn];
     switch (userRelation) {
         case "driver":
-            modalButton = document.createElement("a");
-            modalButton.href = route("rides.edit", rideId);
-            modalButton.classList.add("btn", "btn-primary");
-            modalButton.textContent = "Edit Ride";
+            const editRideBtn = document.createElement("a");
+            editRideBtn.href = route("rides.edit", rideId);
+            editRideBtn.classList.add("btn", "btn-primary");
+            editRideBtn.textContent = "Edit Ride";
+            modalButtons.push(editRideBtn);
             break;
         case "passenger":
             if ("content" in document.createElement("template")) {
-                console.log(relatedModelId);
-                modalButton = deleteFormTemplate.cloneNode(true);
-                modalButton.querySelector("form").action = route(
+                const leaveRideBtn = deleteFormTemplate.cloneNode(true);
+                leaveRideBtn.querySelector("form").action = route(
                     "ride-user.destroy",
                     [rideId, relatedModelId]
                 );
-                modalButton.querySelector("button").textContent = "Leave Ride";
+                leaveRideBtn.querySelector("button").textContent = "Leave Ride";
+                modalButtons.push(leaveRideBtn);
             } else {
                 console.error("HTML template element not supported.");
             }
             break;
         case "requester":
             if ("content" in document.createElement("template")) {
-                modalButton = deleteFormTemplate.cloneNode(true);
-                modalButton.querySelector("form").action = route(
+                const cancelRequestBtn = deleteFormTemplate.cloneNode(true);
+                cancelRequestBtn.querySelector("form").action = route(
                     "requests.destroy",
                     relatedModelId
                 );
-                modalButton.querySelector("button").textContent =
+                cancelRequestBtn.querySelector("button").textContent =
                     "Cancel Request";
+                modalButtons.push(cancelRequestBtn);
             } else {
                 console.error("HTML template element not supported.");
             }
             break;
         case "none":
         default:
-            modalButton = document.createElement("a");
-            modalButton.href = route("requests.create", rideId);
-            modalButton.classList.add("btn", "btn-primary");
-            modalButton.textContent = "Request to Join";
+            const requestBtn = document.createElement("a");
+            requestBtn.href = route("requests.create", rideId);
+            requestBtn.classList.add("btn", "btn-primary");
+            requestBtn.textContent = "Request to Join";
+            modalButtons.push(requestBtn);
     }
-    document.getElementById("modal-button-div").replaceChildren(modalButton);
+    document
+        .getElementById("modal-button-div")
+        .replaceChildren(...modalButtons);
 }

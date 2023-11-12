@@ -35,7 +35,7 @@ export class MapComponent {
     }
 
     async update() {
-        // Show loading spinner
+        // Show loading placeholders
         this.setLoading(true);
 
         // Get data
@@ -56,7 +56,7 @@ export class MapComponent {
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("DirectionsResult:", routeResult);
 
-        // Hide loading spinner
+        // Hide loading placeholders
         this.setLoading(false);
 
         // Render data
@@ -306,6 +306,19 @@ export class RideEditMapComponent extends RideCreateMapComponent {
         data.waypoints = ride.waypoints; // Ride will be provided in a script tag in the Blade view
 
         return data;
+    }
+}
+
+export class RideShowMapComponent extends MapComponent {
+    async init() {
+        // Update as soon as map is initialized
+        await super.init();
+
+        super.update();
+    }
+
+    getData() {
+        return ride; // Ride will be provided in a script tag in the Blade view
     }
 }
 
