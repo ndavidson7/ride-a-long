@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class FlashMessage extends Component
+class AlertToast extends Component
 {
     /**
      * Create a new component instance.
@@ -22,6 +22,6 @@ class FlashMessage extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.flash-message');
+        return view('components.alert-toast');
     }
 }

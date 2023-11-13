@@ -11,9 +11,7 @@
 
     <x-footer />
 
-    @if (session()->has('status'))
-        <x-flash-message :type="session('status')" :message="session('message')" />
-    @endif
+    <x-toast-container />
 
 </body>
 

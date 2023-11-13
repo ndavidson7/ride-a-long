@@ -54,6 +54,10 @@ $uva-blue-dark: #141e3c;
     color: $uva-orange;
 }
 
+.bg-uva-orange {
+    background-color: $uva-orange !important;
+}
+
 header {
     background-color: $uva-blue;
     border-bottom: 10px solid $uva-orange;
