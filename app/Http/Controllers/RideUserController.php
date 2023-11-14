@@ -6,6 +6,7 @@ use App\Models\Ride;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\RideService;
+use Illuminate\Support\Facades\Auth;
 use App\Notifications\RideUserDestroyed;
 
 class RideUserController extends Controller
@@ -24,7 +25,11 @@ class RideUserController extends Controller
     {
         $rideService->removePassenger($ride, $user);
 
-        $ride->driver->notify(new RideUserDestroyed($ride, $user));
+        if (Auth::id() === $user->id) {
+            $ride->driver->notify(new RideUserDestroyed($ride, $user));
+        } else {
+            $user->notify(new RideUserDestroyed($ride, $user));
+        }
 
         return back()->with(['status' => 'success', 'message' => 'Passenger removed successfully.']);
     }

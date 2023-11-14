@@ -4,67 +4,18 @@ namespace App\Notifications;
 
 use App\Models\Ride;
 use App\Models\User;
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
+use Illuminate\Support\Facades\Auth;
 
-class RideUserDestroyed extends Notification
+class RideUserDestroyed extends BaseNotification
 {
-    use Queueable;
-
     /**
      * Create a new notification instance.
      */
-    public function __construct(
-        public Ride $ride,
-        public User $user
-    ) {
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(Ride $ride, User $user)
     {
-        return ['database', 'broadcast'];
-    }
-
-    /**
-     * Get the mail representation of the notification.
-     */
-    // public function toMail(object $notifiable): MailMessage
-    // {
-    //     return (new MailMessage)
-    //         ->line('The introduction to the notification.')
-    //         ->action('Notification Action', url('/'))
-    //         ->line('Thank you for using our application!');
-    // }
-
-    public function toBroadcast(object $notifiable)
-    {
-        return new BroadcastMessage([
-            'data' => [
-                'url' => route('rides.show', $this->ride->id),
-                'ride' => $this->ride,
-                'user' => $this->user
-            ],
-            'created_at' => now(),
-        ]);
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            'url' => route('rides.show', $this->ride->id),
-            'ride' => $this->ride,
-            'user' => $this->user
-        ];
+        $this->url = route('rides.show', $ride->id);
+        $this->message = Auth::id() === $user->id
+            ? "{$user->first_name} {$user->last_name} left your ride!"
+            : "You were removed from {$ride->driver->first_name} {$ride->driver->last_name}'s ride!";
     }
 }

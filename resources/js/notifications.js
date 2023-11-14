@@ -29,28 +29,8 @@ Echo.private("App.Models.User." + userId).notification((notification) => {
 
 function formatData(notification) {
     const data = notification["data"];
-    let message = "";
-    switch (notification["type"]) {
-        case "App\\Notifications\\RequestCreated":
-            const requester = data["user"];
-            message = `${requester.first_name} ${requester.last_name} requested to join your ride!`;
-            break;
-        case "App\\Notifications\\RequestUpdated":
-            const driver = data["driver"];
-            message = `${driver.first_name} ${driver.last_name} ${
-                data["response"] == 1 ? "accepted" : "declined"
-            } your request!`;
-            break;
-        case "App\\Notifications\\RideUserDestroyed":
-            const ride = data["ride"];
-            const user = data["user"];
-            message = `${user.first_name} ${user.last_name} left your ride from ${ride.origin.city} to ${ride.destination.city}!`;
-            break;
-        default:
-            console.error("Unknown type in notification:", notification);
-            message = "Unknown notification type";
-    }
 
+    const message = data["message"];
     const viewUrl = route("notifications.show", notification["id"]);
     const deleteUrl = route("notifications.destroy", notification["id"]);
 

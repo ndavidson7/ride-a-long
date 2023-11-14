@@ -3,66 +3,17 @@
 namespace App\Notifications;
 
 use App\Models\Request;
-use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Notification;
-use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class RequestUpdated extends Notification
+class RequestUpdated extends BaseNotification
 {
-    use Queueable;
-
     /**
      * Create a new notification instance.
      */
-    public function __construct(
-        public Request $request
-    ) {
-    }
-
-    /**
-     * Get the notification's delivery channels.
-     *
-     * @return array<int, string>
-     */
-    public function via(object $notifiable): array
+    public function __construct(Request $request)
     {
-        return ['database', 'broadcast'];
-    }
+        $this->url = route('requests.show', $request->id);
 
-    /**
-     * Get the mail representation of the notification.
-     */
-    // public function toMail(object $notifiable): MailMessage
-    // {
-    //     return (new MailMessage)
-    //                 ->line('The introduction to the notification.')
-    //                 ->action('Notification Action', url('/'))
-    //                 ->line('Thank you for using our application!');
-    // }
-
-    public function toBroadcast(object $notifiable)
-    {
-        return new BroadcastMessage([
-            'data' => [
-                'url' => route('requests.show', $this->request->id),
-                'driver' => $this->request->ride->driver,
-                'response' => $this->request->response
-            ],
-            'created_at' => now(),
-        ]);
-    }
-
-    /**
-     * Get the array representation of the notification.
-     *
-     * @return array<string, mixed>
-     */
-    public function toArray(object $notifiable): array
-    {
-        return [
-            'url' => route('requests.show', $this->request->id),
-            'driver' => $this->request->ride->driver,
-            'response' => $this->request->response,
-        ];
+        $response = $request->response == 1 ? 'accepted' : 'declined';
+        $this->message = "{$request->user->first_name} {$request->user->last_name} {$response} your request!";
     }
 }

@@ -20,31 +20,11 @@
                                     <i class="bi bi-circle-fill text-danger ms-3" style="font-size: 0.5rem"></i>
                                 @endif
                                 <a class='dropdown-item' href="{{ route('notifications.show', $notification['id']) }}">
-                                    @switch($notification['type'])
-                                        @case('App\\Notifications\\RequestCreated')
-                                            {{ $notification['data']['user']['first_name'] }}
-                                            {{ $notification['data']['user']['last_name'] }} requested to join your ride!
-                                        @break
-
-                                        @case('App\\Notifications\\RequestUpdated')
-                                            {{ $notification['data']['driver']['first_name'] }}
-                                            {{ $notification['data']['driver']['last_name'] }}
-                                            {{ $notification['data']['response'] == 1 ? 'accepted' : 'declined' }} your
-                                            request!
-                                        @break
-
-                                        @case('App\\Notifications\\RideUserDestroyed')
-                                            {{ $notification['data']['user']['first_name'] }}
-                                            {{ $notification['data']['user']['last_name'] }}
-                                            left your ride from {{ $notification['data']['ride']['origin']['city'] }} to
-                                            {{ $notification['data']['ride']['destination']['city'] }}!
-                                        @break
-                                    @endswitch
+                                    {{ $notification['data']['message'] }}
 
                                     <small class="text-muted" id="notif-time-ago"></small>
                                 </a>
-                                <form action="{{ route('notifications.destroy', $notification['id']) }}"
-                                    method="POST">
+                                <form action="{{ route('notifications.destroy', $notification['id']) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="dropdown-item"><i
