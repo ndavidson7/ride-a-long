@@ -45,13 +45,11 @@ class UserController extends Controller
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Account created successfully!']);
     }
 
-    public function show(int $id = null)
+    public function show(User $user = null)
     {
-        $user = $id ? User::findOrFail($id) : Auth::user();
-
         return view('profiles.show', [
             'entries' => ['resources/js/views/profiles/show.js'],
-            'user' => $user,
+            'user' => $user ?? Auth::user(),
             'uploadedPfp' => session('uploadedPfp') ?? false,
         ]);
     }

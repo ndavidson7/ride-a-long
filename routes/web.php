@@ -31,7 +31,7 @@ Route::controller(UserController::class)->group(function () {
     Route::get('/signup', 'create')->middleware('guest')->name('signup');
     Route::post('/signup', 'store')->middleware('guest');
     Route::get('/profile/edit', 'edit')->middleware(['auth', 'verified'])->name('profile.edit'); // have to put this before show because of wildcard
-    Route::get('/profile/{id?}', 'show')->middleware(['auth', 'verified'])->name('profile.show'); // TODO: Could consider changing ID to local-part of email
+    Route::get('/profile/{user?}', 'show')->middleware(['auth', 'verified'])->name('profile.show'); // TODO: Could consider changing ID to local-part of email
     Route::put('/profile', 'update')->middleware(['auth', 'verified'])->name('profile.update');
     Route::delete('/profile', 'destroy')->middleware(['auth', 'verified'])->name('profile.destroy');
 });
