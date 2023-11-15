@@ -16,13 +16,14 @@
                     <ul id="notifs" class="dropdown-menu dropdown-menu-end" aria-labelledby="notificationsDropdown">
                         @foreach (auth()->user()->notifications as $notification)
                             <li class="d-flex justify-content-center align-items-center">
-                                @if ($notification['read_at'] === null)
-                                    <i class="bi bi-circle-fill text-danger ms-3" style="font-size: 0.5rem"></i>
-                                @endif
-                                <a class='dropdown-item' href="{{ route('notifications.show', $notification['id']) }}">
+                                <a class='dropdown-item d-flex align-items-center'
+                                    href="{{ route('notifications.show', $notification['id']) }}">
+                                    @if ($notification['read_at'] === null)
+                                        <i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.3rem"></i>
+                                    @endif
                                     {{ $notification['data']['message'] }}
-
-                                    <small class="text-muted" id="notif-time-ago"></small>
+                                    <small
+                                        class="text-muted ms-2">{{ $notification->created_at->diffForHumans() }}</small>
                                 </a>
                                 <form action="{{ route('notifications.destroy', $notification['id']) }}" method="POST">
                                     @method('DELETE')

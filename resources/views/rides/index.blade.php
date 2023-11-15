@@ -15,10 +15,11 @@
                             placeholder="Destination City" value="{{ request('destination-city') }}" />
                     </div>
                     <div class="col-auto">
-                        <?php date_default_timezone_set('America/New_York'); ?>
                         {{-- <label class="form-label" for="start-date">Date</label> --}}
                         <input type="date" class="form-control" name="start-date" id="start-date"
-                            placeholder="Origin City" min="{{ date('Y-m-d') }}" value="{{ request('start-date') }}" />
+                            placeholder="Origin City"
+                            min="{{ Carbon\Carbon::now()->setTimezone('America/New_York')->format('Y-m-d') }}"
+                            value="{{ request('start-date') }}" />
                     </div>
                     <div class="col-auto form-check">
                         <label class="form-check-label" for="detours-checkbox"><a href="#"

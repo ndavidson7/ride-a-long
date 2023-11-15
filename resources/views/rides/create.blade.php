@@ -10,12 +10,17 @@
             method="post">
             @csrf
             <h2 class="text-center mb-3">Ride Details</h2>
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div>{{ $error }}</div>
+                @endforeach
+            @endif
             <div class="row mb-3">
                 <div class="col-sm-8 mb-3 mb-sm-0">
-                    <?php date_default_timezone_set('America/New_York'); ?>
                     <label for="start-time" class="form-label">Date and Time</label>
                     <input type="datetime-local" class="form-control" id="start-time" name="start-time"
-                        min="{{ date('Y-m-d\TH\:i') }}" required />
+                        min="{{ Carbon\Carbon::now()->setTimezone('America/New_York')->format('Y-m-d\TH:i') }}"
+                        required />
                 </div>
                 <div class="col-sm-4">
                     <label for="seats" class="form-label">Seats</label>

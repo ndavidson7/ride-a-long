@@ -23,6 +23,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
 -   [ ] Notifications via email and SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Add messaging functionality
+-   [ ] Check all forms validation and add error feedback to views
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)

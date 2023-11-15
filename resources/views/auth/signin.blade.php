@@ -24,8 +24,9 @@
                     <div class="row mb-3 text-white">
                         <div class="col-sm-6 d-flex justify-content-center">
                             <div class="form-check mb-3 mb-md-0 align-items-center">
-                                <input class="form-check-input" type="checkbox" id="remember" name="remember" />
-                                <label class="form-check-label" for="remember" value="1">Remember me</label>
+                                <input class="form-check-input" type="checkbox" id="remember" name="remember"
+                                    value="1" />
+                                <label class="form-check-label" for="remember">Remember me</label>
                             </div>
                         </div>
                         <div class="col-sm-6 d-flex justify-content-center">

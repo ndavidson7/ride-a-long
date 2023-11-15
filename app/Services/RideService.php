@@ -113,7 +113,7 @@ class RideService
             ]
         )->id;
 
-        $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
+        // $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
 
         if ($ride) {
             $ride->update([
@@ -122,7 +122,7 @@ class RideService
                 'destination_id' => $destinationId,
                 'seats_total' => $fields['seats'],
                 'detours_allowed' => $request->has('detours'),
-                'price_per_mile' => $fields['price'],
+                // 'price_per_mile' => $fields['price'],
                 'description' => $fields['description'],
             ]);
         } else {
@@ -133,7 +133,7 @@ class RideService
                 'destination_id' => $destinationId,
                 'seats_total' => $fields['seats'],
                 'detours_allowed' => $request->has('detours'),
-                'price_per_mile' => $fields['price'],
+                // 'price_per_mile' => $fields['price'],
                 'description' => $fields['description'],
             ]);
         }

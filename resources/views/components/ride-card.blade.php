@@ -4,7 +4,7 @@
         {{ $ride->destination->city }}, {{ $ride->destination->state }}
     </h5>
     <div class="card-body d-flex flex-column">
-        <h6 class="card-subtitle mb-2">{{ date('n/j \@ g:i a', strtotime($ride->start_time)) }}
+        <h6 class="card-subtitle mb-2">{{ $ride->start_time->format('n/j \@ g:i a') }}
         </h6>
         <h6 class="card-subtitle mb-2"> {{ $ride->seats_open }} out of {{ $ride->seats_total }}
             seats

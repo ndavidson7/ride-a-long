@@ -49,8 +49,9 @@ function makeNotification(data) {
     notifsEl.insertAdjacentHTML(
         "afterbegin",
         `<li class="d-flex justify-content-center align-items-center">
-    <i class="bi bi-circle-fill text-danger ms-3" style="font-size: 0.5rem"></i>
-    <a class="dropdown-item" href="${data.viewUrl}">${data.message} <small class="text-muted">just now</small></a>${tempDiv.innerHTML}</li>`
+    <a class="dropdown-item d-flex align-items-center" href="${data.viewUrl}">
+    <i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.3rem"></i>
+    ${data.message} <small class="text-muted ms-2">just now</small></a>${tempDiv.innerHTML}</li>`
     );
     numNotifs++;
     numNotifsEl.textContent = numNotifs;

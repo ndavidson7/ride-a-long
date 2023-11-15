@@ -37,8 +37,8 @@ class StoreOrUpdateRideRequest extends FormRequest
             'destination-country' => 'required',
             'destination-latitude' => 'required|numeric',
             'destination-longitude' => 'required|numeric',
-            'pricing' => 'required|in:seat,mile',
-            'price' => 'required|decimal:0,2|min:0',
+            // 'pricing' => 'required|in:seat,mile',
+            // 'price' => 'required|decimal:0,2|min:0',
             'description' => 'nullable|string',
         ];
     }
