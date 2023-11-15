@@ -23,6 +23,10 @@ class RideUserController extends Controller
 
     public function destroy(RideService $rideService, Ride $ride, User $user)
     {
+        if (!($user->id === $ride->driver_id || $ride->passengers()->where('id', $user->id)->exists() && Auth::id() === $user->id)) {
+            return back()->with(['status' => 'error', 'message' => 'You are not authorized to remove this passenger.']);
+        }
+
         $rideService->removePassenger($ride, $user);
 
         if (Auth::id() === $user->id) {

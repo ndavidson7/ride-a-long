@@ -111,7 +111,7 @@ class Ride extends Model
     {
         if ($this->driver->id == auth()->id())
             return 'driver';
-        else if (($request = $this->requests()->where('user_id', auth()->id())->first()) != null) {
+        else if (($request = $this->requests()->where('user_id', auth()->id())->first()) != null && $request->response == null) {
             $this->relatedModelId = $request->id;
             return 'requester';
         } else if (($passenger = $this->passengers()->where('user_id', auth()->id())->first()) != null) {
