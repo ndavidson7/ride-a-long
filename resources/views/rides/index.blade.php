@@ -58,7 +58,7 @@
                 </div>
                 @foreach ($rides as $ride)
                     <div class="col">
-                        <x-ride-card :$ride />
+                        <x-cards.ride-preview :$ride />
                     </div>
                 @endforeach
             </div>

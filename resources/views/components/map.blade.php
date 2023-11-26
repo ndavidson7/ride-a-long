@@ -1,7 +1,7 @@
 <div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">
     <div class="map" style="height:300px; width:100%;"></div>
     <div>
-        <h3><a target="_blank" id="route-directions">Full Route Directions</a></h3>
+        <a class="btn btn-uva-ob" target="_blank" id="route-directions">View Directions</a>
     </div>
     <ol class="route list-group list-group-numbered list-group-flush"></ol>
     <h4 class="distance"></h4>

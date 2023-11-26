@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Ride;
 use Illuminate\Http\Request;
 use App\Services\RideService;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RideFilterRequest;
+use Musonza\Chat\Facades\ChatFacade as Chat;
 use App\Http\Requests\StoreOrUpdateRideRequest;
 
 class RideController extends Controller
@@ -49,12 +51,75 @@ class RideController extends Controller
     public function show(Request $request, Ride $ride)
     {
         // Return JSON with relevant ride details
-        return $request->expectsJson()
-            ? new RideResource($ride)
-            : view('rides.show', [
-                'entries' => ['resources/js/views/rides/show.js'],
-                'ride' => $ride->load('driver', 'passengers', 'requests.user', 'requests.pickup', 'requests.dropoff')
-            ]);
+        if ($request->expectsJson()) {
+            return new RideResource($ride);
+        }
+
+        $ride = $ride->load('driver', 'passengers', 'requests.user', 'requests.pickup', 'requests.dropoff', 'conversation');
+
+        // For chat JavaScript: Make array of each passenger's name and pfp_url, using their IDs as keys
+        $users = $ride->passengers->reduce(function ($carry, $passenger) {
+            $carry[$passenger->id] = [
+                'name' => $passenger->name,
+                'pfp_url' => $passenger->pfp_url,
+            ];
+
+            return $carry;
+        }, []);
+
+        $users[$ride->driver->id] = [
+            'name' => $ride->driver->name,
+            'pfp_url' => $ride->driver->pfp_url,
+        ];
+
+        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) use ($users) {
+            $sender = $users[$message->sender['id']];
+            $sender['id'] = $message->sender['id'];
+
+            return [
+                'sender' => $sender,
+                'body' => $message->body,
+                'created_at' => $message->created_at->setTimezone('America/New_York')->format('g:i a'),
+            ];
+        });
+
+        // Iterate through $messages and group adjacent messages from the same sender, grouping them as such:
+        // ["sender" => ["id", "name", "pfp_url"], "message_chain" => ["message", "message", ...], "timestamp" => {most recent message timestamp}]
+        $messageWrappers = $messagePaginator->reduce(function ($carry, $message) {
+            if (empty($carry)) {
+                return [
+                    [
+                        'sender' => $message['sender'],
+                        'message_chain' => [$message['body']],
+                        'timestamp' => $message['created_at']
+                    ]
+                ];
+            }
+
+            $lastMessage = $carry[count($carry) - 1];
+
+            if ($lastMessage['sender']['id'] === $message['sender']['id']) {
+                $lastMessage['message_chain'][] = $message['body'];
+                $lastMessage['timestamp'] = $message['created_at'];
+                $carry[count($carry) - 1] = $lastMessage;
+            } else {
+                $carry[] = [
+                    'sender' => $message['sender'],
+                    'message_chain' => [$message['body']],
+                    'timestamp' => $message['created_at']
+                ];
+            }
+
+            return $carry;
+        }, []);
+
+
+        return view('rides.show', [
+            'entries' => ['resources/js/views/rides/show.js'],
+            'ride' => $ride,
+            'users' => $users,
+            'messageWrappers' => $messageWrappers,
+        ]);
     }
 
     public function edit(Ride $ride)
@@ -87,6 +152,7 @@ class RideController extends Controller
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to delete it.']);
         }
 
+        // $ride->conversation->delete();
         $ride->delete();
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted successfully.']);

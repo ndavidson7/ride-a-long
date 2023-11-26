@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RideUserController;
+use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoutePlannerController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
@@ -123,4 +124,19 @@ Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'
 Route::controller(NotificationController::class)->middleware(['auth', 'verified'])->name('notifications.')->prefix('notifications')->group(function () {
     Route::get('/{notification}', 'show')->name('show');
     Route::delete('/{notification}', 'destroy')->name('destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| ConversationController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(ConversationController::class)->middleware(['auth', 'verified'])->name('conversations.')->prefix('messages')->group(function () {
+    Route::get('/', 'index')->name('index');
+    Route::get('/new/{user}', 'create')->name('create');
+    Route::post('/new/{user}', 'store')->name('store');
+    Route::get('/{conversation}', 'show')->name('show');
+    Route::put('/{conversation}', 'update')->name('update');
+    Route::delete('/{conversation}', 'destroy')->name('destroy');
 });

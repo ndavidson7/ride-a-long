@@ -8,17 +8,16 @@ use App\Models\Address;
 use App\Models\Request;
 use App\Models\Waypoint;
 use App\Services\RouteService;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrUpdateRideRequest;
+use Musonza\Chat\Facades\ChatFacade as Chat;
 
 class RideService
 {
-    protected $routeService;
-
-    public function __construct(RouteService $routeService)
-    {
-        $this->routeService = $routeService;
+    public function __construct(
+        protected RouteService $routeService
+    ) {
     }
-
 
     public function storeRide(StoreOrUpdateRideRequest $request)
     {
@@ -32,6 +31,7 @@ class RideService
 
     public function addPassenger(Request $request)
     {
+        // Find or create waypoints
         $pickupWaypoint = $request->pickup_id
             ? $request->ride->waypoints()->firstOrCreate([
                 'address_id' => $request->pickup_id,
@@ -48,10 +48,14 @@ class RideService
             ])
             : null;
 
+        // Add passenger to ride
         $request->ride->passengers()->attach($request->user_id, [
             'pickup_waypoint_id' => $pickupWaypoint?->id,
             'dropoff_waypoint_id' => $dropoffWaypoint?->id
         ]);
+
+        // Add passenger to ride conversation
+        Chat::conversation($request->ride->conversation)->addParticipants([$request->user]);
 
         // if no pickup or dropoff was specified, done
         if (!$pickupWaypoint && !$dropoffWaypoint) return;
@@ -85,6 +89,9 @@ class RideService
         $ride->waypoints()->whereIn('id', $waypointIds)->delete();
 
         $ride->passengers()->detach($user->id);
+
+        // Remove the passenger from the ride conversation
+        Chat::conversation($ride->conversation)->removeParticipants([$user]);
     }
 
     private function storeOrUpdateRide(StoreOrUpdateRideRequest $request, Ride $ride = null)
@@ -135,6 +142,7 @@ class RideService
                 'detours_allowed' => $request->has('detours'),
                 // 'price_per_mile' => $fields['price'],
                 'description' => $fields['description'],
+                'conversation_id' => Chat::createConversation([Auth::user()])->makePrivate()->id,
             ]);
         }
     }

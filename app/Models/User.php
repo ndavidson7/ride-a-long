@@ -10,10 +10,11 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
+use Musonza\Chat\Traits\Messageable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, MediaAlly;
+    use HasFactory, Notifiable, MediaAlly, Messageable;
 
     /*
     |--------------------------------------------------------------------------
@@ -117,6 +118,18 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getIsDriverAttribute(): bool
     {
         return $this->car()->exists();
+    }
+
+    public function getPfpUrlAttribute(): string|null
+    {
+        return $this->fetchFirstMedia()['file_url'] ?? null;
+    }
+
+    public function getParticipantDetails()
+    {
+        return [
+            'id' => $this->id
+        ];
     }
 
     /*

@@ -148,3 +148,25 @@ body.splash .btn {
         rgba(253, 160, 133, 1)
     );
 }
+
+#ride-conversation .form-control {
+    border-color: transparent;
+}
+
+#ride-conversation .form-control:focus {
+    border-color: transparent;
+    box-shadow: inset 0px 0px 0px 1px transparent;
+}
+
+#ride-conversation .card-footer {
+    background-color: white;
+    border-top: 2px solid #f5f5f5;
+}
+
+.divider:after,
+.divider:before {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #eee;
+}

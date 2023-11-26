@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Musonza\Chat\Models\Conversation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,7 +32,8 @@ class Ride extends Model
         'seats_total',
         'detours_allowed',
         'price_per_mile',
-        'description'
+        'description',
+        'conversation_id'
     ];
 
     protected $hidden = [
@@ -160,5 +162,10 @@ class Ride extends Model
     public function passengers(): BelongsToMany
     {
         return $this->belongsToMany(User::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
+    }
+
+    public function conversation(): BelongsTo
+    {
+        return $this->belongsTo(Conversation::class);
     }
 }
