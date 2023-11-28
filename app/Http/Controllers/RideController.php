@@ -79,40 +79,51 @@ class RideController extends Controller
             return [
                 'sender' => $sender,
                 'body' => $message->body,
-                'created_at' => $message->created_at->setTimezone('America/New_York')->format('g:i a'),
+                'created_at' => $message->created_at,
             ];
         });
 
-        // Iterate through $messages and group adjacent messages from the same sender, grouping them as such:
-        // ["sender" => ["id", "name", "pfp_url"], "message_chain" => ["message", "message", ...], "timestamp" => {most recent message timestamp}]
-        $messageWrappers = $messagePaginator->reduce(function ($carry, $message) {
+        /* 
+         * Iterate through $messages and group adjacent messages from the same sender into a message wrapper.
+         * Sender contains properties of the message's creator, datetime is the first message's timestamp in Carbon's calendar() format,
+         * and message_chain holds each message and its timestamp.
+         * 
+         * Message wrapper structure:
+         * [
+         *      'sender' => ['id', 'name', 'pfp_url'],
+         *      'datetime' => 'datetime',
+         *      'message_chain' => [['message', 'timestamp'], ['message', 'timestamp'], ...]
+         * ]
+         */
+        $messageWrappers = $messagePaginator->reduce(function ($carry, $messageModel) {
+            $sender = $messageModel['sender'];
+            $message = $messageModel['body'];
+            $carbon = $messageModel['created_at']->setTimezone('America/New_York');
+            $timestamp = $carbon->format('g:i A');
+
             if (empty($carry)) {
-                return [
-                    [
-                        'sender' => $message['sender'],
-                        'message_chain' => [$message['body']],
-                        'timestamp' => $message['created_at']
-                    ]
-                ];
-            }
-
-            $lastMessage = $carry[count($carry) - 1];
-
-            if ($lastMessage['sender']['id'] === $message['sender']['id']) {
-                $lastMessage['message_chain'][] = $message['body'];
-                $lastMessage['timestamp'] = $message['created_at'];
-                $carry[count($carry) - 1] = $lastMessage;
-            } else {
                 $carry[] = [
-                    'sender' => $message['sender'],
-                    'message_chain' => [$message['body']],
-                    'timestamp' => $message['created_at']
+                    'sender' => $sender,
+                    'datetime' => $carbon->calendar(),
+                    'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
                 ];
+            } else {
+                $lastMessageWrapper = end($carry);
+
+                if ($lastMessageWrapper['sender']['id'] === $sender['id']) {
+                    $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $timestamp];
+                    $carry[count($carry) - 1] = $lastMessageWrapper;
+                } else {
+                    $carry[] = [
+                        'sender' => $sender,
+                        'datetime' => $carbon->calendar(),
+                        'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
+                    ];
+                }
             }
 
             return $carry;
         }, []);
-
 
         return view('rides.show', [
             'entries' => ['resources/js/views/rides/show.js'],

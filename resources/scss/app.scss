@@ -149,18 +149,24 @@ body.splash .btn {
     );
 }
 
-#ride-conversation .form-control {
-    border-color: transparent;
-}
+#ride-conversation {
+    & .form-control {
+        border-color: transparent;
+    }
 
-#ride-conversation .form-control:focus {
-    border-color: transparent;
-    box-shadow: inset 0px 0px 0px 1px transparent;
-}
+    & .form-control:focus {
+        border-color: transparent;
+        box-shadow: inset 0px 0px 0px 1px transparent;
+    }
 
-#ride-conversation .card-footer {
-    background-color: white;
-    border-top: 2px solid #f5f5f5;
+    & .card-footer {
+        background-color: white;
+        border-top: 2px solid #f5f5f5;
+    }
+
+    & .timestamp {
+        font-size: 0.75em;
+    }
 }
 
 .divider:after,

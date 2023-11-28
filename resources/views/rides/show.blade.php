@@ -6,7 +6,7 @@
             </div>
             @if (in_array($ride->user_relation, ['driver', 'passenger']))
                 <div class="col-lg">
-                    <x-cards.ride-conversation class="mb-3" :$ride :messageWrappers="json_encode($messageWrappers)" :$users />
+                    <x-cards.ride-conversation class="mb-3" :$ride :$messageWrappers :$users />
                     <x-cards.ride-passengers :$ride class="mb-3" />
                     @if ($ride->user_relation === 'driver')
                         <x-cards.ride-requests :$ride />

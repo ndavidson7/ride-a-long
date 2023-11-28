@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use Musonza\Chat\Models\Conversation;
 use Illuminate\Support\Facades\Broadcast;
 
 /*
@@ -20,4 +21,10 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('profile-pictures.{userId}', function (User $user, int $userId) {
     return $user->id === $userId;
+});
+
+Broadcast::channel('mc-chat-conversation.{conversation}', function (User $user, Conversation $conversation) {
+    return $conversation->getParticipants()->contains(function ($user) {
+        return $user->id === Auth::user()->id;
+    });
 });

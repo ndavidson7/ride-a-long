@@ -10,22 +10,24 @@ let numNotifs = parseInt(numNotifsEl.textContent);
 const toastContainer = document.getElementById("toast-container");
 
 // Listen for any incoming notifications
-Echo.private("App.Models.User." + userId).notification((notification) => {
-    if (import.meta.env.VITE_APP_DEBUG)
-        console.log("Incoming notification:", notification);
+Echo.private("App.Models.User." + window.userId).notification(
+    (notification) => {
+        if (import.meta.env.VITE_APP_DEBUG)
+            console.log("Incoming notification:", notification);
 
-    // Show the notification badge
-    // notifsBadge.style.display = "inline-block"; // Redundant because notifsBadge is always shown at the moment
+        // Show the notification badge
+        // notifsBadge.style.display = "inline-block"; // Redundant because notifsBadge is always shown at the moment
 
-    // Extract and format data from the notification
-    const data = formatData(notification);
+        // Extract and format data from the notification
+        const data = formatData(notification);
 
-    // Add the notification to the dropdown
-    makeNotification(data);
+        // Add the notification to the dropdown
+        makeNotification(data);
 
-    // Create and show a toast
-    makeToast(data);
-});
+        // Create and show a toast
+        makeToast(data);
+    }
+);
 
 function formatData(notification) {
     const data = notification["data"];

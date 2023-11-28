@@ -7,7 +7,7 @@ return [
      * Channel: mc-chat-conversation.2,
      * Event: Musonza\Chat\Eventing\MessageWasSent
      */
-    'broadcasts' => false,
+    'broadcasts' => true,
 
     /*
      * Specify the fields that you want to return each time for the sender.
@@ -55,4 +55,11 @@ return [
         'message'      => null,
         'participant'  => null,
     ],
+
+    /*
+     * Message wrapper grouping settings
+     */
+    'message_wrappers' => [
+        'time_threshold' => 5, // Max time in minutes between messages to group, i.e., if X minutes or more have passed since the last message, start a new group
+    ]
 ];

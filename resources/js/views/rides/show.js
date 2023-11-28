@@ -1,4 +1,12 @@
 import { RideShowMapComponent } from "@modules/map.js";
+import dayjs from "dayjs";
+import calendar from "dayjs/plugin/calendar";
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+dayjs.extend(calendar);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault("America/New_York");
 
 const map = new RideShowMapComponent(document.getElementById("map-component"));
 
@@ -8,6 +16,9 @@ const messageForm = document.getElementById("message-form");
 messageForm.addEventListener("submit", handleSubmit);
 
 const messageHistory = document.getElementById("message-history");
+messageHistory.scrollTop =
+    messageHistory.scrollHeight - messageHistory.clientHeight; // immediately scroll to bottom
+
 const messageWrapperTemplateOther = document.getElementById(
     "message-wrapper-template-other"
 );
@@ -18,8 +29,21 @@ const messageTemplateOther = document.getElementById("message-template-other");
 const messageTemplateSelf = document.getElementById("message-template-self");
 const dividerTemplate = document.getElementById("divider-template");
 
-let lastSender = null,
-    lastMessageWrapper = null;
+let lastMessageWrapper = messageHistory.lastElementChild;
+let lastSender = lastMessageWrapper?.dataset.sender;
+
+// add event listener to all messages so that the timestamp invisible class is toggled off
+document.querySelectorAll(".message").forEach((message) => {
+    addMessageEventListeners(message);
+});
+
+Echo.private(`mc-chat-conversation.${ride.conversation.id}`).listen(
+    ".Musonza\\Chat\\Eventing\\MessageWasSent",
+    (e) => {
+        if (e.message.sender.id != window.userId)
+            addMessage(e.message.body, e.message.sender.id);
+    }
+);
 
 async function handleSubmit(event) {
     event.preventDefault();
@@ -46,42 +70,76 @@ async function handleSubmit(event) {
 // TODO: Dividers
 // TODO: Only update timestamp if time difference is under a certain threshold, otherwise add a new timestamp
 function addMessage(message, sender) {
-    // if new sender, create new message wrapper
-    if (sender !== lastSender) {
+    // if is at bottom prior to adding message, scroll to bottom after adding message
+    const isAtBottom =
+        messageHistory.scrollTop ==
+        messageHistory.scrollHeight - messageHistory.clientHeight;
+
+    // if new sender, create new message wrapper, update picture, name, and calendar timestamp, and append to chat history
+    if (sender != lastSender) {
         lastMessageWrapper =
-            sender === window.userId
+            sender == window.userId
                 ? messageWrapperTemplateSelf.content.cloneNode(true)
                 : messageWrapperTemplateOther.content.cloneNode(true);
+
+        const user = window.users[sender];
+
+        const pfpElement = lastMessageWrapper.querySelector("img");
+        if (user.pfp_url) {
+            pfpElement.src = user.pfp_url;
+            pfpElement.alt = `${user.name}'s profile picture`;
+            pfpElement.parentElement.href = route("profile.show", sender);
+        } else pfpElement.parentElement.remove();
+
+        const nameElement = lastMessageWrapper.querySelector(".name");
+        nameElement.href = route("profile.show", sender);
+        nameElement.textContent = user.name;
+        lastMessageWrapper.querySelector(".calendar").textContent = dayjs
+            .tz(dayjs())
+            .calendar();
+
+        messageHistory.appendChild(lastMessageWrapper);
+        lastMessageWrapper = messageHistory.lastElementChild; // because it's a DocumentFragment
     }
 
-    // create and append new message
+    // create new message
     const messageTemplate =
-        sender === window.userId
+        sender == window.userId
             ? messageTemplateSelf.content.cloneNode(true)
             : messageTemplateOther.content.cloneNode(true);
     messageTemplate.querySelector(".message").textContent = message;
-    lastMessageWrapper.querySelector(".message-chain").append(messageTemplate);
-
-    // update picture, name, and timestamp
-    if (sender !== lastSender) {
-        const pfp = lastMessageWrapper.querySelector("img");
-        const user = window.users[sender];
-        if (user.pfp_url) pfp.src = user.pfp_url;
-        else pfp.parentElement.remove();
-
-        lastMessageWrapper.querySelector(".name").textContent = user.name;
-    }
-    lastMessageWrapper.querySelector(".timestamp").textContent =
+    messageTemplate.querySelector(".timestamp").textContent =
         new Date().toLocaleTimeString([], {
             timeZone: "America/New_York",
             timeStyle: "short",
         });
 
-    // append message wrapper to chat if new sender
-    if (sender !== lastSender) {
-        messageHistory.append(lastMessageWrapper);
-        lastMessageWrapper = messageHistory.lastElementChild; // because it's a DocumentFragment
+    // add event listeners
+    addMessageEventListeners(messageTemplate.querySelector(".message"));
+
+    // append message
+    lastMessageWrapper
+        .querySelector(".message-chain")
+        .appendChild(messageTemplate);
+
+    if (isAtBottom) {
+        messageHistory.scrollTop =
+            messageHistory.scrollHeight - messageHistory.clientHeight;
     }
 
+    // update last sender
     lastSender = sender;
+}
+
+function addMessageEventListeners(message) {
+    message.addEventListener("mouseenter", (event) => {
+        event.target.parentElement
+            .querySelector(".timestamp")
+            .classList.remove("invisible");
+    });
+    message.addEventListener("mouseleave", (event) => {
+        event.target.parentElement
+            .querySelector(".timestamp")
+            .classList.add("invisible");
+    });
 }

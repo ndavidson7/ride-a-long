@@ -1,7 +1,7 @@
 <div {{ $attributes->merge(['class' => 'card']) }} id="ride-conversation">
     <h3 class="card-header">Chat</h3>
     <div class="card-body overflow-scroll" id="message-history" style="position: relative; height: 400px">
-        @foreach (json_decode($messageWrappers) as $messageWrapper)
+        @foreach ($messageWrappers as $messageWrapper)
             <x-messages.message-wrapper :$messageWrapper />
         @endforeach
     </div>
@@ -12,7 +12,7 @@
         @csrf
         @if (isset($users[auth()->user()->id]['pfp_url']))
             <img src="{{ $users[auth()->user()->id]['pfp_url'] }}" alt="My profile picture"
-                style="width: 50px; height: 100%;">
+                style="width: 50px; height: 50px;">
         @endif
         <input type="text" class="form-control form-control-lg" name="message" placeholder="Type message">
         <button type="submit" class="btn ms-1"><i class="bi bi-send-fill fs-4"></i></button>
@@ -20,11 +20,11 @@
 </div>
 
 @php
-    $senderOther = (object) ['id' => 0, 'name' => '', 'pfp_url' => ''];
-    $senderSelf = (object) ['id' => auth()->user()->id, 'name' => '', 'pfp_url' => ''];
+    $senderOther = ['id' => 0, 'name' => '', 'pfp_url' => ''];
+    $senderSelf = ['id' => auth()->user()->id, 'name' => '', 'pfp_url' => ''];
 
-    $messageWrapperOther = (object) ['sender' => $senderOther, 'message_chain' => [], 'timestamp' => ''];
-    $messageWrapperSelf = (object) ['sender' => $senderSelf, 'message_chain' => [], 'timestamp' => ''];
+    $messageWrapperOther = ['sender' => $senderOther, 'datetime' => '', 'message_chain' => []];
+    $messageWrapperSelf = ['sender' => $senderSelf, 'datetime' => '', 'message_chain' => []];
 @endphp
 
 <template id="message-wrapper-template-other">
@@ -32,7 +32,7 @@
 </template>
 
 <template id="message-template-other">
-    <x-messages.message :sender="$senderOther" message="" />
+    <x-messages.message :sender="$senderOther" :messageInfo="['message' => '', 'timestamp' => '']" />
 </template>
 
 <template id="message-wrapper-template-self">
@@ -40,7 +40,7 @@
 </template>
 
 <template id="message-template-self">
-    <x-messages.message :sender="$senderSelf" message="" />
+    <x-messages.message :sender="$senderSelf" :messageInfo="['message' => '', 'timestamp' => '']" />
 </template>
 
 <template id="divider-template">
