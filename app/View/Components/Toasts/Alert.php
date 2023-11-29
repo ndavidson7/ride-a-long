@@ -1,20 +1,19 @@
 <?php
 
-namespace App\View\Components\Cards;
+namespace App\View\Components\Toasts;
 
 use Closure;
-use App\Models\Ride;
-use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
-class RidePreview extends Component
+class Alert extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public Ride $ride,
-        public array $without = [],
+        public string $type,
+        public string $message,
     ) {
     }
 
@@ -23,6 +22,6 @@ class RidePreview extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.cards.ride-preview');
+        return view('components.toasts.alert');
     }
 }

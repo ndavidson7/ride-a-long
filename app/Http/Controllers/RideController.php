@@ -57,27 +57,9 @@ class RideController extends Controller
 
         $ride = $ride->load('driver', 'passengers', 'requests.user', 'requests.pickup', 'requests.dropoff', 'conversation');
 
-        // For chat JavaScript: Make array of each passenger's name and pfp_url, using their IDs as keys
-        $users = $ride->passengers->reduce(function ($carry, $passenger) {
-            $carry[$passenger->id] = [
-                'name' => $passenger->name,
-                'pfp_url' => $passenger->pfp_url,
-            ];
-
-            return $carry;
-        }, []);
-
-        $users[$ride->driver->id] = [
-            'name' => $ride->driver->name,
-            'pfp_url' => $ride->driver->pfp_url,
-        ];
-
-        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) use ($users) {
-            $sender = $users[$message->sender['id']];
-            $sender['id'] = $message->sender['id'];
-
+        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
             return [
-                'sender' => $sender,
+                'sender' => $message->sender,
                 'body' => $message->body,
                 'created_at' => $message->created_at,
             ];
@@ -128,7 +110,6 @@ class RideController extends Controller
         return view('rides.show', [
             'entries' => ['resources/js/views/rides/show.js'],
             'ride' => $ride,
-            'users' => $users,
             'messageWrappers' => $messageWrappers,
         ]);
     }

@@ -11,7 +11,7 @@
 
     <x-footer />
 
-    <x-toast-container />
+    <x-toasts.container />
 
 </body>
 

@@ -1,5 +1,4 @@
 import { createMap, createDirections } from "./google-api.js";
-import { formatDateTime } from "./utils.js";
 
 export class MapComponent {
     constructor(component) {
@@ -16,10 +15,6 @@ export class MapComponent {
             routeDirections: component.querySelector("#route-directions"),
             route: component.querySelector(".route"),
             distance: component.querySelector(".distance"),
-            date: component.querySelector(".date"),
-            time: component.querySelector(".time"),
-            description: component.querySelector(".description"),
-            // driver: component.querySelector(".driver"),
         };
 
         this.init();
@@ -81,9 +76,6 @@ export class MapComponent {
          * - origin: { address: string, latitude: number, longitude: number }
          * - destination: { address: string, latitude: number, longitude: number }
          * - waypoints: (optional) [{ address: string, latitude: number, longitude: number }]
-         * - description: string
-         * - start_time: string
-         * - driver: { first_name: string, last_name: string, email: string }
          */
         throw new Error("MapComponent.getData() should be overriden!");
     }
@@ -156,16 +148,6 @@ export class MapComponent {
             MapComponent.calculateTotalDistance(routeResult);
         this.elements.distance.textContent =
             miles + " miles (" + duration + ")";
-
-        const [date, time] = formatDateTime(data.start_time);
-        this.elements.date.textContent = date;
-        this.elements.time.textContent = time;
-
-        this.elements.description.textContent = data.description;
-
-        // TODO: Remove this "if" when driver fetching implemented
-        // if (data.driver)
-        //     this.elements.driver.textContent = `${data.driver.first_name} ${data.driver.last_name} (${data.driver.email})`;
     }
 
     static async fetchData(rideId) {
@@ -285,9 +267,6 @@ export class RideCreateMapComponent extends MapComponent {
                 longitude: document.getElementById("destination-longitude")
                     .value,
             },
-            description: document.getElementById("description").value,
-            start_time: document.getElementById("start-time").value,
-            // driver: null, // TODO: Fetch driver data?
         };
     }
 }

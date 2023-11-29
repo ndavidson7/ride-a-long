@@ -41,8 +41,7 @@
                     <a class="nav-link" href="#" role="button" id="accountDropdown" data-bs-toggle="dropdown"
                         aria-expanded="false" aria-label="Account Dropdown">
                         @if ($pfp = auth()->user()->fetchFirstMedia())
-                            <img src="{{ $pfp['file_url'] }}" alt="Profile picture" class="rounded-circle shadow-lg"
-                                style="height:3em; width:auto;">
+                            <img src="{{ $pfp['file_url'] }}" alt="Profile picture" style="height:3em; width:auto;">
                         @else
                             <i class="bi bi-person-circle" style="font-size: 2.5rem"></i>
                         @endif

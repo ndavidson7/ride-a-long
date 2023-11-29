@@ -128,7 +128,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function getParticipantDetails()
     {
         return [
-            'id' => $this->id
+            'id' => $this->id,
+            'name' => $this->name,
+            'pfp_url' => $this->pfp_url,
         ];
     }
 

@@ -22,8 +22,10 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] My rides page (sort of hacked... but works well enough)
 -   [x] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
 -   [ ] Add messaging functionality
+    -   [x] Ride chat
+    -   [ ] Direct messages
 -   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
--   [ ] Only show driver's car to passengers
+-   [x] Only show driver's car to passengers
 -   [ ] Import majors
 -   [ ] Check all forms validation and add error feedback to views
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)

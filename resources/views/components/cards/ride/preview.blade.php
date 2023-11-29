@@ -15,8 +15,7 @@
         </h6>
         <p class="card-text mt-auto">{{ $ride->description }}</p>
         <div class="d-flex justify-content-center align-items-center mt-auto">
-            <h6 class="card-subtitle">{{ $ride->driver->first_name }}
-                {{ $ride->driver->last_name }}
+            <h6 class="card-subtitle">{{ $ride->driver->name }}
             </h6>
             @if ($pfp = $ride->driver->fetchFirstMedia())
                 <img src="{{ $pfp['file_url'] }}" alt="Profile picture" class="rounded-circle shadow-lg ms-2"

@@ -1,6 +1,6 @@
 <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3">
     @if (session()->has('status'))
-        <x-alert-toast :type="session('status')" :message="session('message')" />
+        <x-toasts.alert :type="session('status')" :message="session('message')" />
     @endif
 </div>
 <template id="notif-toast-template">

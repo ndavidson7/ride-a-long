@@ -2,7 +2,7 @@
     <h3 class="card-header">Chat</h3>
     <div class="card-body overflow-scroll" id="message-history" style="position: relative; height: 400px">
         @foreach ($messageWrappers as $messageWrapper)
-            <x-messages.message-wrapper :$messageWrapper />
+            <x-messages.wrapper :$messageWrapper />
         @endforeach
     </div>
     <form class="card-footer text-muted d-flex justify-content-start align-items-center p-3"
@@ -10,9 +10,8 @@
         autocomplete="off">
         @method('PUT')
         @csrf
-        @if (isset($users[auth()->user()->id]['pfp_url']))
-            <img src="{{ $users[auth()->user()->id]['pfp_url'] }}" alt="My profile picture"
-                style="width: 50px; height: 50px;">
+        @if ($pfpUrl = auth()->user()->pfp_url)
+            <img src="{{ $pfpUrl }}" alt="My profile picture" style="width: 50px; height: 50px;">
         @endif
         <input type="text" class="form-control form-control-lg" name="message" placeholder="Type message">
         <button type="submit" class="btn ms-1"><i class="bi bi-send-fill fs-4"></i></button>
@@ -21,14 +20,16 @@
 
 @php
     $senderOther = ['id' => 0, 'name' => '', 'pfp_url' => ''];
-    $senderSelf = ['id' => auth()->user()->id, 'name' => '', 'pfp_url' => ''];
+    $senderSelf = auth()
+        ->user()
+        ->getParticipantDetails();
 
     $messageWrapperOther = ['sender' => $senderOther, 'datetime' => '', 'message_chain' => []];
     $messageWrapperSelf = ['sender' => $senderSelf, 'datetime' => '', 'message_chain' => []];
 @endphp
 
 <template id="message-wrapper-template-other">
-    <x-messages.message-wrapper :messageWrapper="$messageWrapperOther" />
+    <x-messages.wrapper :messageWrapper="$messageWrapperOther" />
 </template>
 
 <template id="message-template-other">
@@ -36,7 +37,7 @@
 </template>
 
 <template id="message-wrapper-template-self">
-    <x-messages.message-wrapper :messageWrapper="$messageWrapperSelf" />
+    <x-messages.wrapper :messageWrapper="$messageWrapperSelf" />
 </template>
 
 <template id="message-template-self">

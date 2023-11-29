@@ -1,21 +1,20 @@
 <?php
 
-namespace App\View\Components\Cards;
+namespace App\View\Components\Cards\Ride;
 
 use Closure;
 use App\Models\Ride;
 use Illuminate\View\Component;
 use Illuminate\Contracts\View\View;
 
-class RideConversation extends Component
+class Preview extends Component
 {
     /**
      * Create a new component instance.
      */
     public function __construct(
         public Ride $ride,
-        public array|string $messageWrappers,
-        public array $users,
+        public array $without = [],
     ) {
     }
 
@@ -24,6 +23,6 @@ class RideConversation extends Component
      */
     public function render(): View|Closure|string
     {
-        return view('components.cards.ride-conversation');
+        return view('components.cards.ride.preview');
     }
 }

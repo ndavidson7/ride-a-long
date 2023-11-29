@@ -40,7 +40,7 @@
                             value="1" @if (request('my-rides')) checked @endif />
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-uva-ob fs-6 fw-bold">Filter</button>
+                        <button type="submit" class="btn btn-uva-ob btn-bold">Filter</button>
                     </div>
                 </div>
             </form>
@@ -58,7 +58,7 @@
                 </div>
                 @foreach ($rides as $ride)
                     <div class="col">
-                        <x-cards.ride-preview :$ride />
+                        <x-cards.ride.preview :$ride />
                     </div>
                 @endforeach
             </div>

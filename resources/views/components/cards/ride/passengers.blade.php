@@ -10,12 +10,10 @@
                     <a href="{{ route('profile.show', $passenger) }}"
                         class="d-flex align-items-center me-auto w-100 text-decoration-none text-reset">
                         @if ($pfp = $passenger->fetchFirstMedia())
-                            <img src="{{ $pfp['file_url'] }}"
-                                alt="{{ $passenger->first_name }} {{ $passenger->last_name }}'s profile picture"
+                            <img src="{{ $pfp['file_url'] }}" alt="{{ $passenger->name }}'s profile picture"
                                 class="rounded-circle shadow-lg me-2" style="height:3em;">
                         @endif
-                        <span class="fs-5">{{ $passenger->first_name }}
-                            {{ $passenger->last_name }}</span>
+                        <span class="fs-5">{{ $passenger->name }}</span>
                     </a>
                     @if ($ride->user_relation === 'driver')
                         <button type="submit" class="btn" title="Remove passenger"

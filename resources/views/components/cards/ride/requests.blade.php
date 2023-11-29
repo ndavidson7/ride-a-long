@@ -12,12 +12,10 @@
                             class="me-auto w-100 text-decoration-none text-reset">
                             <div class="d-flex align-items-center my-1">
                                 @if ($pfp = $request->user->fetchFirstMedia())
-                                    <img src="{{ $pfp['file_url'] }}"
-                                        alt="{{ $request->user->first_name }} {{ $request->user->last_name }}'s profile picture"
+                                    <img src="{{ $pfp['file_url'] }}" alt="{{ $request->user->name }}'s profile picture"
                                         class="rounded-circle shadow-lg me-2" style="height:3em;">
                                 @endif
-                                <span class="fs-5">{{ $request->user->first_name }}
-                                    {{ $request->user->last_name }}</span>
+                                <span class="fs-5">{{ $request->user->name }}</span>
                             </div>
                             @if ($request->message)
                                 <p class="mb-1">{{ $request->message }}</p>
