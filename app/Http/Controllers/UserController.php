@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Models\Major;
 use App\Models\Driver;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -56,13 +57,13 @@ class UserController extends Controller
 
     public function edit()
     {
-        $user = Auth::user()->load('emergencyContacts', 'car');
+        $user = Auth::user()->load('car');
 
         return view('profiles.edit', [
             'entries' => ['resources/js/views/profiles/edit.js'],
             'user' => $user,
             'car' => $user->car,
-            'contacts' => $user->emergencyContacts,
+            'majors' => Major::all()
         ]);
     }
 
@@ -70,11 +71,15 @@ class UserController extends Controller
     {
         $userFields = $request->validate([
             'year' => 'nullable|digits:1|min:1|max:5',
-            'major' => 'nullable|string|max:63',
+            'major' => 'nullable|numeric|integer|exists:majors,id',
             'bio' => 'nullable|string|max:255',
         ]);
 
-        Auth::user()->update($userFields);
+        Auth::user()->update([
+            'year' => $userFields['year'],
+            'major_id' => $userFields['major'],
+            'bio' => $userFields['bio'],
+        ]);
 
         if ($request->has('delete-pfp') && $request['delete-pfp']) {
             Auth::user()->detachMedia(Auth::user()->fetchFirstMedia());

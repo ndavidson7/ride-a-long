@@ -26,7 +26,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [ ] Direct messages
 -   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [x] Only show driver's car to passengers
--   [ ] Import majors
+-   [x] Import majors
 -   [ ] Check all forms validation and add error feedback to views
 -   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
@@ -37,9 +37,6 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [ ] When seat becomes available in previously full ride
     -   [ ] New ride is created matching desired route
 -   [ ] Infinite scroll pagination
--   [ ] Fix emergency contacts JavaScript
-    -   [ ] Account for already existing emergency contacts
-    -   [ ] Use template to insert correct HTML? Also insert in correct place
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
 -   [ ] Rides index on large map, show routes when filter applied
 -   [ ] Pricing model

@@ -2,15 +2,16 @@
 
 namespace App\Models;
 
+use Musonza\Chat\Traits\Messageable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
-use Musonza\Chat\Traits\Messageable;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -34,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'first_name',
         'last_name',
         'year',
-        'major',
+        'major_id',
         'bio'
     ];
 
@@ -52,7 +53,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email_verified_at',
         'bio',
         'id',
-        'major',
+        'major_id',
         'year',
     ];
 
@@ -140,11 +141,6 @@ class User extends Authenticatable implements MustVerifyEmail
     |--------------------------------------------------------------------------
     */
 
-    public function emergencyContacts(): HasMany
-    {
-        return $this->hasMany(EmergencyContact::class);
-    }
-
     public function car(): HasOneThrough
     {
         return $this->hasOneThrough(Car::class, Driver::class)->withDefault();
@@ -158,6 +154,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function rides(): BelongsToMany
     {
         return $this->belongsToMany(Ride::class)->withPivot('pickup_waypoint_id', 'dropoff_waypoint_id');
+    }
+
+    public function major(): BelongsTo
+    {
+        return $this->belongsTo(Major::class);
     }
 
     // public function waypoints(): HasManyThrough

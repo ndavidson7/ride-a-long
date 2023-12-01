@@ -47,9 +47,13 @@
                 </div>
                 <div class="col-sm-6">
                     <label class="form-label" for="major">Major</label>
-                    <input type="text" class="form-control" id="major" name="major" maxlength="63"
-                        aria-describedby="major-limit" value="{{ $user->major }}" />
-                    <div id="major-limit" class="form-text">Max 63 characters.</div>
+                    <select class="form-select" id="major" name="major">
+                        <option value="" @selected(!$user->major_id)>Select...</option>
+                        @foreach ($majors as $major)
+                            <option value="{{ $major->id }}" @selected($user->major_id == $major->id)>
+                                {{ $major->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
             <div class="mb-3">
@@ -80,46 +84,6 @@
                     <div id="color-limit" class="form-text">Max 63 characters.</div>
                 </div>
             </div>
-
-            {{-- <h3>Emergency Contacts</h3>
-            @foreach ($contacts as $contact)
-                <h4>Contact {{ $loop->iteration }}</h4>
-                <div class="row mb-3">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <label class="form-label" for="contact{{ $loop->iteration }}-first-name">First
-                            Name</label>
-                        <input type="text" class="form-control" id="contact{{ $loop->iteration }}-first-name"
-                            name="contact{{ $loop->iteration }}-first-name" maxlength="255"
-                            value="{{ $contact->first_name }}" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label" for="contact{{ $loop->iteration }}-last-name">Last
-                            Name</label>
-                        <input type="text" class="form-control" id="contact{{ $loop->iteration }}-last-name"
-                            name="contact{{ $loop->iteration }}-last-name" maxlength="255"
-                            value="{{ $contact->last_name }}" />
-                    </div>
-                </div>
-                <div class="row mb-3">
-                    <div class="col-sm-6 mb-3 mb-sm-0">
-                        <label class="form-label" for="contact{{ $loop->iteration }}-phone">Phone
-                            Number</label>
-                        <input type="tel" class="form-control" id="contact{{ $loop->iteration }}-phone"
-                            name="contact{{ $loop->iteration }}-phone"
-                            placeholder="No spaces, no dashes (ex: 1112223333)" pattern="[0-9]{10}"
-                            value="{{ $contact->phone }}" />
-                    </div>
-                    <div class="col-sm-6">
-                        <label class="form-label"
-                            for="contact{{ $loop->iteration }}-relationship">Relationship</label>
-                        <input type="text" class="form-control" id="contact{{ $loop->iteration }}-relationship"
-                            name="contact{{ $loop->iteration }}-relationship" maxlength="63"
-                            value="{{ $contact->relationship }}" />
-                    </div>
-                </div>
-            @endforeach
-            <button type="button" id="add-new-contact" class="btn btn-uva-ob mb-3" style="width: auto;">Add
-                New</button> --}}
             <div class="d-flex">
                 <button type="submit" class="btn btn-uva-ob me-2" disabled>Save</button>
                 <a href="{{ route('profile.destroy') }}" class="btn btn-danger"

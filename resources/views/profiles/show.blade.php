@@ -34,40 +34,12 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body p-4">
-                            <div class="mb-3">
-                                <h5>Information</h5>
-                                <hr class="mt-0 mb-3">
-                                <div class="row pt-1">
-                                    <div class="col-md-6">
-                                        <h6>Year</h6>
-                                        <p class="text-muted">{{ $user->year_formatted }}</p>
-                                        <h6>Major</h6>
-                                        <p class="text-muted">{{ $user->major }}</p>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <h6>Bio</h6>
-                                        <p class="text-muted">{{ $user->bio }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div>
-                                <h5>Car</h5>
-                                <hr class="mt-0 mb-3">
-                                <div class="row pt-1">
-                                    <div class="col-sm-4">
-                                        <h6>License Plate</h6>
-                                        <p class="text-muted">{{ $user->car->license_plate }}</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h6>Make</h6>
-                                        <p class="text-muted">{{ $user->car->make }}</p>
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <h6>Color</h6>
-                                        <p class="text-muted">{{ $user->car->color }}</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <h5 class="card-title">Year</h5>
+                            <h6 class="card-subtitle mb-5">{{ $user->year_formatted }}</h6>
+                            <h5 class="card-title">Major</h5>
+                            <h6 class="card-subtitle mb-5">{{ $user->major?->name }}</h6>
+                            <h5 class="card-title">Bio</h5>
+                            <h6 class="card-subtitle">{{ $user->bio }}</h6>
                         </div>
                     </div>
                 </div>

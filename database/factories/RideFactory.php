@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Driver;
+use Musonza\Chat\Facades\ChatFacade as Chat;
 use App\Models\Address;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,15 +19,19 @@ class RideFactory extends Factory
      */
     public function definition(): array
     {
+        $addresses = Address::inRandomOrder()->limit(2)->get();
+        $driver = Driver::inRandomOrder()->first();
+
         return [
-            'driver_id' => Driver::inRandomOrder()->first(),
+            'driver_id' => $driver->id,
             'start_time' => fake()->dateTimeBetween('now', '+2 months'),
-            'origin_id' => Address::inRandomOrder()->first(),
-            'destination_id' => Address::inRandomOrder()->first(), // will sometimes be the same as origin_id lol
+            'origin_id' => $addresses->first(),
+            'destination_id' => $addresses->last(),
             'seats_total' => fake()->numberBetween(1, 7),
             'detours_allowed' => fake()->boolean(),
             'price_per_mile' => null,
             'description' => fake()->text(255),
+            'conversation_id' => Chat::createConversation([$driver->user])->makePrivate()->id,
         ];
     }
 }

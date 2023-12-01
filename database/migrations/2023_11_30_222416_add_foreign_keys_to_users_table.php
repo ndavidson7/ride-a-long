@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rides', function (Blueprint $table) {
-            $table->foreignId('conversation_id')->constrained('chat_conversations')->onDelete('restrict');
+        Schema::table('users', function (Blueprint $table) {
+            $table->foreign('major_id')->references('id')->on('majors')->nullOnDelete();
         });
     }
 
@@ -21,9 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rides', function (Blueprint $table) {
-            $table->dropForeign(['conversation_id']);
-            $table->dropColumn('conversation_id');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropForeign(['major']);
         });
     }
 };

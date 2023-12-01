@@ -23,8 +23,8 @@ return new class extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->string('phone', 10)->unique('phone');
-            $table->unsignedInteger('year')->nullable();
-            $table->string('major', 63)->nullable();
+            $table->unsignedTinyInteger('year')->nullable();
+            $table->unsignedTinyInteger('major_id')->nullable();
             $table->string('bio')->nullable();
         });
     }

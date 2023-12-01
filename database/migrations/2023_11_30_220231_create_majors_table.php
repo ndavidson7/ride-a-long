@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('rides', function (Blueprint $table) {
-            $table->foreignId('conversation_id')->constrained('chat_conversations')->onDelete('restrict');
+        Schema::create('majors', function (Blueprint $table) {
+            $table->unsignedTinyInteger('id')->autoIncrement();
+            $table->tinyText('name');
+            // $table->unsignedTinyInteger('school');
         });
     }
 
@@ -21,9 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('rides', function (Blueprint $table) {
-            $table->dropForeign(['conversation_id']);
-            $table->dropColumn('conversation_id');
-        });
+        Schema::dropIfExists('majors');
     }
 };

@@ -22,7 +22,8 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'password' => 'password',
             'phone' => fake()->regexify('[1-9]\d{9}'),
-            // 'email_verified_at' => now(),
+            'email_verified_at' => now(),
+            'year' => fake()->numberBetween(1, 5),
         ];
     }
 
