@@ -23,6 +23,7 @@ return new class extends Migration
             $table->boolean('detours_allowed')->default(false);
             $table->unsignedDecimal('price_per_mile', 4, 2)->nullable();
             $table->string('description')->nullable();
+            $table->softDeletes();
         });
     }
 

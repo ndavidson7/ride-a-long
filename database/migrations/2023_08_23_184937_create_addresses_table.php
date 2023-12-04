@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('country'); // ->nullable()?
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
+            $table->timestamp('created_at')->nullable();
         });
     }
 

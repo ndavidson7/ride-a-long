@@ -25,6 +25,7 @@ return new class extends Migration
             // users will not be allowed to edit their own requests,
             // so they will only be updated by the drivers' responses.
             $table->timestamps();
+            $table->softDeletes();
 
             $table->unique(['ride_id', 'user_id']);
         });

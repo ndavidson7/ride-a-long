@@ -28,9 +28,12 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Only show driver's car to passengers
 -   [x] Import majors
 -   [ ] Check all forms validation and add error feedback to views
--   [ ] Delete old rides (DELETE FROM rides WHERE start_time < NOW();)
+-   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
+    -   [x] Create scheduled Artisan command
+    -   [ ] Add cron entry to server (https://laravel.com/docs/10.x/scheduling#running-the-scheduler)
+-   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
 -   [ ] Refactor view-specific JS to be more modular, reusable
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [ ] Allow users to create alerts:
@@ -40,6 +43,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
 -   [ ] Rides index on large map, show routes when filter applied
 -   [ ] Pricing model
+-   [ ] Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
 
 ## :hammer_and_wrench: Built With
 
@@ -77,7 +81,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     - Application restriction: Websites
     - Website restrictions: "localhost/\*"
     - API restrictions: The APIs enabled in the above step
-1. Copy and paste the API key into the `MAPS_API_KEY` variable in `.env`.
+1. Copy and paste the API key into the `MAPS_JS_API_KEY` variable in `.env`.
 
 ### Host
 

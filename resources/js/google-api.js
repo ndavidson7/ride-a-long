@@ -7,7 +7,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 */
 
 const loader = new Loader({
-    apiKey: import.meta.env.VITE_MAPS_API_KEY,
+    apiKey: import.meta.env.VITE_MAPS_JS_API_KEY,
     version: "weekly",
     libraries: ["core", "maps", "places", "routes"],
 });
