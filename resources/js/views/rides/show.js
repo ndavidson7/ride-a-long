@@ -1,12 +1,7 @@
 import { RideShowMapComponent } from "@modules/map.js";
 import dayjs from "dayjs";
 import calendar from "dayjs/plugin/calendar";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 dayjs.extend(calendar);
-dayjs.extend(utc);
-dayjs.extend(timezone);
-dayjs.tz.setDefault("America/New_York");
 
 const map = new RideShowMapComponent(document.getElementById("map-component"));
 
@@ -30,10 +25,7 @@ const messageTemplateSelf = document.getElementById("message-template-self");
 const dividerTemplate = document.getElementById("divider-template");
 
 let lastMessageWrapper = messageHistory.lastElementChild;
-let lastSender =
-    lastMessageWrapper?.dataset.sender == window.userId
-        ? null
-        : lastMessageWrapper.dataset.sender;
+let lastSenderId = lastMessageWrapper?.dataset.senderId;
 
 // add event listener to all messages so that the timestamp invisible class is toggled off
 document.querySelectorAll(".message").forEach((message) => {
@@ -60,7 +52,7 @@ async function handleSubmit(event) {
 
     if (response.ok) {
         // Add message to chat
-        addMessage(data.get("message"));
+        addMessage(data.get("message"), { id: window.userId });
 
         // Clear message input
         messageForm.reset();
@@ -74,22 +66,23 @@ async function handleSubmit(event) {
  * Adds a message to the chat history
  *
  * @param {string} message The message to add, strings only for now
- * @param {object|null} sender User sending the message, with the following properties at minimum: id, name, pfp_url
+ * @param {object} sender User sending the message, with the following properties: id, name, pfp_url (if user is self, only id is required)
  */
-function addMessage(message, sender = null) {
+function addMessage(message, sender) {
     // if is at bottom prior to adding message, scroll to bottom after adding message
     const isAtBottom =
         messageHistory.scrollTop ==
         messageHistory.scrollHeight - messageHistory.clientHeight;
 
     // if new sender, create new message wrapper, update picture, name, and calendar timestamp, and append to chat history
-    if (sender != lastSender) {
-        lastMessageWrapper = sender
-            ? messageWrapperTemplateOther.content.cloneNode(true)
-            : messageWrapperTemplateSelf.content.cloneNode(true);
+    if (sender.id != lastSenderId) {
+        lastMessageWrapper =
+            sender.id == window.userId
+                ? messageWrapperTemplateSelf.content.cloneNode(true)
+                : messageWrapperTemplateOther.content.cloneNode(true);
 
         // if sender is not self (because messageWrapperTemplateSelf has all this data already)
-        if (sender) {
+        if (sender.id != window.userId) {
             const pfpElement = lastMessageWrapper.querySelector("img");
             if (sender.pfp_url != null) {
                 pfpElement.src = sender.pfp_url;
@@ -105,24 +98,21 @@ function addMessage(message, sender = null) {
             nameElement.textContent = sender.name;
         }
 
-        lastMessageWrapper.querySelector(".calendar").textContent = dayjs
-            .tz(dayjs())
-            .calendar();
+        lastMessageWrapper.querySelector(".calendar").textContent =
+            dayjs().calendar();
 
         messageHistory.appendChild(lastMessageWrapper);
         lastMessageWrapper = messageHistory.lastElementChild; // because it's a DocumentFragment
     }
 
     // create new message
-    const messageTemplate = sender
-        ? messageTemplateOther.content.cloneNode(true)
-        : messageTemplateSelf.content.cloneNode(true);
+    const messageTemplate =
+        sender.id == window.userId
+            ? messageTemplateSelf.content.cloneNode(true)
+            : messageTemplateOther.content.cloneNode(true);
     messageTemplate.querySelector(".message").textContent = message;
     messageTemplate.querySelector(".timestamp").textContent =
-        new Date().toLocaleTimeString([], {
-            timeZone: "America/New_York",
-            timeStyle: "short",
-        });
+        new Date().toLocaleTimeString([], { timeStyle: "short" });
 
     // add event listeners
     addMessageEventListeners(messageTemplate.querySelector(".message"));
@@ -138,7 +128,7 @@ function addMessage(message, sender = null) {
     }
 
     // update last sender
-    lastSender = sender;
+    lastSenderId = sender.id;
 }
 
 function addMessageEventListeners(message) {

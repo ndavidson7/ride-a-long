@@ -27,13 +27,17 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [x] Only show driver's car to passengers
 -   [x] Import majors
--   [ ] Check all forms validation and add error feedback to views
+-   [ ] Overhaul forms
+    -   [ ] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
+    -   [ ] Consider using input groups (https://getbootstrap.com/docs/5.3/forms/input-group/#basic-example)
 -   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
     -   [x] Create scheduled Artisan command
     -   [ ] Add cron entry to server (https://laravel.com/docs/10.x/scheduling#running-the-scheduler)
 -   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
+    -   [ ] Request user's location OR allow user to set their location/timezone
+-   [ ] Use dividers in messages?
 -   [ ] Refactor view-specific JS to be more modular, reusable
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
 -   [ ] Allow users to create alerts:

@@ -6,7 +6,7 @@
 
 @if ($sender['id'] !== auth()->user()->id)
     {{-- other --}}
-    <div class="d-flex flex-column align-items-start pt-1" data-sender="{{ $sender['id'] }}">
+    <div class="d-flex flex-column align-items-start pt-1" data-sender-id="{{ $sender['id'] }}">
         <div class="d-flex align-items-center gap-2 mb-2">
             @if (isset($sender['pfp_url']))
                 <a href="{{ route('profile.show', $sender['id']) }}" style="width: 50px; height: 50px;"><img
