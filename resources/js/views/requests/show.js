@@ -1,4 +1,4 @@
-import { RequestShowMapComponent } from "@modules/map.js";
+import { RequestShowMapComponent } from "@modules/map";
 
 const map = new RequestShowMapComponent(
     document.getElementById("map-component")

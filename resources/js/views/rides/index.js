@@ -1,5 +1,5 @@
-import { RideModalMapComponent } from "@modules/map.js";
-import "@modules/tooltip.js";
+import { RideModalMapComponent } from "@modules/map";
+import "@modules/tooltip";
 
 const map = new RideModalMapComponent(document.getElementById("map-component"));
 

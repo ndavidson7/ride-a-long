@@ -17,41 +17,61 @@ $uva-blue-dark: #141e3c;
 .btn-uva-wb {
     color: $uva-blue;
     background-color: white;
-}
 
-.btn-uva-wb:hover {
-    background-color: $uva-blue;
-    color: white;
+    &:disabled {
+        color: $uva-blue;
+        background-color: white;
+    }
+
+    &:hover {
+        background-color: $uva-blue;
+        color: white;
+    }
 }
 
 .btn-uva-ow {
     color: white;
     background-color: $uva-orange;
-}
 
-.btn-uva-ow:hover {
-    background-color: white;
-    color: $uva-orange;
+    &:disabled {
+        color: white;
+        background-color: $uva-orange;
+    }
+
+    &:hover {
+        background-color: white;
+        color: $uva-orange;
+    }
 }
 
 .btn-uva-bo {
     color: $uva-orange;
     background-color: $uva-blue;
-}
 
-.btn-uva-bo:hover {
-    background-color: $uva-orange;
-    color: $uva-blue;
+    &:disabled {
+        color: $uva-orange;
+        background-color: $uva-blue;
+    }
+
+    &:hover {
+        background-color: $uva-orange;
+        color: $uva-blue;
+    }
 }
 
 .btn-uva-ob {
     color: $uva-blue;
     background-color: $uva-orange;
-}
 
-.btn-uva-ob:hover {
-    background-color: $uva-blue;
-    color: $uva-orange;
+    &:disabled {
+        color: $uva-blue;
+        background-color: $uva-orange;
+    }
+
+    &:hover {
+        background-color: $uva-blue;
+        color: $uva-orange;
+    }
 }
 
 .btn-bold {
@@ -61,6 +81,10 @@ $uva-blue-dark: #141e3c;
 
 .bg-uva-orange {
     background-color: $uva-orange !important;
+}
+
+.btn:disabled {
+    border-color: transparent;
 }
 
 header {
@@ -78,18 +102,6 @@ header {
     & h1 {
         font-size: 5em;
     }
-}
-
-footer a {
-    color: inherit;
-
-    &:hover {
-        color: inherit;
-    }
-}
-
-.no-decor {
-    text-decoration: none;
 }
 
 .notification {
@@ -111,28 +123,14 @@ body.splash {
         padding: 70px 0px;
     }
 
-    & input:not(:placeholder-shown):invalid {
-        background-color: rgb(180, 180, 180);
+    // form:invalid button {
+    //     background-color: rgb(180, 180, 180);
+    // }
 
-        + label::after {
-            background-color: transparent;
-        }
+    & .btn {
+        font-weight: 800;
+        font-size: 2em;
     }
-
-    form:invalid button {
-        background-color: rgb(180, 180, 180);
-
-        &:hover {
-            background-color: rgb(180, 180, 180);
-            color: white;
-        }
-    }
-}
-
-/* Not nested in order to take precedence (greater specificity) over Bootstrap .btn defaults */
-body.splash .btn {
-    font-weight: 800;
-    font-size: 2em;
 }
 
 .gradient-custom {

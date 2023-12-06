@@ -16,7 +16,7 @@ class UserController extends Controller
     public function create()
     {
         return view('auth.signup', [
-            'entries' => ['resources/js/form.js']
+            'entries' => ['resources/js/views/auth/signup.js']
         ]);
     }
 

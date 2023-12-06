@@ -27,9 +27,12 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [x] Only show driver's car to passengers
 -   [x] Import majors
--   [ ] Overhaul forms
-    -   [ ] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
-    -   [ ] Consider using input groups (https://getbootstrap.com/docs/5.3/forms/input-group/#basic-example)
+-   [x] Overhaul forms
+    -   [x] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
+-   [ ] Attractive landing page
+-   [ ] Forgot password route
+-   [ ] text-muted deprecated, text-secondary is not a substitute (https://getbootstrap.com/docs/5.3/utilities/colors/#colors)
+-   [ ] Allow users to upload multiple cars, and decouple it from profile edit
 -   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)

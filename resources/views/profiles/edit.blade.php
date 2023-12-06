@@ -1,6 +1,6 @@
 <x-layouts.main title="Edit profile" :$entries>
     <main>
-        <form class="form-disabled container py-4 col-11 col-sm-10 col-md-9 col-lg-8 col-xl-7 col-xxl-6"
+        <form class="disabled-until-change container py-4 col-11 col-sm-10 col-md-9 col-lg-8 col-xl-7 col-xxl-6"
             action="{{ route('profile.update') }}" method="post" enctype="multipart/form-data">
             @method('PUT')
             @csrf

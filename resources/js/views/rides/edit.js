@@ -1,4 +1,4 @@
-import { RideEditMapComponent } from "@modules/map.js";
+import { RideEditMapComponent } from "@modules/map";
 
 const map = new RideEditMapComponent(document.getElementById("map-component"));
 

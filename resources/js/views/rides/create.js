@@ -1,5 +1,7 @@
-import { RideCreateMapComponent } from "@modules/map.js";
-import "@modules/tooltip.js";
+import { RideCreateMapComponent } from "@modules/map";
+import "@modules/tooltip";
+import { enableSubmitOnAllRequiredInputsValid } from "@modules/form";
+enableSubmitOnAllRequiredInputsValid();
 
 const map = new RideCreateMapComponent(
     document.getElementById("map-component")
@@ -11,18 +13,14 @@ previewButton.addEventListener("click", () => {
     previewButton.disabled = true;
 });
 
-// TODO: Extract this to form.js?
-// Enable preview button if all required inputs are filled
+// Submit button is disabled until all required inputs are filled,
+// so we can simply check if it is enabled.
+const submit = document.querySelector(
+    "form.disabled-until-required button[type=submit]"
+);
 const requiredInputs = document.querySelectorAll("[required]");
 requiredInputs.forEach((input) => {
     input.addEventListener("change", function () {
-        let allFilled = true;
-        requiredInputs.forEach((input) => {
-            if (input.value === "") {
-                allFilled = false;
-            }
-        });
-
-        previewButton.disabled = !allFilled;
+        previewButton.disabled = submit.disabled;
     });
 });

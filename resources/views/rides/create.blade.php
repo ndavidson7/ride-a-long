@@ -6,8 +6,8 @@
                 <x-map class="d-none" />
             </div>
         </div>
-        <form id="ride-create" class="container col-sm-10 col-md-8 col-lg-6" action="{{ route('rides.store') }}"
-            method="post">
+        <form id="ride-create" class="disabled-until-required container col-sm-10 col-md-8 col-lg-6"
+            action="{{ route('rides.store') }}" method="post">
             @csrf
             <h2 class="text-center mb-3">Ride Details</h2>
             @if ($errors->any())
@@ -75,7 +75,7 @@
                 <label class="form-label" for="description">Description/Additional info</label>
                 <textarea class="form-control" id="description" name="description" rows=3 maxlength="255"></textarea>
             </div>
-            <button type="submit" class="btn btn-uva-ob">Post</button>
+            <button type="submit" class="btn btn-uva-ob" disabled>Post</button>
             <button type="button" class="btn btn-uva-ob" id="preview-button" disabled>Preview</button>
         </form>
     </main>
