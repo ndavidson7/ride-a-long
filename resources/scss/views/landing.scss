@@ -1,0 +1,131 @@
+:root {
+    --clr-primary: #3832d3;
+    --clr-primary-rgb: 56, 50, 211;
+    --clr-secondary: #aa84e4;
+    --clr-secondary-rgb: 170, 132, 228;
+    --clr-accent: #612e8a;
+    --clr-accent-rgb: 97, 46, 138;
+    --clr-text: #050517;
+    --clr-text-rgb: 5, 5, 23;
+    --clr-bg: #f0f0fc;
+    --clr-bg-rgb: 240, 240, 252;
+}
+
+html {
+    background: var(--clr-primary);
+}
+
+body {
+    color: var(--clr-text);
+    background: var(--clr-bg);
+}
+
+.jumbotron {
+    background: var(--clr-primary);
+    height: 50vh;
+    border-bottom: transparent;
+    border-bottom-left-radius: 50% 25%;
+    border-bottom-right-radius: 50% 25%;
+
+    & a {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+    }
+}
+
+footer {
+    display: grid;
+    place-items: center;
+    background: var(--clr-primary);
+    height: 100px;
+    border-top: transparent;
+    border-top-left-radius: 50% 25%;
+    border-top-right-radius: 50% 25%;
+
+    a {
+        color: white;
+    }
+}
+
+section {
+    padding: 3rem 0;
+}
+
+.divider {
+    height: 10px;
+    background: #6c63ff;
+}
+
+.accordion {
+    // WHEN CLOSED
+    // header text
+    --bs-accordion-btn-color: var(--clr-text);
+    // header background
+    --bs-accordion-btn-bg: rgba(var(--clr-primary-rgb), 0.2);
+
+    // WHEN OPEN
+    // header text
+    --bs-accordion-active-color: var(--clr-text);
+    // header background
+    --bs-accordion-active-bg: rgba(var(--clr-primary-rgb), 0.5);
+    // body text
+    --bs-accordion-color: var(--clr-text);
+    // body background
+    --bs-accordion-bg: transparent;
+    --bs-accordion-btn-focus-box-shadow: none; // outline
+    --bs-accordion-btn-focus-border-color: transparent; // idk
+}
+
+.btn-cta {
+    background: var(--clr-secondary);
+    color: var(--clr-text);
+    border: none;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+        background: var(--clr-accent);
+        color: var(--clr-bg);
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.features > * {
+    opacity: 0;
+    transition: all 2s;
+}
+
+.show {
+    opacity: 1;
+}
+
+// @keyframes slideAndFadeIn {
+//     from {
+//         transform: translateX(-50vw);
+//         opacity: 0;
+//         filter: blur(5px);
+//     }
+
+//     to {
+//         transform: translateX(0);
+//         opacity: 1;
+//         filter: blur(0);
+//     }
+// }
+
+// .feature {
+//     border: 1px solid black;
+//     padding-top: 1rem;
+//     animation: slideAndFadeIn 1s;
+// }
+
+// @for $i from 2 through 3 {
+//     .feature:nth-child(#{$i}) {
+//         animation-delay: #{$i * 100}ms;
+//     }
+// }

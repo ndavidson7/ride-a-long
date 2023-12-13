@@ -32,7 +32,7 @@
             </div>
             <button class="btn btn-uva-ow w-50" type="submit" disabled>Sign in</button>
         </form>
-        <p class="text-white">New user? <a class="orange orange-darken-hover" href="/signup">Sign up
+        <p class="text-white">New user? <a class="orange orange-darken-hover" href="{{ route('users.create') }}">Sign up
                 here!</a>
         </p>
     </main>

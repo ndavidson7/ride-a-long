@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
 use App\Http\Controllers\RideUserController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\ConversationController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoutePlannerController;
@@ -14,13 +15,13 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 /*
 |--------------------------------------------------------------------------
-| Home Route
+| Landing Route
 |--------------------------------------------------------------------------
 */
 
 Route::get('/', function () {
-    return redirect()->route('rides.index');
-})->middleware(['auth', 'verified'])->name('home');
+    return view('landing');
+})->name('landing');
 
 /*
 |--------------------------------------------------------------------------
@@ -28,13 +29,13 @@ Route::get('/', function () {
 |--------------------------------------------------------------------------
 */
 
-Route::controller(UserController::class)->group(function () {
-    Route::get('/signup', 'create')->middleware('guest')->name('signup');
-    Route::post('/signup', 'store')->middleware('guest');
-    Route::get('/profile/edit', 'edit')->middleware(['auth', 'verified'])->name('profile.edit'); // have to put this before show because of wildcard
-    Route::get('/profile/{user?}', 'show')->middleware(['auth', 'verified'])->name('profile.show'); // TODO: Could consider changing ID to local-part of email
-    Route::put('/profile', 'update')->middleware(['auth', 'verified'])->name('profile.update');
-    Route::delete('/profile', 'destroy')->middleware(['auth', 'verified'])->name('profile.destroy');
+Route::controller(UserController::class)->name('users.')->group(function () {
+    Route::get('/signup', 'create')->middleware('guest')->name('create');
+    Route::post('/signup', 'store')->middleware('guest')->name('store');
+    Route::get('/profile/edit', 'edit')->middleware(['auth', 'verified'])->name('edit'); // have to put this before show because of wildcard
+    Route::get('/profile/{user?}', 'show')->middleware(['auth', 'verified'])->name('show'); // TODO: Could consider changing ID to local-part of email
+    Route::put('/profile', 'update')->middleware(['auth', 'verified'])->name('update');
+    Route::delete('/profile', 'destroy')->middleware(['auth', 'verified'])->name('destroy');
 });
 
 /*
@@ -139,4 +140,15 @@ Route::controller(ConversationController::class)->middleware(['auth', 'verified'
     Route::get('/{conversation}', 'show')->name('show');
     Route::put('/{conversation}', 'update')->name('update');
     Route::delete('/{conversation}', 'destroy')->name('destroy');
+});
+
+/*
+|--------------------------------------------------------------------------
+| SettingsController Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::controller(SettingsController::class)->middleware(['auth', 'verified'])->name('settings.')->prefix('settings')->group(function () {
+    Route::get('/', 'index')->name('index');
+    // Route::put('/location', 'update')->name('update');
 });
