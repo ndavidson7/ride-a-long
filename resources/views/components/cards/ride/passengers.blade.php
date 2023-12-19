@@ -7,7 +7,7 @@
                     class="list-group-item list-group-item-action d-flex align-items-center">
                     @method('DELETE')
                     @csrf
-                    <a href="{{ route('profile.show', $passenger) }}"
+                    <a href="{{ route('users.show', $passenger) }}"
                         class="d-flex align-items-center me-auto w-100 text-decoration-none text-reset">
                         @if ($pfp = $passenger->fetchFirstMedia())
                             <img src="{{ $pfp['file_url'] }}" alt="{{ $passenger->name }}'s profile picture"

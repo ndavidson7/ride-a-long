@@ -8,9 +8,8 @@
     <div class="card-body">
         <div class="d-flex align-items-center gap-3">
             @if ($pfpUrl = $driver->pfp_url)
-                <a href="{{ route('profile.show', $driver) }}" style="height:6em; width:6em;"><img
-                        src="{{ $pfpUrl }}" alt="{{ $driver->name }}'s' profile picture"
-                        class="img-fluid rounded-circle shadow-lg"></a>
+                <a href="{{ route('users.show', $driver) }}" style="height:6em; width:6em;"><img src="{{ $pfpUrl }}"
+                        alt="{{ $driver->name }}'s' profile picture" class="img-fluid rounded-circle shadow-lg"></a>
             @endif
             <div class="d-flex flex-column">
                 <h5 class="card-title">{{ $driver->name }}</h5>

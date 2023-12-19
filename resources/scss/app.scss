@@ -1,86 +1,99 @@
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
-$uva-orange: #e57200;
-$uva-orange-dark: #eb5f0c;
-$uva-blue: #232d4b;
-$uva-blue-dark: #141e3c;
-
-.orange {
-    color: $uva-orange;
+:root {
+    --clr-primary: #3832d3;
+    --clr-primary-rgb: 56, 50, 211;
+    --clr-secondary: #aa84e4;
+    --clr-secondary-rgb: 170, 132, 228;
+    --clr-accent: #612e8a;
+    --clr-accent-rgb: 97, 46, 138;
+    --clr-text: #050517;
+    --clr-text-rgb: 5, 5, 23;
+    --clr-bg: #f0f0fc;
+    --clr-bg-rgb: 240, 240, 252;
 }
 
-.orange-darken-hover:hover {
-    color: $uva-orange-dark;
-}
+// $uva-orange: #e57200;
+// $uva-orange-dark: #eb5f0c;
+// $uva-blue: #232d4b;
+// $uva-blue-dark: #141e3c;
 
-.btn-uva-wb {
-    color: $uva-blue;
-    background-color: white;
+// .orange {
+//     color: $uva-orange;
+// }
 
-    &:disabled {
-        color: $uva-blue;
-        background-color: white;
-    }
+// .orange-darken-hover:hover {
+//     color: $uva-orange-dark;
+// }
 
-    &:hover {
-        background-color: $uva-blue;
-        color: white;
-    }
-}
+// .btn-uva-wb {
+//     color: $uva-blue;
+//     background-color: white;
 
-.btn-uva-ow {
-    color: white;
-    background-color: $uva-orange;
+//     &:disabled {
+//         color: $uva-blue;
+//         background-color: white;
+//     }
 
-    &:disabled {
-        color: white;
-        background-color: $uva-orange;
-    }
+//     &:hover {
+//         background-color: $uva-blue;
+//         color: white;
+//     }
+// }
 
-    &:hover {
-        background-color: white;
-        color: $uva-orange;
-    }
-}
+// .btn-uva-ow {
+//     color: white;
+//     background-color: $uva-orange;
 
-.btn-uva-bo {
-    color: $uva-orange;
-    background-color: $uva-blue;
+//     &:disabled {
+//         color: white;
+//         background-color: $uva-orange;
+//     }
 
-    &:disabled {
-        color: $uva-orange;
-        background-color: $uva-blue;
-    }
+//     &:hover {
+//         background-color: white;
+//         color: $uva-orange;
+//     }
+// }
 
-    &:hover {
-        background-color: $uva-orange;
-        color: $uva-blue;
-    }
-}
+// .btn-uva-bo {
+//     color: $uva-orange;
+//     background-color: $uva-blue;
 
-.btn-uva-ob {
-    color: $uva-blue;
-    background-color: $uva-orange;
+//     &:disabled {
+//         color: $uva-orange;
+//         background-color: $uva-blue;
+//     }
 
-    &:disabled {
-        color: $uva-blue;
-        background-color: $uva-orange;
-    }
+//     &:hover {
+//         background-color: $uva-orange;
+//         color: $uva-blue;
+//     }
+// }
 
-    &:hover {
-        background-color: $uva-blue;
-        color: $uva-orange;
-    }
-}
+// .btn-uva-ob {
+//     color: $uva-blue;
+//     background-color: $uva-orange;
+
+//     &:disabled {
+//         color: $uva-blue;
+//         background-color: $uva-orange;
+//     }
+
+//     &:hover {
+//         background-color: $uva-blue;
+//         color: $uva-orange;
+//     }
+// }
+
+// .bg-uva-orange {
+//     background-color: $uva-orange !important;
+// }
 
 .btn-bold {
     font-size: 1rem;
     font-weight: 700;
-}
-
-.bg-uva-orange {
-    background-color: $uva-orange !important;
 }
 
 .btn:disabled {
@@ -88,15 +101,11 @@ $uva-blue-dark: #141e3c;
 }
 
 header {
-    background-color: $uva-blue;
-    border-bottom: 10px solid $uva-orange;
+    background-color: var(--clr-primary);
+    border-bottom: 10px solid var(--clr-secondary);
 
     & i {
         color: white;
-    }
-
-    & sub {
-        font-size: 0.5em;
     }
 
     & h1 {
@@ -112,7 +121,7 @@ header {
 }
 
 body.splash {
-    background-color: $uva-blue-dark;
+    background-color: var(--clr-bg);
 
     & main {
         padding-top: 50px;
@@ -122,10 +131,6 @@ body.splash {
     & header {
         padding: 70px 0px;
     }
-
-    // form:invalid button {
-    //     background-color: rgb(180, 180, 180);
-    // }
 
     & .btn {
         font-weight: 800;

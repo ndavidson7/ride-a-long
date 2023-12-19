@@ -29,7 +29,8 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Import majors
 -   [x] Overhaul forms
     -   [x] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
--   [ ] Attractive landing page
+-   [x] Attractive landing page
+-   [ ] Overhaul styling
 -   [ ] Forgot password route
 -   [ ] text-muted deprecated, text-secondary is not a substitute (https://getbootstrap.com/docs/5.3/utilities/colors/#colors)
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit

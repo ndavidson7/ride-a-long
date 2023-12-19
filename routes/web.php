@@ -21,7 +21,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return view('landing');
-})->name('landing');
+})->middleware('guest')->name('landing');
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +63,7 @@ Route::get('/email/verify', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect()->route('profile.edit')->with(['status' => 'success', 'message' => 'Email verified successfully!']);
+    return redirect()->route('users.edit')->with(['status' => 'success', 'message' => 'Email verified successfully!']);
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {

@@ -1,12 +1,12 @@
 <header class="container-fluid ps-4">
     <nav class="navbar navbar-expand navbar-light">
         <a class="navbar-brand fw-bold fs-1 text-white" href="{{ route('rides.index') }}"
-            title="Return to ride listings">Ride-A-Long<sub class="orange">@UVA</sub></a>
+            title="Return to ride listings">Ride-A-Long</a>
         <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item me-2">
                 <div class="dropdown nav-link">
-                    <a class="nav-link" href="#" role="button" id="notificationsDropdown"
-                        data-bs-toggle="dropdown" aria-expanded="false" aria-label="Notifications Dropdown">
+                    <a class="nav-link" href="#" role="button" id="notificationsDropdown" data-bs-toggle="dropdown"
+                        aria-expanded="false" aria-label="Notifications Dropdown">
                         <i class="bi bi-bell-fill" style="font-size: 2rem"></i>
                         <span id="notifsBadge" class="notification badge rounded-pill bg-danger">
                             <span id="numNotifs">{{ auth()->user()->unreadNotifications()->count() }}</span>
@@ -47,11 +47,12 @@
                         @endif
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                        <li><a class="dropdown-item" href="{{ route('profile.show') }}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{{ route('users.show') }}">Profile</a></li>
                         <li><a class="dropdown-item" href="{{ route('rides.index', ['my-rides' => 1]) }}">My Rides</a>
                         </li>
                         {{-- <li><a class="dropdown-item" href="{{ route('requests.index') }}">Requests</a></li> --}}
                         <li><a class="dropdown-item" href="#">Messages</a></li>
+                        <li><a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

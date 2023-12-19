@@ -118,7 +118,7 @@ class UserController extends Controller
             $driver->save();
         }
 
-        return redirect()->route('profile.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!', 'uploadedPfp' => $hasPfp]);
+        return redirect()->route('users.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!', 'uploadedPfp' => $hasPfp]);
     }
 
     public function destroy()

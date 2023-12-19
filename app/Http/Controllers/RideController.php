@@ -29,7 +29,7 @@ class RideController extends Controller
     public function create()
     {
         if (Auth::user()->cannot('create', Ride::class)) {
-            return redirect()->route('profile.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
+            return redirect()->route('users.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
         }
 
         return view('rides.create', [
@@ -40,7 +40,7 @@ class RideController extends Controller
     public function store(StoreOrUpdateRideRequest $request, RideService $rideService)
     {
         if (Auth::user()->cannot('store', Ride::class)) {
-            return redirect()->route('profile.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
+            return redirect()->route('users.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
         }
 
         $rideService->storeRide($request);

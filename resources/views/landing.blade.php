@@ -13,15 +13,12 @@
 </head>
 
 <body>
-    {{-- Navbar? --}}
-
-    {{-- Jumbotron --}}
-    <section
-        class="jumbotron d-flex flex-column justify-content-center align-items-center text-center text-white px-3 px-sm-5">
+    {{-- Header --}}
+    <header class="d-flex flex-column justify-content-center align-items-center text-center text-white px-3 px-sm-5">
         <a href="{{ route('sessions.create') }}" class="btn btn-cta" role="button">Log In</a>
         <h1 class="display-4 fw-bold">Share the Journey with Ride-A-Long</h1>
         <p class="lead">Carpooling made simple, affordable, and convenient for everyone.</p>
-    </section>
+    </header>
 
     {{-- Features Section --}}
     <section class="features container-fluid d-flex flex-column row-gap-5 text-center text-md-start">
@@ -56,8 +53,6 @@
             </div>
         </div>
     </section>
-
-    {{-- <div class="divider"></div> --}}
 
     {{-- FAQ --}}
     <section class="container-md">
@@ -115,8 +110,6 @@
         </div>
     </section>
 
-    {{-- <div class="divider"></div> --}}
-
     {{-- Call to Action --}}
     <section class="text-center">
         <h2 class="display-5 fw-bold">Ready to Share Your Ride or Find One?</h2>
@@ -126,10 +119,12 @@
 
     {{-- Footer --}}
     <footer>
-        <div class="col col-md-6 d-flex justify-content-evenly align-items-center mx-auto">
-            <a href="#" class="link-offset-2 fs-4">About</a>
-            <a href="#" class="link-offset-2 fs-4">Contact</a>
+        <div class="d-flex justify-content-center align-items-center p-2 column-gap-3 flex-wrap">
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+            <a href="#">Privacy Policy</a>
         </div>
+        <small class="text-white">Copyright &copy; 2024 | Ride-A-Long</small>
     </footer>
 </body>
 

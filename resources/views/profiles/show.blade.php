@@ -27,7 +27,7 @@
                         {{-- Only wrapped in div because can't give font icon margin for some reason --}}
                         @if ($user->id == auth()->id())
                             <div class="mb-4">
-                                <a href="{{ route('profile.edit') }}"><i class="bi bi-pencil-square fs-3"
+                                <a href="{{ route('users.edit') }}"><i class="bi bi-pencil-square fs-3"
                                         title="Edit profile"></i></a>
                             </div>
                         @endif

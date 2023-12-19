@@ -1,7 +1,7 @@
 <x-layouts.main title="Edit profile" :$entries>
     <main>
         <form class="disabled-until-change container py-4 col-11 col-sm-10 col-md-9 col-lg-8 col-xl-7 col-xxl-6"
-            action="{{ route('profile.update') }}" method="post" enctype="multipart/form-data">
+            action="{{ route('users.update') }}" method="post" enctype="multipart/form-data">
             @method('PUT')
             @csrf
 
@@ -86,7 +86,7 @@
             </div>
             <div class="d-flex">
                 <button type="submit" class="btn btn-uva-ob me-2" disabled>Save</button>
-                <a href="{{ route('profile.destroy') }}" class="btn btn-danger"
+                <a href="{{ route('users.destroy') }}" class="btn btn-danger"
                     onclick="return confirm('Are you sure you want to delete your account? This action is irreversible.');">Delete
                     Account</a>
             </div>

@@ -87,14 +87,11 @@ function addMessage(message, sender) {
             if (sender.pfp_url != null) {
                 pfpElement.src = sender.pfp_url;
                 pfpElement.alt = `${sender.name}'s profile picture`;
-                pfpElement.parentElement.href = route(
-                    "profile.show",
-                    sender.id
-                );
+                pfpElement.parentElement.href = route("users.show", sender.id);
             } else pfpElement.parentElement.remove();
 
             const nameElement = lastMessageWrapper.querySelector(".name");
-            nameElement.href = route("profile.show", sender.id);
+            nameElement.href = route("users.show", sender.id);
             nameElement.textContent = sender.name;
         }
 
