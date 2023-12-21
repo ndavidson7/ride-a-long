@@ -26,6 +26,9 @@ return new class extends Migration
             $table->unsignedTinyInteger('year')->nullable();
             $table->unsignedTinyInteger('major_id')->nullable();
             $table->string('bio')->nullable();
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->unsignedInteger('college_id')->nullable();
         });
     }
 

@@ -13,7 +13,7 @@
                             @error('first-name') @else value="{{ old('first-name') }}" @enderror
                             aria-describedby="name-help" required />
                         <label for="first-name">First name</label>
-                        <div class="form-text text-white text-opacity-50" id="name-help">No numbers</div>
+                        <div class="form-text" id="name-help">No numbers</div>
                         <div class="invalid-feedback">
                             @error('first-name')
                                 {{ $message }}
@@ -41,7 +41,7 @@
                             pattern="[A-Za-z0-9]+@virginia.edu" aria-describedby="email-help"
                             @error('email') @else value="{{ old('email') }}" @enderror required />
                         <label for="email">UVA email address</label>
-                        <div class="form-text text-white text-opacity-50" id="email-help">Valid UVA email</div>
+                        <div class="form-text" id="email-help">Valid UVA email</div>
                         <div class="invalid-feedback">
                             @error('email')
                                 {{ $message }}
@@ -54,7 +54,7 @@
                             maxlength="10" aria-describedby="phone-help"
                             @error('phone') @else value="{{ old('phone') }}" @enderror required />
                         <label for="phone">Personal phone number</label>
-                        <div class="form-text text-white text-opacity-50" id="phone-help">No spaces or dashes</div>
+                        <div class="form-text" id="phone-help">No spaces or dashes</div>
                         <div class="invalid-feedback">
                             @error('phone')
                                 {{ $message }}
@@ -69,7 +69,7 @@
                             name="password" placeholder="" autocomplete="new-password" maxlength="255"
                             aria-describedby="password-help" required />
                         <label for="password">Password</label>
-                        <div class="form-text text-white text-opacity-50" id="password-help">Never reuse
+                        <div class="form-text" id="password-help">Never reuse
                             passwords!</div>
                         <div class="invalid-feedback">
                             @error('password')
@@ -87,12 +87,11 @@
                         </div>
                     </div>
                 </div>
-                <button class="w-50 btn btn-uva-ow" type="submit" disabled>Sign
-                    up</button>
+                <button class="w-50 btn" type="submit" disabled>Sign up</button>
             </form>
             <div class="row text-center">
-                <p class="text-white">Already have an account? <a class="orange orange-darken-hover "
-                        href="{{ route('sessions.create') }}">Sign in here!</a></p>
+                <p>Already have an account? <a class="link-primary" href="{{ route('sessions.create') }}">Sign in
+                        here!</a></p>
             </div>
         </div>
     </main>

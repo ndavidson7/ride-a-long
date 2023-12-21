@@ -6,6 +6,7 @@ use App\Models\Car;
 use App\Models\User;
 use App\Models\Major;
 use App\Models\Driver;
+use App\Models\College;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -25,6 +26,7 @@ class UserSeeder extends Seeder
             'first_name' => 'Nicholas',
             'last_name' => 'Davidson',
             'email_verified_at' => now(),
+            'college_id' => 1,
         ])->id;
 
         $driverId = Driver::create([
@@ -46,6 +48,7 @@ class UserSeeder extends Seeder
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email_verified_at' => now(),
+            'college_id' => 1,
         ])->id;
 
         $driver2Id = Driver::create([
@@ -59,14 +62,14 @@ class UserSeeder extends Seeder
             'color' => 'White',
         ]);
 
-        // Import majors
-        Artisan::call('app:import-majors');
         $majors = Major::all();
+        $colleges = College::all();
 
         // Random users
-        User::factory(10)->create()->each(function ($user) use ($majors) {
+        User::factory(10)->create()->each(function ($user) use ($majors, $colleges) {
             // Randomly assign a major
             $user->major()->associate($majors->random());
+            $user->college()->associate($colleges->random());
             $user->save();
         });
     }

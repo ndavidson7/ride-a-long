@@ -36,7 +36,9 @@ class User extends Authenticatable implements MustVerifyEmail
         'last_name',
         'year',
         'major_id',
-        'bio'
+        'bio',
+        'latitude',
+        'longitude',
     ];
 
     /**
@@ -55,6 +57,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'id',
         'major_id',
         'year',
+        'latitude',
+        'longitude',
     ];
 
     /**
@@ -159,6 +163,11 @@ class User extends Authenticatable implements MustVerifyEmail
     public function major(): BelongsTo
     {
         return $this->belongsTo(Major::class);
+    }
+
+    public function college(): BelongsTo
+    {
+        return $this->belongsTo(College::class);
     }
 
     // public function waypoints(): HasManyThrough

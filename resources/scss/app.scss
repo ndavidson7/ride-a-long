@@ -1,3 +1,4 @@
+@use "sass:color";
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
@@ -14,82 +15,37 @@
     --clr-bg-rgb: 240, 240, 252;
 }
 
-// $uva-orange: #e57200;
-// $uva-orange-dark: #eb5f0c;
-// $uva-blue: #232d4b;
-// $uva-blue-dark: #141e3c;
+body {
+    color: var(--clr-text);
+    background: var(--clr-bg);
+}
 
-// .orange {
-//     color: $uva-orange;
-// }
+@mixin btn($color, $bg-color) {
+    color: $color;
+    background-color: $bg-color;
 
-// .orange-darken-hover:hover {
-//     color: $uva-orange-dark;
-// }
+    &:disabled {
+        color: $color;
+        background-color: $bg-color;
+    }
 
-// .btn-uva-wb {
-//     color: $uva-blue;
-//     background-color: white;
+    &:hover {
+        background-color: $color;
+        color: $bg-color;
+    }
+}
 
-//     &:disabled {
-//         color: $uva-blue;
-//         background-color: white;
-//     }
+@mixin link($color) {
+    color: #{$color};
 
-//     &:hover {
-//         background-color: $uva-blue;
-//         color: white;
-//     }
-// }
+    &:hover {
+        color: color.scale(#{$color}, $lightness: -20%);
+    }
+}
 
-// .btn-uva-ow {
-//     color: white;
-//     background-color: $uva-orange;
-
-//     &:disabled {
-//         color: white;
-//         background-color: $uva-orange;
-//     }
-
-//     &:hover {
-//         background-color: white;
-//         color: $uva-orange;
-//     }
-// }
-
-// .btn-uva-bo {
-//     color: $uva-orange;
-//     background-color: $uva-blue;
-
-//     &:disabled {
-//         color: $uva-orange;
-//         background-color: $uva-blue;
-//     }
-
-//     &:hover {
-//         background-color: $uva-orange;
-//         color: $uva-blue;
-//     }
-// }
-
-// .btn-uva-ob {
-//     color: $uva-blue;
-//     background-color: $uva-orange;
-
-//     &:disabled {
-//         color: $uva-blue;
-//         background-color: $uva-orange;
-//     }
-
-//     &:hover {
-//         background-color: $uva-blue;
-//         color: $uva-orange;
-//     }
-// }
-
-// .bg-uva-orange {
-//     background-color: $uva-orange !important;
-// }
+.link-primary {
+    @include link(var(--clr-primary));
+}
 
 .btn-bold {
     font-size: 1rem;
