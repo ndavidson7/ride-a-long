@@ -82,7 +82,7 @@
                             class="form-control form-control-lg @error('confirm-password') is-invalid @enderror"
                             id="confirm-password" name="confirm-password" placeholder="" autocomplete="new-password"
                             maxlength="255" aria-describedby="password-help" required />
-                        <label for="confirm-password">Confirm Password</label>
+                        <label for="confirm-password">Confirm password</label>
                         <div class="invalid-feedback">
                         </div>
                     </div>

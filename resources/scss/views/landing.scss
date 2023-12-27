@@ -60,25 +60,25 @@ section {
     padding: 3rem 0;
 }
 
-.accordion {
-    // WHEN CLOSED
-    // header text
-    --bs-accordion-btn-color: var(--clr-text);
-    // header background
-    --bs-accordion-btn-bg: rgba(var(--clr-primary-rgb), 0.2);
+// .accordion {
+//     // WHEN CLOSED
+//     // header text
+//     --bs-accordion-btn-color: var(--clr-text);
+//     // header background
+//     --bs-accordion-btn-bg: rgba(var(--clr-primary-rgb), 0.2);
 
-    // WHEN OPEN
-    // header text
-    --bs-accordion-active-color: var(--clr-text);
-    // header background
-    --bs-accordion-active-bg: rgba(var(--clr-primary-rgb), 0.5);
-    // body text
-    --bs-accordion-color: var(--clr-text);
-    // body background
-    --bs-accordion-bg: transparent;
-    --bs-accordion-btn-focus-box-shadow: none; // outline
-    --bs-accordion-btn-focus-border-color: transparent; // idk
-}
+//     // WHEN OPEN
+//     // header text
+//     --bs-accordion-active-color: var(--clr-text);
+//     // header background
+//     --bs-accordion-active-bg: rgba(var(--clr-primary-rgb), 0.5);
+//     // body text
+//     --bs-accordion-color: var(--clr-text);
+//     // body background
+//     --bs-accordion-bg: transparent;
+//     --bs-accordion-btn-focus-box-shadow: none; // outline
+//     --bs-accordion-btn-focus-border-color: transparent; // idk
+// }
 
 .btn-cta {
     background: var(--clr-secondary);

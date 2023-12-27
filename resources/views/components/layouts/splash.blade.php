@@ -9,7 +9,7 @@
 
     {{ $slot }}
 
-    <x-footer />
+    {{-- <x-footer /> --}}
 
     <x-toasts.container />
 

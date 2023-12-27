@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="card-footer">
-        <button type="button" class="card-link btn btn-uva-ob stretched-link" data-bs-toggle="modal"
+        <button type="button" class="card-link btn btn-primary stretched-link" data-bs-toggle="modal"
             data-bs-target="#mapModal" data-ride="{{ $ride->id }}" data-user-relation="{{ $ride->user_relation }}"
             data-related-model-id="{{ $ride->related_model_id }}">
             @switch($ride->user_relation)
