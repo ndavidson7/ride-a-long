@@ -21,19 +21,17 @@
                 <label for="password">Password</label>
                 <div class="invalid-feedback"></div>
             </div>
-            <div class="d-flex mb-3 text-white gap-4">
+            <div class="d-flex mb-3 gap-4">
                 <div class="form-check mb-3 mb-md-0">
                     <input class="form-check-input" type="checkbox" id="remember" name="remember" value="1"
                         @checked(old('remember')) />
                     <label class="form-check-label" for="remember">Remember me</label>
                 </div>
                 {{-- TODO: Implement route --}}
-                <a href="#" class="orange orange-darken-hover">Forgot password?</a>
+                <a href="#" class="link-primary">Forgot password?</a>
             </div>
-            <button class="btn btn-uva-ow w-50" type="submit" disabled>Sign in</button>
+            <button class="btn btn-primary w-50" type="submit" disabled>Sign in</button>
         </form>
-        <p class="text-white">New user? <a class="orange orange-darken-hover" href="{{ route('users.create') }}">Sign up
-                here!</a>
-        </p>
+        <p>New user? <a class="link-primary" href="{{ route('users.create') }}">Sign up here!</a></p>
     </main>
 </x-layouts.splash>

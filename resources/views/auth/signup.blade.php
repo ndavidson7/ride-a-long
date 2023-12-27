@@ -87,7 +87,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="w-50 btn" type="submit" disabled>Sign up</button>
+                <button class="w-50 btn btn-primary" type="submit" disabled>Sign up</button>
             </form>
             <div class="row text-center">
                 <p>Already have an account? <a class="link-primary" href="{{ route('sessions.create') }}">Sign in

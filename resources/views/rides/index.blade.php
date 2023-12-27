@@ -22,10 +22,10 @@
                             value="{{ request('start-date') }}" />
                     </div>
                     <div class="col-auto form-check">
-                        <label class="form-check-label" for="detours-checkbox"><a href="#"
+                        <label class="form-check-label" for="detours-checkbox">Detours Allowed <a href="#"
                                 data-bs-toggle="tooltip"
-                                data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination">Detours</a>
-                            Allowed</label>
+                                data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination"><i
+                                    class="bi bi-question-circle"></i></a></label>
                         <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours"
                             value="1" @if (request('detours')) checked @endif />
                     </div>
@@ -40,7 +40,7 @@
                             value="1" @if (request('my-rides')) checked @endif />
                     </div>
                     <div class="col-auto">
-                        <button type="submit" class="btn btn-uva-ob btn-bold">Filter</button>
+                        <button type="submit" class="btn btn-primary btn-bold">Filter</button>
                     </div>
                 </div>
             </form>

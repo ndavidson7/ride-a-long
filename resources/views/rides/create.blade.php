@@ -51,9 +51,10 @@
             </div>
             <input type="hidden" name="miles" />
             <div class="form-check mb-3">
-                <label class="form-check-label" for="detours-checkbox">Allow <a href="#" data-bs-toggle="tooltip"
-                        data-bs-placement="right"
-                        data-bs-title="Allowing detours means users can request pickup and/or dropoff locations that are different than your ride's origin and destination">Detours</a></label>
+                <label class="form-check-label" for="detours-checkbox">Allow Detours <a href="#"
+                        data-bs-toggle="tooltip" data-bs-placement="right"
+                        data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination"><i
+                            class="bi bi-question-circle"></i></a></label>
                 <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours" />
             </div>
             {{-- <div class="row mb-3">

@@ -1,26 +1,26 @@
-@use "sass:color";
+// Overrides for Bootstrap variables and various additional styles
+@import "_variables";
+
+// Bootstrap
 @import "~bootstrap/scss/bootstrap";
 @import "~bootstrap-icons/font/bootstrap-icons.css";
 
 :root {
-    --clr-primary: #3832d3;
-    --clr-primary-rgb: 56, 50, 211;
-    --clr-secondary: #aa84e4;
-    --clr-secondary-rgb: 170, 132, 228;
-    --clr-accent: #612e8a;
-    --clr-accent-rgb: 97, 46, 138;
-    --clr-text: #050517;
-    --clr-text-rgb: 5, 5, 23;
-    --clr-bg: #f0f0fc;
-    --clr-bg-rgb: 240, 240, 252;
+    --clr-primary: #{$primary};
+    --clr-secondary: #{$secondary};
+    --clr-accent: #{$accent};
+    --clr-text: #{$text};
+    --clr-bg: #{$bg};
 }
 
-body {
-    color: var(--clr-text);
-    background: var(--clr-bg);
+@function color-var($color-name) {
+    @return var(--clr-#{$color-name});
 }
 
-@mixin btn($color, $bg-color) {
+@mixin btn-invert($color-name, $bg-color-name) {
+    $color: color-var($color-name);
+    $bg-color: color-var($bg-color-name);
+
     color: $color;
     background-color: $bg-color;
 
@@ -35,17 +35,16 @@ body {
     }
 }
 
-@mixin link($color) {
-    color: #{$color};
+// $components: btn, a;
+// $colors: primary, secondary, accent;
 
-    &:hover {
-        color: color.scale(#{$color}, $lightness: -20%);
-    }
-}
-
-.link-primary {
-    @include link(var(--clr-primary));
-}
+// @each $component in $components {
+//     @each $color in $colors {
+//         .#{$component}-#{$color} {
+//             @include #{$component}(var(--clr-#{$color}), var(--clr-#{$color}-rgb));
+//         }
+//     }
+// }
 
 .btn-bold {
     font-size: 1rem;
@@ -54,6 +53,11 @@ body {
 
 .btn:disabled {
     border-color: transparent;
+}
+
+body {
+    color: var(--clr-text);
+    background: var(--clr-bg);
 }
 
 header {
@@ -139,4 +143,9 @@ body.splash {
     flex: 1;
     height: 1px;
     background: #eee;
+}
+
+[data-bs-toggle="tooltip"] {
+    color: inherit;
+    text-decoration: none;
 }
