@@ -9,10 +9,7 @@
                 </div>
             @enderror
             <div class="form-floating mb-3 w-100">
-                <input type="email" class="form-control form-control-lg" id="email" name="email" placeholder=""
-                    autocomplete="email" maxlength="255" pattern="[A-Za-z0-9]+@virginia.edu" value="{{ old('email') }}"
-                    required />
-                <label for="email">UVA email address</label>
+                <x-inputs.email />
                 <div class="invalid-feedback"></div>
             </div>
             <div class="form-floating mb-3 w-100">

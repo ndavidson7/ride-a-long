@@ -7,10 +7,12 @@
                 {{-- EMPTY PLACEHOLDERS NECESSARY FOR CSS STYLING ON INVALID INPUTS --}}
                 <div class="d-flex gap-3">
                     <div class="form-floating col-sm-6">
-                        <input type="text"
-                            class="form-control form-control-lg @error('first-name') is-invalid @enderror" id="first-name"
-                            name="first-name" placeholder="" autocomplete="given-name" maxlength="255" pattern="[^\d]+"
-                            @error('first-name') @else value="{{ old('first-name') }}" @enderror
+                        <input type="text" @class([
+                            'form-control',
+                            'form-control-lg',
+                            'is-invalid' => $errors->has('first-name'),
+                        ]) id="first-name" name="first-name" placeholder=""
+                            autocomplete="given-name" maxlength="255" pattern="[^\d]+" value="{{ old('first-name') }}"
                             aria-describedby="name-help" required />
                         <label for="first-name">First name</label>
                         <div class="form-text" id="name-help">No numbers</div>
@@ -21,11 +23,13 @@
                         </div>
                     </div>
                     <div class="form-floating col-sm-6">
-                        <input type="text"
-                            class="form-control form-control-lg @error('last-name') is-invalid @enderror" id="last-name"
-                            name="last-name" placeholder="" autocomplete="family-name" maxlength="255" pattern="[^\d]+"
-                            @error('last-name') @else value="{{ old('last-name') }}" @enderror
-                            aria-describedby="name-help" required />
+                        <input type="text" @class([
+                            'form-control',
+                            'form-control-lg',
+                            'is-invalid' => $errors->has('last-name'),
+                        ]) id="last-name" name="last-name"
+                            placeholder="" autocomplete="family-name" maxlength="255" pattern="[^\d]+"
+                            value="{{ old('last-name') }}" aria-describedby="name-help" required />
                         <label for="last-name">Last name</label>
                         <div class="invalid-feedback">
                             @error('last-name')
@@ -36,11 +40,7 @@
                 </div>
                 <div class="d-flex gap-3">
                     <div class="form-floating col-sm-6">
-                        <input type="email" class="form-control form-control-lg @error('email') is-invalid @enderror"
-                            id="email" name="email" placeholder="" autocomplete="email" maxlength="255"
-                            pattern="[A-Za-z0-9]+@virginia.edu" aria-describedby="email-help"
-                            @error('email') @else value="{{ old('email') }}" @enderror required />
-                        <label for="email">UVA email address</label>
+                        <x-inputs.email aria-describedby="email-help" />
                         <div class="form-text" id="email-help">Valid UVA email</div>
                         <div class="invalid-feedback">
                             @error('email')
@@ -49,10 +49,13 @@
                         </div>
                     </div>
                     <div class="form-floating col-sm-6">
-                        <input type="tel" class="form-control form-control-lg @error('phone') is-invalid @enderror"
-                            id="phone" name="phone" placeholder="" pattern="[0-9]{10}" autocomplete="tel-national"
-                            maxlength="10" aria-describedby="phone-help"
-                            @error('phone') @else value="{{ old('phone') }}" @enderror required />
+                        <input type="tel" @class([
+                            'form-control',
+                            'form-control-lg',
+                            'is-invalid' => $errors->has('phone'),
+                        ]) id="phone" name="phone" placeholder=""
+                            pattern="[0-9]{10}" autocomplete="tel-national" maxlength="10" aria-describedby="phone-help"
+                            value="{{ old('phone') }}" required />
                         <label for="phone">Personal phone number</label>
                         <div class="form-text" id="phone-help">No spaces or dashes</div>
                         <div class="invalid-feedback">
@@ -64,10 +67,13 @@
                 </div>
                 <div class="d-flex gap-3">
                     <div class="form-floating col-sm-6">
-                        <input type="password"
-                            class="form-control form-control-lg @error('password') is-invalid @enderror" id="password"
-                            name="password" placeholder="" autocomplete="new-password" maxlength="255"
-                            aria-describedby="password-help" required />
+                        <input type="password" @class([
+                            'form-control',
+                            'form-control-lg',
+                            'is-invalid' => $errors->has('password'),
+                        ]) id="password" name="password"
+                            placeholder="" autocomplete="new-password" maxlength="255" aria-describedby="password-help"
+                            required />
                         <label for="password">Password</label>
                         <div class="form-text" id="password-help">Never reuse
                             passwords!</div>
@@ -78,10 +84,13 @@
                         </div>
                     </div>
                     <div class="form-floating col-sm-6">
-                        <input type="password"
-                            class="form-control form-control-lg @error('confirm-password') is-invalid @enderror"
-                            id="confirm-password" name="confirm-password" placeholder="" autocomplete="new-password"
-                            maxlength="255" aria-describedby="password-help" required />
+                        <input type="password" @class([
+                            'form-control',
+                            'form-control-lg',
+                            'is-invalid' => $errors->has('confirm-password'),
+                        ]) id="confirm-password"
+                            name="confirm-password" placeholder="" autocomplete="new-password" maxlength="255"
+                            aria-describedby="password-help" required />
                         <label for="confirm-password">Confirm password</label>
                         <div class="invalid-feedback">
                         </div>
