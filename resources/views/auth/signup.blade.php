@@ -39,15 +39,7 @@
                     </div>
                 </div>
                 <div class="d-flex gap-3">
-                    <div class="form-floating col-sm-6">
-                        <x-inputs.email aria-describedby="email-help" />
-                        <div class="form-text" id="email-help">Valid UVA email</div>
-                        <div class="invalid-feedback">
-                            @error('email')
-                                {{ $message }}
-                            @enderror
-                        </div>
-                    </div>
+                    <x-inputs.email class="col-sm-6" with-help />
                     <div class="form-floating col-sm-6">
                         <input type="tel" @class([
                             'form-control',

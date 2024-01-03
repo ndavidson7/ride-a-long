@@ -8,10 +8,7 @@
                     {{ $message }}
                 </div>
             @enderror
-            <div class="form-floating mb-3 w-100">
-                <x-inputs.email />
-                <div class="invalid-feedback"></div>
-            </div>
+            <x-inputs.email class="mb-3 w-100" />
             <div class="form-floating mb-3 w-100">
                 <input type="password" class="form-control form-control-lg" id="password" name="password"
                     placeholder="" autocomplete="current-password" required />
@@ -24,8 +21,7 @@
                         @checked(old('remember')) />
                     <label class="form-check-label" for="remember">Remember me</label>
                 </div>
-                {{-- TODO: Implement route --}}
-                <a href="#" class="link-primary">Forgot password?</a>
+                <a href="{{ route('password.request') }}" class="link-primary">Forgot password?</a>
             </div>
             <button class="btn btn-primary w-50" type="submit" disabled>Sign in</button>
         </form>
