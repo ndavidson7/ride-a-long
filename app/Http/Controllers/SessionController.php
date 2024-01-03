@@ -11,7 +11,7 @@ class SessionController extends Controller
     public function create()
     {
         return view('auth.signin', [
-            'entries' => ['resources/js/views/auth/signin.js']
+            'entries' => ['resources/js/form-validation.js']
         ]);
     }
 

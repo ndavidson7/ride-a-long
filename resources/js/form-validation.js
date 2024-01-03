@@ -1,6 +1,7 @@
 import {
     enableSubmitOnAllRequiredInputsValid,
     validateInputsOnChange,
-} from "@modules/form";
-enableSubmitOnAllRequiredInputsValid();
+} from "@modules/form-helpers";
+
 validateInputsOnChange();
+enableSubmitOnAllRequiredInputsValid();
