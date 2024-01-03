@@ -2,29 +2,15 @@
 
 namespace App\View\Components\Layouts;
 
-use Closure;
-use Illuminate\Contracts\View\View;
-use Illuminate\View\Component;
-
-class Splash extends Component
+class Splash extends Layout
 {
-    /**
-     * Create a new component instance.
-     * 
-     * @param string $title The page title
-     * @param string[] $entries The vite entry points to load
-     */
-    public function __construct(
-        public string $title,
-        public array $entries = []
-    ) {
+    protected function getBodyClasses(): string
+    {
+        return 'splash';
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
-    public function render(): View|Closure|string
+    protected function getHeader(): string
     {
-        return view('components.layouts.splash');
+        return 'headers.splash';
     }
 }

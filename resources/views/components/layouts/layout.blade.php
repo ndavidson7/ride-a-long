@@ -3,9 +3,9 @@
 
 <x-head :$title :$entries />
 
-<body class="splash d-flex flex-column min-vh-100">
+<body class="{{ $bodyClasses }} d-flex flex-column min-vh-100">
 
-    <x-headers.splash />
+    <x-dynamic-component :component="$header" />
 
     {{ $slot }}
 
