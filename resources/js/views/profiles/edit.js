@@ -1,4 +1,4 @@
-import { enableSubmitOnAnyChange } from "@modules/form";
+import { enableSubmitOnAnyChange } from "@modules/form-helpers";
 enableSubmitOnAnyChange();
 
 const pfpLabel = document.getElementById("pfp-label");

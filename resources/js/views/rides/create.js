@@ -1,6 +1,6 @@
 import { RideCreateMapComponent } from "@modules/map";
 import "@modules/tooltip";
-import { enableSubmitOnAllRequiredInputsValid } from "@modules/form";
+import { enableSubmitOnAllRequiredInputsValid } from "@modules/form-helpers";
 enableSubmitOnAllRequiredInputsValid();
 
 const map = new RideCreateMapComponent(
