@@ -85,7 +85,7 @@
                 </div>
             </div>
             <div class="d-flex">
-                <button type="submit" class="btn btn-uva-ob me-2" disabled>Save</button>
+                <button type="submit" class="btn btn-primary me-2" disabled>Save</button>
                 <a href="{{ route('users.destroy') }}" class="btn btn-danger"
                     onclick="return confirm('Are you sure you want to delete your account? This action is irreversible.');">Delete
                     Account</a>

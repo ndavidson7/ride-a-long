@@ -42,8 +42,8 @@
                     <textarea class="form-control" name="message" id="message" rows="3"></textarea>
                 </div>
                 <div class="d-flex justify-content-start gap-2">
-                    <button type="submit" class="btn btn-uva-ob">Request</button>
-                    <button type="button" id="preview-button" class="btn btn-uva-ob" disabled>Preview</button>
+                    <button type="submit" class="btn btn-primary">Request</button>
+                    <button type="button" id="preview-button" class="btn btn-primary" disabled>Preview</button>
                 </div>
             </div>
         </form>

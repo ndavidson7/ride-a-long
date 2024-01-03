@@ -7,7 +7,7 @@
         <p class="card-text">{{ $ride->description }}</p>
         @switch($ride->user_relation)
             @case('driver')
-                <a href="{{ route('rides.edit', $ride) }}" class="btn btn-uva-ob btn-bold">Edit Ride</a>
+                <a href="{{ route('rides.edit', $ride) }}" class="btn btn-primary btn-bold">Edit Ride</a>
             @break
 
             @case('requester')
@@ -29,7 +29,7 @@
 
             @default
                 @if ($ride->seats_open > 0)
-                    <a href="{{ route('requests.create', $ride) }}" class="btn btn-uva-ob btn-bold">Request to Join</a>
+                    <a href="{{ route('requests.create', $ride) }}" class="btn btn-primary btn-bold">Request to Join</a>
                 @endif
         @endswitch
         {{-- </div> --}}

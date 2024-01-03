@@ -66,18 +66,18 @@
                 <div class="col mt-auto">
                     <input type="radio" class="btn-check" name="pricing" id="pricing1" value="seat"
                         autocomplete="off" required />
-                    <label class="btn btn-uva-ob" for="pricing1">Per Seat</label>
+                    <label class="btn btn-primary" for="pricing1">Per Seat</label>
                     <input type="radio" class="btn-check" name="pricing" id="pricing2" value="mile"
                         autocomplete="off" required />
-                    <label class="btn btn-uva-ob" for="pricing2">Per Mile</label>
+                    <label class="btn btn-primary" for="pricing2">Per Mile</label>
                 </div>
             </div> --}}
             <div class="mb-3">
                 <label class="form-label" for="description">Description/Additional info</label>
                 <textarea class="form-control" id="description" name="description" rows=3 maxlength="255"></textarea>
             </div>
-            <button type="submit" class="btn btn-uva-ob" disabled>Post</button>
-            <button type="button" class="btn btn-uva-ob" id="preview-button" disabled>Preview</button>
+            <button type="submit" class="btn btn-primary" disabled>Post</button>
+            <button type="button" class="btn btn-primary" id="preview-button" disabled>Preview</button>
         </form>
     </main>
 </x-layouts.main>

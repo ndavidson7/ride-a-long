@@ -59,9 +59,9 @@
             @csrf
         </form>
         <div>
-            <button type="submit" form="ride-update" class="btn btn-uva-ob">Save</button>
+            <button type="submit" form="ride-update" class="btn btn-primary">Save</button>
             <button type="submit" form="ride-destroy" class="btn btn-danger">Delete</button>
-            <button type="button" class="btn btn-uva-ob" id="preview-button" disabled>Preview</button>
+            <button type="button" class="btn btn-primary" id="preview-button" disabled>Preview</button>
         </div>
         <script>
             var ride = @json($ride);
