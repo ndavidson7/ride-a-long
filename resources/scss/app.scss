@@ -35,17 +35,6 @@
     }
 }
 
-// $components: btn, a;
-// $colors: primary, secondary, accent;
-
-// @each $component in $components {
-//     @each $color in $colors {
-//         .#{$component}-#{$color} {
-//             @include #{$component}(var(--clr-#{$color}), var(--clr-#{$color}-rgb));
-//         }
-//     }
-// }
-
 .btn-bold {
     font-size: 1rem;
     font-weight: 700;

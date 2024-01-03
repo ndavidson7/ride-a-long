@@ -1,3 +1,11 @@
+{{-- 
+
+    Any classes passed to the component will be applied to the wrapping div.
+    The component will also accept the following attributes:
+        - with-help: If present, a help text will be displayed below the input.
+
+--}}
+
 <div class="{{ $attributes->merge(['class' => 'form-floating'])->get('class') }}">
     <input type="email" @class([
         'form-control',

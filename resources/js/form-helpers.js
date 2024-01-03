@@ -30,6 +30,7 @@ export function enableSubmitOnAllRequiredInputsValid() {
     });
 }
 
+// TODO: Consider changing to a per-input class, rather than per-form
 export function validateInputsOnChange() {
     const forms = document.querySelectorAll(".validate-on-change");
     forms.forEach((form) => {
