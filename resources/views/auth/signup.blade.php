@@ -64,8 +64,8 @@
                             'form-control-lg',
                             'is-invalid' => $errors->has('password'),
                         ]) id="password" name="password"
-                            placeholder="" autocomplete="new-password" maxlength="255" aria-describedby="password-help"
-                            required />
+                            placeholder="" autocomplete="new-password" minlength="8" maxlength="255"
+                            aria-describedby="password-help" required />
                         <label for="password">Password</label>
                         <div class="form-text" id="password-help">Never reuse
                             passwords!</div>
@@ -79,11 +79,11 @@
                         <input type="password" @class([
                             'form-control',
                             'form-control-lg',
-                            'is-invalid' => $errors->has('confirm-password'),
-                        ]) id="confirm-password"
-                            name="confirm-password" placeholder="" autocomplete="new-password" maxlength="255"
-                            aria-describedby="password-help" required />
-                        <label for="confirm-password">Confirm password</label>
+                            'is-invalid' => $errors->has('password_confirmation'),
+                        ]) id="password_confirmation"
+                            name="password_confirmation" placeholder="" autocomplete="new-password" minlength="8"
+                            maxlength="255" aria-describedby="password-help" required />
+                        <label for="password_confirmation">Confirm password</label>
                         <div class="invalid-feedback">
                         </div>
                     </div>

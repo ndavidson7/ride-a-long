@@ -98,14 +98,14 @@ Route::post('/forgot-password', function (Request $request) {
 })->middleware(['guest', 'throttle:2,1'])->name('password.email');
 
 Route::get('/reset-password/{token}', function (string $token) {
-    return view('auth.reset-password', ['token' => $token]);
+    return view('auth.reset-password', ['token' => $token, 'entries' => ['resources/js/form-validation.js']]);
 })->middleware('guest')->name('password.reset');
 
 Route::post('/reset-password', function (Request $request) {
     $request->validate([
         'token' => 'required',
         'email' => 'required|email',
-        'password' => 'required|min:8|confirmed',
+        'password' => 'required|min:8|max:255|confirmed',
     ]);
 
     $status = Password::reset(
@@ -122,7 +122,7 @@ Route::post('/reset-password', function (Request $request) {
     );
 
     return $status === Password::PASSWORD_RESET
-        ? redirect()->route('login')->with('status', __($status))
+        ? redirect()->route('sessions.create')->with(['status' => 'success', 'message' => __($status)])
         : back()->withErrors(['email' => [__($status)]]);
 })->middleware('guest')->name('password.update');
 

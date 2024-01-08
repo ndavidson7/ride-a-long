@@ -27,7 +27,7 @@ class UserController extends Controller
             'last-name' => 'required|alpha|max:255',
             'email' => 'required|email|ends_with:@virginia.edu|max:255|unique:users,email',
             'phone' => 'required|digits:10|unique:users,phone',
-            'password' => 'required|same:confirm-password|max:255'
+            'password' => 'required|min:8|max:255|confirmed'
         ]);
 
         $fields = array_combine(
