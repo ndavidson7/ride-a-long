@@ -10,7 +10,7 @@
             @csrf
             <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4">
                 <h2 class="text-center mb-3">Request Details</h2>
-                <p class="text-muted mb-1">All fields are optional</p>
+                <p class="text-body-secondary mb-1">All fields are optional</p>
                 @if ($ride->detours_allowed)
                     <div class="row mb-3 autocomplete" id="pickup-div">
                         <label class="form-label" for="pickup">Specific pickup location</label>

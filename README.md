@@ -31,26 +31,27 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [x] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
 -   [x] Attractive landing page
 -   [x] Forgot password route
--   [ ] Overhaul styling
--   [ ] text-muted deprecated, text-secondary is not a substitute (https://getbootstrap.com/docs/5.3/utilities/colors/#colors)
+-   [x] text-muted deprecated
+-   [ ] Convert HTML template JS code to make use of web components?
+-   [ ] Allow users to create alerts:
+    -   [ ] When seat becomes available in previously full ride
+    -   [ ] New ride is created matching desired route
+-   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
+    -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
+-   [ ] Pricing model
+-   [ ] Overhaul styling
 -   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
     -   [x] Create scheduled Artisan command
     -   [ ] Add cron entry to server (https://laravel.com/docs/10.x/scheduling#running-the-scheduler)
--   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
-    -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Use dividers in messages?
 -   [ ] Refactor view-specific JS to be more modular, reusable
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
--   [ ] Allow users to create alerts:
-    -   [ ] When seat becomes available in previously full ride
-    -   [ ] New ride is created matching desired route
 -   [ ] Infinite scroll pagination
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
 -   [ ] Rides index on large map, show routes when filter applied
--   [ ] Pricing model
 -   [ ] Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
 
 ## :hammer_and_wrench: Built With

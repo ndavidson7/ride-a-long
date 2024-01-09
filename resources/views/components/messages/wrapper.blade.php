@@ -1,9 +1,3 @@
-@php
-    $sender = $messageWrapper['sender'];
-    $datetime = $messageWrapper['datetime'];
-    $messageChain = $messageWrapper['message_chain'];
-@endphp
-
 @if ($sender['id'] !== auth()->user()->id)
     {{-- other --}}
     <div class="d-flex flex-column align-items-start pt-1" data-sender-id="{{ $sender['id'] }}">
@@ -16,7 +10,7 @@
             <div class="d-flex flex-column justify-content-center align-items-start">
                 <a href="{{ route('users.show', $sender['id']) }}"
                     class="text-reset text-decoration-none name">{{ $sender['name'] }}</a>
-                <small class="text-muted timestamp calendar">{{ $datetime }}</small>
+                <small class="text-body-secondary timestamp calendar">{{ $datetime }}</small>
             </div>
         </div>
         <div class="d-flex flex-column align-items-start message-chain">
@@ -32,7 +26,7 @@
             <div class="d-flex flex-column justify-content-center align-items-end">
                 <a href="{{ route('users.show', $sender['id']) }}"
                     class="text-reset text-decoration-none name">{{ $sender['name'] }}</a>
-                <small class="text-muted timestamp calendar">{{ $datetime }}</small>
+                <small class="text-body-secondary timestamp calendar">{{ $datetime }}</small>
             </div>
             @if (isset($sender['pfp_url']))
                 <a href="{{ route('users.show', $sender['id']) }}" style="width: 50px; height: 50px;"><img

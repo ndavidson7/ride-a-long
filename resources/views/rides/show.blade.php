@@ -8,7 +8,7 @@
             @if (in_array($ride->user_relation, ['driver', 'passenger']))
                 <div class="col-lg">
                     <x-cards.ride.conversation class="mb-3" :$ride :$messageWrappers />
-                    <x-cards.ride.passengers :$ride class="mb-3" />
+                    <x-cards.ride.passengers class="mb-3" :$ride />
                     @if ($ride->user_relation === 'driver')
                         <x-cards.ride.requests :$ride />
                     @endif

@@ -23,13 +23,13 @@
                                     @endif
                                     {{ $notification['data']['message'] }}
                                     <small
-                                        class="text-muted ms-2">{{ $notification->created_at->diffForHumans() }}</small>
+                                        class="text-body-secondary ms-2">{{ $notification->created_at->diffForHumans() }}</small>
                                 </a>
                                 <form action="{{ route('notifications.destroy', $notification['id']) }}" method="POST">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="dropdown-item"><i
-                                            class="bi bi-x-lg text-muted"></i></button>
+                                            class="bi bi-x-lg text-body-secondary"></i></button>
                                 </form>
                             </li>
                         @endforeach
@@ -72,7 +72,7 @@
         <form action="" method="POST">
             @csrf
             @method('DELETE')
-            <button type="submit" class="dropdown-item"><i class="bi bi-x-lg text-muted"></i></button>
+            <button type="submit" class="dropdown-item"><i class="bi bi-x-lg text-body-secondary"></i></button>
         </form>
     </template>
     @vite('resources/js/notifications.js')

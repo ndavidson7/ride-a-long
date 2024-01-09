@@ -5,7 +5,7 @@
             <x-messages.wrapper :$messageWrapper />
         @endforeach
     </div>
-    <form class="card-footer text-muted d-flex justify-content-start align-items-center p-3"
+    <form class="card-footer text-body-secondary d-flex justify-content-start align-items-center p-3"
         action="{{ route('conversations.update', $ride->conversation) }}" method="POST" id="message-form"
         autocomplete="off">
         @method('PUT')

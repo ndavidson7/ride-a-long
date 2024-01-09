@@ -53,7 +53,7 @@ function makeNotification(data) {
         `<li class="d-flex justify-content-center align-items-center">
     <a class="dropdown-item d-flex align-items-center" href="${data.viewUrl}">
     <i class="bi bi-circle-fill text-danger me-2" style="font-size: 0.3rem"></i>
-    ${data.message} <small class="text-muted ms-2">just now</small></a>${tempDiv.innerHTML}</li>`
+    ${data.message} <small class="text-body-secondary ms-2">just now</small></a>${tempDiv.innerHTML}</li>`
     );
     numNotifs++;
     numNotifsEl.textContent = numNotifs;
