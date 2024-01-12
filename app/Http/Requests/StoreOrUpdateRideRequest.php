@@ -23,7 +23,7 @@ class StoreOrUpdateRideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start-time' => 'required|date|after:now',
+            'start-time' => 'required|date|after_or_equal:now',
             'seats' => 'required|numeric|min:1',
             'origin-address' => 'required',
             'origin-city' => 'required',
