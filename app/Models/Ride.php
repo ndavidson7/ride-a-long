@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
+use App\Events\RideSaved;
+use App\Events\RideDeleted;
 use Musonza\Chat\Models\Conversation;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ride extends Model
 {
@@ -96,6 +98,22 @@ class Ride extends Model
         $query->where('start_time', '>', now())
             ->oldest('start_time');
     }
+
+    /*
+    |--------------------------------------------------------------------------
+    | Events
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * The event map for the model.
+     *
+     * @var array
+     */
+    protected $dispatchesEvents = [
+        'saved' => RideSaved::class,
+        'deleted' => RideDeleted::class,
+    ];
 
     /*
     |--------------------------------------------------------------------------

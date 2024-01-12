@@ -24,18 +24,19 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Add messaging functionality
     -   [x] Ride chat
     -   [ ] Direct messages
--   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [x] Only show driver's car to passengers
 -   [x] Import majors
--   [x] Overhaul forms
-    -   [x] Check validation and add error feedback (https://getbootstrap.com/docs/5.3/forms/validation/)
 -   [x] Attractive landing page
 -   [x] Forgot password route
 -   [x] text-muted deprecated
 -   [ ] Convert HTML template JS code to make use of web components?
--   [ ] Allow users to create alerts:
-    -   [ ] When seat becomes available in previously full ride
-    -   [ ] New ride is created matching desired route
+-   [ ] Allow users to create alerts to be notified when:
+    -   [ ] Seat becomes available in previously full ride
+    -   [ ] New ride is created matching desired criteria
+-   [ ] Overhaul forms
+    -   [ ] Check validation and add error feedback div to every (required?) input
+    -   [ ] Refactor forms JS?
+-   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
     -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
@@ -49,16 +50,19 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Use dividers in messages?
 -   [ ] Refactor view-specific JS to be more modular, reusable
 -   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
+-   [ ] Show password toggle
 -   [ ] Infinite scroll pagination
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
 -   [ ] Rides index on large map, show routes when filter applied
 -   [ ] Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
 
-## :hammer_and_wrench: Built With
+## :hammer_and_wrench: Tech Stack
 
 -   Laravel/PHP
--   ES6 JavaScript
+-   Vanilla JavaScript
 -   MySQL
+-   Vite
+-   Pusher
 
 ## Setup development environment
 

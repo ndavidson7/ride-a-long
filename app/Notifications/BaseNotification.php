@@ -6,20 +6,12 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 
-class BaseNotification extends Notification
+abstract class BaseNotification extends Notification
 {
     use Queueable;
 
     protected string $url;
     protected string $message;
-
-    /**
-     * Create a new notification instance.
-     */
-    public function __construct()
-    {
-        //
-    }
 
     /**
      * Get the notification's delivery channels.
