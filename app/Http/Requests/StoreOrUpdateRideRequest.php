@@ -23,7 +23,7 @@ class StoreOrUpdateRideRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'start-time' => 'required|date|after_or_equal:now',
+            'start-time' => 'required|date|after_or_equal:' . now()->setTimezone('America/New_York')->format('Y-m-d\TH:i'),
             'seats' => 'required|numeric|min:1',
             'origin-address' => 'required',
             'origin-city' => 'required',
