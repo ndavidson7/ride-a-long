@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('rides', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('driver_id')->index('driver_id');
-            $table->timestamp('start_time')->nullable();
+            $table->timestamp('start_time');
             $table->unsignedInteger('origin_id')->index('origin_id');
             $table->unsignedInteger('destination_id')->index('destination_id');
             $table->unsignedInteger('seats_total');
