@@ -1,9 +1,8 @@
 <x-layouts.main title="Ride listings" :$entries>
-    <main
-        class="flex-grow-1 @if ($rides->isEmpty()) d-flex justify-content-center align-items-center @else container-fluid py-3 @endif">
+    <main class="flex-grow-1 container-fluid py-3">
+        <x-ride-filter />
+        <hr class="border-2">
         @if ($rides->count())
-            <x-ride-filter />
-            <hr class="border-2">
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-3">
                 <div class="col">
                     <div class="card text-center h-100">
@@ -26,9 +25,27 @@
             </div>
             <x-modals.ride />
         @else
-            <div class="text-center">
-                <h3>There are no upcoming rides :(</h3>
-                <h4>Be the first to <a href="{{ route('rides.create') }}">post</a> one!</h4>
+            <div class="text-center mt-5">
+                @php
+                    $heading = request('my-rides') ? 'You have no rides' : 'No rides available';
+                    if (request('origin-city')) {
+                        $heading .= ' from ' . request('origin-city');
+                    }
+                    if (request('destination-city')) {
+                        $heading .= ' to ' . request('destination-city');
+                    }
+                    if (request('start-date')) {
+                        $heading .= ' on ' . Carbon\Carbon::parse(request('start-date'))->format('F j, Y');
+                    }
+                    if (request('detours')) {
+                        $heading .= ' with detours allowed';
+                    }
+                    $heading .= '.';
+                @endphp
+                <h1 class="fs-3">{{ $heading }}</h1>
+                <p class="fs-4">Be the first to <a href="{{ route('rides.create') }}">post</a> one, or <a
+                        href="{{ route('new-ride-alerts.create') }}">set an alert</a> to
+                    be notified when a ride becomes available!</p>
             </div>
         @endif
     </main>

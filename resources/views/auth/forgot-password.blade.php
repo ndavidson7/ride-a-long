@@ -6,7 +6,7 @@
                 <p class="card-subtitle fs-4 mb-3">Enter your email to receive a link to reset your
                     password.
                 </p>
-                <form action="{{ route('password.email') }}" method="POST" class="validate-on-change">
+                <form action="{{ route('password.email') }}" method="POST" disabled>
                     @csrf
                     <x-inputs.email class="mb-2" />
                     <button type="submit" class="btn btn-primary w-100">Reset</button>

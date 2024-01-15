@@ -172,6 +172,16 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         return $this->belongsTo(College::class);
     }
 
+    public function newRideAlerts(): HasMany
+    {
+        return $this->hasMany(NewRideAlert::class);
+    }
+
+    public function seatOpenAlerts(): HasMany
+    {
+        return $this->hasMany(SeatOpenAlert::class);
+    }
+
     // public function waypoints(): HasManyThrough
     // {
     //     return $this->hasManyThrough(Waypoint::class, );

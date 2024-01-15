@@ -51,23 +51,17 @@ export class MapComponent {
         if (import.meta.env.VITE_APP_DEBUG)
             console.log("DirectionsResult:", routeResult);
 
-        // Hide loading placeholders
-        this.setLoading(false);
-
         // Render data
         this.renderData(data, routeResult);
+
+        // Hide loading placeholders
+        this.setLoading(false);
     }
 
     setLoading(loading) {
-        if (loading) {
-            for (const element of Object.values(this.elements)) {
-                element.classList.add("placeholder");
-            }
-        } else {
-            for (const element of Object.values(this.elements)) {
-                element.classList.remove("placeholder");
-            }
-        }
+        Object.values(this.elements).forEach((element) => {
+            element.classList.toggle("placeholder", loading);
+        });
     }
 
     getData() {
@@ -447,5 +441,109 @@ export class RequestShowMapComponent extends RequestMapComponent {
             : null;
 
         return await RequestMapComponent.handleWaypoints(data, pickup, dropoff);
+    }
+}
+
+export class NewRideAlertCreateMapComponent extends RideCreateMapComponent {
+    constructor(component) {
+        super(component);
+
+        this.originCircle = null;
+        this.destinationCircle = null;
+    }
+
+    getData() {
+        const data = super.getData();
+
+        data.origin.radius = document.getElementById("origin-radius").value;
+        data.destination.radius =
+            document.getElementById("destination-radius").value;
+
+        return data;
+    }
+
+    formatData(data) {
+        const routeData = super.formatData(data);
+
+        routeData.origin.radius = data.origin.radius;
+        routeData.destination.radius = data.destination.radius;
+
+        return routeData;
+    }
+
+    async getRoute(data) {
+        const routeResult = await super.getRoute(data);
+
+        // Update circles (probably shouldn't do this here, but it works)
+        if (data.origin.radius) {
+            this.updateCircle("origin", data.origin, data.origin.radius);
+        } else if (this.originCircle) {
+            this.originCircle.setMap(null);
+            this.originCircle = null;
+        }
+
+        if (data.destination.radius) {
+            this.updateCircle(
+                "destination",
+                data.destination,
+                data.destination.radius
+            );
+        } else if (this.destinationCircle) {
+            this.destinationCircle.setMap(null);
+            this.destinationCircle = null;
+        }
+
+        return routeResult;
+    }
+
+    updateCircle(type, center, radius) {
+        // Convert radius to meters
+        const radiusInMeters = radius * 1609.344;
+
+        // Get the existing circle
+        const circle =
+            type === "origin" ? this.originCircle : this.destinationCircle;
+
+        // If the circle exists and its center and radius haven't changed, do nothing
+        if (
+            circle &&
+            circle.getCenter().equals(center) &&
+            circle.getRadius() === radiusInMeters
+        ) {
+            return;
+        }
+
+        // If the circle exists but its center or radius has changed, remove it
+        if (circle) {
+            circle.setMap(null);
+        }
+
+        // Create a new circle
+        const newCircle = new google.maps.Circle({
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeWeight: 2,
+            fillColor: "#FF0000",
+            fillOpacity: 0.35,
+            map: this.map,
+            center: center,
+            radius: radiusInMeters,
+        });
+
+        // Store the new circle
+        if (type === "origin") {
+            this.originCircle = newCircle;
+        } else {
+            this.destinationCircle = newCircle;
+        }
+    }
+}
+
+export class NewRideAlertEditMapComponent extends NewRideAlertCreateMapComponent {
+    async init() {
+        // Update as soon as map is initialized
+        await super.init();
+
+        super.update();
     }
 }

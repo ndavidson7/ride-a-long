@@ -29,19 +29,21 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Attractive landing page
 -   [x] Forgot password route
 -   [x] text-muted deprecated
--   [ ] Convert HTML template JS code to make use of web components?
 -   [ ] Allow users to create alerts to be notified when:
     -   [ ] Seat becomes available in previously full ride
     -   [ ] New ride is created matching desired criteria
 -   [ ] Overhaul forms
     -   [ ] Check validation and add error feedback div to every (required?) input
     -   [ ] Refactor forms JS?
+    -   [ ] Look into datalists (https://getbootstrap.com/docs/5.3/forms/form-control/#datalists)
+-   [ ] Make use of form requests, policies, and static factory methods for increased validation and security and reduced controller method complexity
 -   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
 -   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
     -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
 -   [ ] Pricing model
 -   [ ] Overhaul styling
+-   [ ] Convert HTML template JS code to make use of web components?
 -   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)

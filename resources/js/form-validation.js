@@ -1,7 +1,3 @@
-import {
-    enableSubmitOnAllRequiredInputsValid,
-    validateInputsOnChange,
-} from "@modules/form-helpers";
+import { enableSubmitOnAllRequiredInputsValid } from "@modules/form-helpers";
 
-validateInputsOnChange();
 enableSubmitOnAllRequiredInputsValid();

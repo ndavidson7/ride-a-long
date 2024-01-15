@@ -52,6 +52,7 @@
                         </li>
                         {{-- <li><a class="dropdown-item" href="{{ route('requests.index') }}">Requests</a></li> --}}
                         <li><a class="dropdown-item" href="#">Messages</a></li>
+                        <li><a class="dropdown-item" href="{{ route('alerts.index') }}">Alerts</a></li>
                         <li><a class="dropdown-item" href="{{ route('settings.index') }}">Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">

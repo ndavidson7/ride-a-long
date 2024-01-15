@@ -35,6 +35,6 @@ class RideUserController extends Controller
             $user->notify(new RideUserDestroyed($ride, $user));
         }
 
-        return back()->with(['status' => 'success', 'message' => 'Passenger removed successfully.']);
+        return back()->with(['status' => 'success', 'message' => 'Passenger removed.']);
     }
 }

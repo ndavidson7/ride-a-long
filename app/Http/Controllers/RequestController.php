@@ -163,7 +163,7 @@ class RequestController extends Controller
 
             $request->user->notify(new RequestUpdated($request));
 
-            return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added successfully.']);
+            return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added.']);
         } catch (\Throwable $th) {
             DB::rollBack();
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'There was an error adding the passenger.']);

@@ -11,11 +11,14 @@ export function enableSubmitOnAnyChange() {
 }
 
 export function enableSubmitOnAllRequiredInputsValid() {
-    const forms = document.querySelectorAll(".disabled-until-required");
+    const forms = document.querySelectorAll("form[disabled]");
     forms.forEach((form) => {
         const submit = form.querySelector("button[type=submit]");
+        submit.disabled = true; // immediately disable in case this was forgotten in the HTML
+
         const requiredInputs = document.querySelectorAll("[required]");
         requiredInputs.forEach((input) => {
+            // on any input, check whether all required inputs have become valid
             input.addEventListener("input", function () {
                 let allValid = true;
                 requiredInputs.forEach((input) => {
@@ -26,26 +29,19 @@ export function enableSubmitOnAllRequiredInputsValid() {
 
                 submit.disabled = !allValid;
             });
-        });
-    });
-}
 
-// TODO: Consider changing to a per-input class, rather than per-form
-export function validateInputsOnChange() {
-    const forms = document.querySelectorAll(".validate-on-change");
-    forms.forEach((form) => {
-        const inputs = form.querySelectorAll("input, select, textarea");
-        inputs.forEach((input) => {
+            // check if input has invalid feedback div
             const error =
                 input.parentElement.querySelector(".invalid-feedback");
+
+            if (!error) {
+                return;
+            }
+
+            // if so, add event listener to show error message
             input.addEventListener("change", function () {
-                if (!this.checkValidity()) {
-                    this.classList.add("is-invalid");
-                    error.textContent = this.validationMessage;
-                } else {
-                    this.classList.remove("is-invalid");
-                    error.textContent = "";
-                }
+                this.classList.toggle("is-invalid", !this.checkValidity());
+                error.textContent = this.validationMessage || "";
             });
         });
     });

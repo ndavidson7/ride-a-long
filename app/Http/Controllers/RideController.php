@@ -33,7 +33,7 @@ class RideController extends Controller
         }
 
         return view('rides.create', [
-            'entries' => ['resources/js/views/rides/create.js']
+            'entries' => ['resources/js/views/rides/create.js', 'resources/js/form-validation.js']
         ]);
     }
 
@@ -45,7 +45,7 @@ class RideController extends Controller
 
         $rideService->storeRide($request);
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created successfully.']);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created.']);
     }
 
     public function show(Request $request, Ride $ride)
@@ -135,7 +135,7 @@ class RideController extends Controller
 
         $rideService->updateRide($request, $ride);
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride updated successfully!']);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride updated!']);
     }
 
     public function destroy(Ride $ride)
@@ -147,6 +147,6 @@ class RideController extends Controller
         // $ride->conversation->delete();
         $ride->delete();
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted successfully.']);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride deleted.']);
     }
 }

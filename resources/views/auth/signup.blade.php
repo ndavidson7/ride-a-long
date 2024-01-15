@@ -1,8 +1,8 @@
 <x-layouts.splash title="Sign up" :$entries>
     <main>
         <div class="container-fluid align-items-center col-10 col-md-8 col-lg-6 col-lg-5 col-xxl-4">
-            <form class="row disabled-until-required validate-on-change d-flex flex-column align-items-center gap-3 mb-3"
-                action="{{ route('users.store') }}" method="post">
+            <form class="row d-flex flex-column align-items-center gap-3 mb-3" action="{{ route('users.store') }}"
+                method="post" disabled>
                 @csrf
                 {{-- EMPTY PLACEHOLDERS NECESSARY FOR CSS STYLING ON INVALID INPUTS --}}
                 <div class="d-flex gap-3">

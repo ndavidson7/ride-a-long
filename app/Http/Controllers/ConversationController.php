@@ -60,7 +60,7 @@ class ConversationController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Message sent successfully.'
+                'message' => 'Message sent.'
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -74,6 +74,6 @@ class ConversationController extends Controller
     {
         Chat::conversation($conversation)->setParticipant(Auth::user())->clear();
 
-        return redirect()->route('conversations.index')->with(['status' => 'success', 'message' => 'Conversation deleted successfully.']);
+        return redirect()->route('conversations.index')->with(['status' => 'success', 'message' => 'Conversation deleted.']);
     }
 }

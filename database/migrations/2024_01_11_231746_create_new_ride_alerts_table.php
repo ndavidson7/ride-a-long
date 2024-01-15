@@ -18,7 +18,7 @@ return new class extends Migration
             $table->unsignedSmallInteger('origin_radius')->default(0);
             $table->unsignedInteger('destination_id');
             $table->unsignedSmallInteger('destination_radius')->default(0);
-            $table->boolean('strict')->default(false); // if true, require both origin and destination to pass radius check
+            $table->boolean('strict')->default(true); // if true, require both origin and destination to pass radius check
             $table->date('start_date'); //->nullable();
             $table->date('end_date'); //->nullable();
             $table->timestamps();

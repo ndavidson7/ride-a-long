@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RideController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Password;
+use App\Http\Controllers\NewRideAlertController;
 use Illuminate\Auth\Events\PasswordReset;
 use App\Http\Controllers\RequestController;
 use App\Http\Controllers\SessionController;
@@ -66,7 +67,7 @@ Route::get('/email/verify', function () {
 Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
     $request->fulfill();
 
-    return redirect()->route('users.edit')->with(['status' => 'success', 'message' => 'Email verified successfully!']);
+    return redirect()->route('users.edit')->with(['status' => 'success', 'message' => 'Email verified!']);
 })->middleware(['auth', 'signed'])->name('verification.verify');
 
 Route::post('/email/verification-notification', function (Request $request) {
@@ -205,4 +206,27 @@ Route::controller(ConversationController::class)->middleware(['auth', 'verified'
 Route::controller(SettingsController::class)->middleware(['auth', 'verified'])->name('settings.')->prefix('settings')->group(function () {
     Route::get('/', 'index')->name('index');
     // Route::put('/location', 'update')->name('update');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Alert Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('/alerts', function () {
+    return view('alerts.index', [
+        'newRideAlerts' => Auth::user()->newRideAlerts,
+        'seatOpenAlerts' => Auth::user()->seatOpenAlerts,
+    ]);
+})->middleware(['auth', 'verified'])->name('alerts.index');
+
+Route::controller(NewRideAlertController::class)->middleware(['auth', 'verified'])->name('new-ride-alerts.')->prefix('alerts/new-ride')->group(function () {
+    // Route::get('/', 'index')->name('index');
+    Route::get('/create', 'create')->name('create');
+    Route::post('/', 'store')->name('store');
+    Route::get('/{newRideAlert}', 'show')->name('show');
+    Route::get('/{newRideAlert}/edit', 'edit')->name('edit');
+    Route::put('/{newRideAlert}', 'update')->name('update');
+    Route::delete('/{newRideAlert}', 'destroy')->name('destroy');
 });

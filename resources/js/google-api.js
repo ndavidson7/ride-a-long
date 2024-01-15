@@ -21,6 +21,15 @@ loader
         )
     );
 
+// Add Circle to the global google.maps namespace for later use
+loader
+    .importLibrary("maps")
+    .catch((e) =>
+        console.error(
+            `Google API loader failed when importing Maps library.\n${e}`
+        )
+    );
+
 export async function createMap(mapDiv) {
     try {
         const { Map } = await loader.importLibrary("maps");

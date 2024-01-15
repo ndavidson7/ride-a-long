@@ -1,20 +1,23 @@
 <x-layouts.main title="Create ride" :$entries>
     <main class="py-4">
         <div class="container col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4">
-            <h2 class="text-center mb-3">Preview</h2>
+            <h1 class="text-center mb-3">Preview</h1>
             <div class="row mb-3">
                 <x-map class="d-none" />
             </div>
         </div>
-        <form id="ride-create" class="disabled-until-required container col-sm-10 col-md-8 col-lg-6"
-            action="{{ route('rides.store') }}" method="post">
+
+        <form id="ride-create" class="container col-sm-10 col-md-8 col-lg-6" action="{{ route('rides.store') }}"
+            method="post" disabled>
             @csrf
-            <h2 class="text-center mb-3">Ride Details</h2>
+            <h1 class="text-center mb-3">Ride Details</h1>
+
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
                     <div>{{ $error }}</div>
                 @endforeach
             @endif
+
             <div class="row mb-3">
                 <div class="col-sm-8 mb-3 mb-sm-0">
                     <label for="start-time" class="form-label">Date and Time</label>
@@ -27,29 +30,15 @@
                     <input type="number" class="form-control" id="seats" name="seats" min="1" required />
                 </div>
             </div>
-            <div class="mb-3 autocomplete">
-                {{-- ID needed for inputs that supply information to map.js MapComponent --}}
-                <label for="origin" class="form-label">Origin</label>
-                <input type="text" class="form-control place" id="origin" name="origin" required />
-                <input type="hidden" class="address" id="origin-address" name="origin-address" maxlength="255" />
-                <input type="hidden" class="city" name="origin-city" />
-                <input type="hidden" class="state" name="origin-state" />
-                <input type="hidden" class="country" name="origin-country" />
-                <input type="hidden" class="latitude" id="origin-latitude" name="origin-latitude" />
-                <input type="hidden" class="longitude" id="origin-longitude" name="origin-longitude" />
-            </div>
-            <div class="mb-3 autocomplete">
-                <label for="destination" class="form-label">Destination</label>
-                <input type="text" class="form-control place" id="destination" name="destination" required />
-                <input type="hidden" class="address" id="destination-address" name="destination-address"
-                    maxlength="255" />
-                <input type="hidden" class="city" name="destination-city" />
-                <input type="hidden" class="state" name="destination-state" />
-                <input type="hidden" class="country" name="destination-country" />
-                <input type="hidden" class="latitude" id="destination-latitude" name="destination-latitude" />
-                <input type="hidden" class="longitude" id="destination-longitude" name="destination-longitude" />
-            </div>
-            <input type="hidden" name="miles" />
+
+            <x-inputs.autocomplete class="mb-3" name="origin" id="origin" required>
+                <x-slot:label>Origin</x-slot:label>
+            </x-inputs.autocomplete>
+
+            <x-inputs.autocomplete class="mb-3" name="destination" id="destination" required>
+                <x-slot:label>Destination</x-slot:label>
+            </x-inputs.autocomplete>
+
             <div class="form-check mb-3">
                 <label class="form-check-label" for="detours-checkbox">Allow Detours <a href="#"
                         data-bs-toggle="tooltip" data-bs-placement="right"
@@ -57,6 +46,7 @@
                             class="bi bi-question-circle"></i></a></label>
                 <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours" />
             </div>
+
             {{-- <div class="row mb-3">
                 <div class="col-sm-4 mb-3 mb-sm-0">
                     <label for="price" class="form-label">Price</label>
@@ -72,10 +62,12 @@
                     <label class="btn btn-primary" for="pricing2">Per Mile</label>
                 </div>
             </div> --}}
+
             <div class="mb-3">
                 <label class="form-label" for="description">Description/Additional info</label>
                 <textarea class="form-control" id="description" name="description" rows=3 maxlength="255"></textarea>
             </div>
+
             <button type="submit" class="btn btn-primary" disabled>Post</button>
             <button type="button" class="btn btn-primary" id="preview-button" disabled>Preview</button>
         </form>

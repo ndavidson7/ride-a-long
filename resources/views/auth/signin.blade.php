@@ -1,7 +1,7 @@
 <x-layouts.splash title="Sign in" :$entries>
     <main class="d-flex flex-column align-items-center">
-        <form class="disabled-until-required validate-on-change mb-3 d-flex flex-column align-items-center"
-            action="{{ route('sessions.store') }}" method="post" style="width: 320px">
+        <form class="mb-3 d-flex flex-column align-items-center" action="{{ route('sessions.store') }}" method="post"
+            style="width: 320px" disabled>
             @csrf
             @error('incorrect')
                 <div class="alert alert-danger" role="alert">

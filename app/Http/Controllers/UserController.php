@@ -43,7 +43,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Account created successfully!']);
+        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Account created!']);
     }
 
     public function show(User $user = null)
@@ -118,13 +118,13 @@ class UserController extends Controller
             $driver->save();
         }
 
-        return redirect()->route('users.show')->with(['status' => 'success', 'message' => 'Profile updated successfully!', 'uploadedPfp' => $hasPfp]);
+        return redirect()->route('users.show')->with(['status' => 'success', 'message' => 'Profile updated!', 'uploadedPfp' => $hasPfp]);
     }
 
     public function destroy()
     {
         Auth::user()->delete();
 
-        return redirect('/')->with(['status' => 'success', 'message' => 'Account deleted successfully!']);
+        return redirect('/')->with(['status' => 'success', 'message' => 'Account deleted!']);
     }
 }
