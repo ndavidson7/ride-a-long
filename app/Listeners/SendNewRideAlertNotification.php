@@ -29,10 +29,10 @@ class SendNewRideAlertNotification implements ShouldQueue
         $alerts = NewRideAlert::active()->get();
 
         foreach ($alerts as $alert) {
-            // temporary naive exact match implementation
+            // temporary naive city match implementation
             if (
-                $alert->origin->id === $event->ride->origin->id &&
-                $alert->destination->id === $event->ride->destination->id &&
+                $alert->origin->city === $event->ride->origin->city &&
+                $alert->destination->city === $event->ride->destination->city &&
                 $event->ride->seats_open > 0
             ) {
                 // if this ride is a match, send a notification to the user

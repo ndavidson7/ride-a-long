@@ -8,8 +8,18 @@ use Illuminate\Notifications\DatabaseNotification;
 
 class NotificationController extends Controller
 {
-    public function show(DatabaseNotification $notification)
+    // Because a policy seems overkill
+    private static function authorizeRequest(Request $request, DatabaseNotification $notification): void
     {
+        if ($notification->notifiable_id !== $request->user()->id) {
+            abort(403);
+        }
+    }
+
+    public function show(Request $request, DatabaseNotification $notification)
+    {
+        self::authorizeRequest($request, $notification);
+
         if ($notification['read_at'] === null) {
             $notification->markAsRead();
         }
@@ -17,8 +27,10 @@ class NotificationController extends Controller
         return redirect($notification->data['url']);
     }
 
-    public function destroy(DatabaseNotification $notification)
+    public function destroy(Request $request, DatabaseNotification $notification)
     {
+        self::authorizeRequest($request, $notification);
+
         $notification->delete();
 
         return redirect()->back()->with(['status' => 'success', 'message' => 'Notification deleted.']);

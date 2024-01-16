@@ -156,10 +156,8 @@ Route::controller(RequestController::class)->middleware(['auth', 'verified'])->n
 |--------------------------------------------------------------------------
 */
 
-Route::controller(RideUserController::class)->middleware(['auth', 'verified'])->name('ride-user.')->group(function () {
-    Route::post('/rides/{ride}/users', 'store')->name('store');
-    Route::delete('/rides/{ride}/users/{user}', 'destroy')->name('destroy');
-});
+// TODO: store is unused, consider removing
+Route::resource('rides.users', RideUserController::class)->only(['store', 'destroy'])->middleware(['auth', 'verified']);
 
 /*
 |--------------------------------------------------------------------------
@@ -177,10 +175,7 @@ Route::controller(RoutePlannerController::class)->middleware(['auth', 'verified'
 |--------------------------------------------------------------------------
 */
 
-Route::controller(NotificationController::class)->middleware(['auth', 'verified'])->name('notifications.')->prefix('notifications')->group(function () {
-    Route::get('/{notification}', 'show')->name('show');
-    Route::delete('/{notification}', 'destroy')->name('destroy');
-});
+Route::resource('notifications', NotificationController::class)->only(['show', 'destroy'])->middleware(['auth', 'verified']);
 
 /*
 |--------------------------------------------------------------------------

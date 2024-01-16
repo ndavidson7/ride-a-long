@@ -34,7 +34,7 @@ function updateButtons(userRelation, rideId, relatedModelId) {
             if ("content" in document.createElement("template")) {
                 const leaveRideBtn = deleteFormTemplate.cloneNode(true);
                 leaveRideBtn.querySelector("form").action = route(
-                    "ride-user.destroy",
+                    "rides.users.destroy",
                     [rideId, relatedModelId]
                 );
                 leaveRideBtn.querySelector("button").textContent = "Leave Ride";

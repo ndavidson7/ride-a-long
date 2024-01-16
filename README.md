@@ -44,7 +44,9 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Pricing model
 -   [ ] Overhaul styling
 -   [ ] Convert HTML template JS code to make use of web components?
--   [ ] Soft delete old rides (DELETE FROM rides WHERE start_time < NOW();)
+-   [ ] Soft deletes
+    -   [ ] old rides (DELETE FROM rides WHERE start_time < NOW();)
+    -   [ ] requests (don't allow users to request the same ride again after soft delete)
 -   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
 -   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
     -   [x] Create scheduled Artisan command

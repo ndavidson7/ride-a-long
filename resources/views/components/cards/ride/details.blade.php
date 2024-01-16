@@ -20,7 +20,7 @@
             @break
 
             @case('passenger')
-                <form action="{{ route('ride-user.destroy', [$ride, auth()->user()]) }}" method="POST">
+                <form action="{{ route('rides.users.destroy', [$ride, auth()->user()]) }}" method="POST">
                     @method('DELETE')
                     @csrf
                     <button type="submit" class="btn btn-danger btn-bold">Leave Ride</button>

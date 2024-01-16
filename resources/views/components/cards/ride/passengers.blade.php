@@ -3,7 +3,7 @@
     <div class="card-body">
         <div class="list-group list-group-flush">
             @foreach ($ride->passengers as $passenger)
-                <form action="{{ route('ride-user.destroy', [$ride, $passenger]) }}" method="POST"
+                <form action="{{ route('rides.users.destroy', [$ride, $passenger]) }}" method="POST"
                     class="list-group-item list-group-item-action d-flex align-items-center">
                     @method('DELETE')
                     @csrf

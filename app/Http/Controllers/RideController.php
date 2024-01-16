@@ -14,6 +14,11 @@ use App\Http\Requests\StoreOrUpdateRideRequest;
 
 class RideController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Ride::class, 'ride');
+    }
+
     public function index(RideFilterRequest $request)
     {
         return view('rides.index', [
@@ -28,10 +33,6 @@ class RideController extends Controller
 
     public function create()
     {
-        if (Auth::user()->cannot('create', Ride::class)) {
-            return redirect()->route('users.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
-        }
-
         return view('rides.create', [
             'entries' => ['resources/js/views/rides/create.js', 'resources/js/form-validation.js']
         ]);
@@ -39,10 +40,6 @@ class RideController extends Controller
 
     public function store(StoreOrUpdateRideRequest $request, RideService $rideService)
     {
-        if (Auth::user()->cannot('store', Ride::class)) {
-            return redirect()->route('users.edit')->with(['status' => 'error', 'message' => 'You must have a car to create a ride.']);
-        }
-
         $rideService->storeRide($request);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride created.']);
@@ -53,9 +50,15 @@ class RideController extends Controller
         // Return JSON with relevant ride details
         if ($request->expectsJson()) {
             return new RideResource($ride);
+        } else if (in_array($ride->user_relation, ['requester', 'none'])) {
+            return view('rides.show', [
+                'entries' => ['resources/js/views/rides/show.js'],
+                'ride' => $ride,
+                'messageWrappers' => [],
+            ]);
         }
 
-        $ride = $ride->load('driver', 'passengers', 'requests.user', 'requests.pickup', 'requests.dropoff', 'conversation');
+        $ride = $ride->load('requests', 'conversation');
 
         $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
             return [
@@ -116,23 +119,14 @@ class RideController extends Controller
 
     public function edit(Ride $ride)
     {
-        if (Auth::user()->cannot('edit', $ride)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to edit it.']);
-        }
-
-        // Return view with relevant ride details
         return view('rides.edit', [
             'entries' => ['resources/js/views/rides/edit.js'],
-            'ride' => new RideResource($ride->load('passengers'))
+            'ride' => new RideResource($ride)
         ]);
     }
 
     public function update(StoreOrUpdateRideRequest $request, Ride $ride, RideService $rideService)
     {
-        if (Auth::user()->cannot('update', $ride)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to update it.']);
-        }
-
         $rideService->updateRide($request, $ride);
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Ride updated!']);
@@ -140,10 +134,6 @@ class RideController extends Controller
 
     public function destroy(Ride $ride)
     {
-        if (Auth::user()->cannot('destroy', $ride)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You must be the driver of this ride to delete it.']);
-        }
-
         // $ride->conversation->delete();
         $ride->delete();
 

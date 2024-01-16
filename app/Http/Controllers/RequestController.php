@@ -12,11 +12,16 @@ use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Notifications\RequestCreated;
 use App\Notifications\RequestUpdated;
-use App\Http\Requests\RequestStoreRequest;
+use App\Http\Requests\StoreRequestRequest;
 use Illuminate\Http\Request as HttpRequest;
 
 class RequestController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Request::class, 'request');
+    }
+
     public function index(HttpRequest $request)
     {
         // User's requests which have been responded to
@@ -64,79 +69,29 @@ class RequestController extends Controller
 
     public function create(Ride $ride)
     {
-        if (Auth::user()->cannot('create', [Request::class, $ride])) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not create a request for this ride.']);
-        }
-
         return view('requests.create', [
             'entries' => ['resources/js/views/requests/create.js'],
             'ride' => new RideResource($ride),
         ]);
     }
 
-    public function store(RequestStoreRequest $request, Ride $ride)
+    public function store(StoreRequestRequest $request, Ride $ride)
     {
-        if (Auth::user()->cannot('create', [Request::class, $ride])) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not create a request for this ride.']);
-        }
-
-        $fields = $request->validated();
-
-        $pickupId = $fields['pickup-address'] ?? false ? Address::firstOrCreate(
-            ['address' => $fields['pickup-address']],
-            [
-                'city' => $fields['pickup-city'],
-                'state' => $fields['pickup-state'],
-                'country' => $fields['pickup-country'],
-                'latitude' => $fields['pickup-latitude'],
-                'longitude' => $fields['pickup-longitude']
-            ]
-        )->id : null;
-
-        $dropoffId = $fields['dropoff-address'] ?? false ? Address::firstOrCreate(
-            ['address' => $fields['dropoff-address']],
-            [
-                'city' => $fields['dropoff-city'],
-                'state' => $fields['dropoff-state'],
-                'country' => $fields['dropoff-country'],
-                'latitude' => $fields['dropoff-latitude'],
-                'longitude' => $fields['dropoff-longitude']
-            ]
-        )->id : null;
-
-        $request = Request::create([
-            'ride_id' => $ride->id,
-            'user_id' => Auth::id(),
-            'pickup_id' => $pickupId,
-            'dropoff_id' => $dropoffId,
-            'message' => $fields['message']
-        ]);
-
-        $ride->driver->notify(new RequestCreated($request));
+        Request::createFromRequest($request, $ride);
 
         return redirect()->route('rides.index', $ride)->with(['status' => 'success', 'message' => 'Your request has been submitted.']);
     }
 
     public function show(Request $request)
     {
-        $request = $request->load(['ride', 'user', 'pickup', 'dropoff']);
-
-        if (Auth::user()->cannot('show', $request)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to view this request.']);
-        }
-
         return view('requests.show', [
             'entries' => ['resources/js/views/requests/show.js'],
-            'request' => $request
+            'request' => $request->load(['ride', 'user', 'pickup', 'dropoff'])
         ]);
     }
 
     public function update(HttpRequest $httpRequest, Request $request, RideService $rideService)
     {
-        if (Auth::user()->cannot('update', $request)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You can not respond to this request.']);
-        }
-
         $fields = $httpRequest->validate([
             'response' => 'required|boolean'
         ]);
@@ -172,10 +127,6 @@ class RequestController extends Controller
 
     public function destroy(Request $request)
     {
-        if (Auth::user()->cannot('destroy', $request)) {
-            return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'You are not authorized to delete this request.']);
-        }
-
         $request->delete();
 
         return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Your request has been deleted.']);

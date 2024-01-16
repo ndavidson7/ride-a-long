@@ -20,8 +20,8 @@
                             @if ($request->message)
                                 <p class="mb-1">{{ $request->message }}</p>
                             @endif
-                            <p class="mb-1">Pickup: {{ $request->pickup ?: 'None' }}</p>
-                            <p class="mb-1">Dropoff: {{ $request->dropoff ?: 'None' }}</p>
+                            <p class="mb-1">Pickup: {{ $request->pickup?->address ?: 'None' }}</p>
+                            <p class="mb-1">Dropoff: {{ $request->dropoff?->address ?: 'None' }}</p>
                         </a>
                         <button type="submit" class="btn" name="response" value="1" title="Accept request"><i
                                 class="bi bi-check-lg text-success fs-3"></i></button>
