@@ -1,5 +1,3 @@
-import * as bootstrap from "bootstrap";
-
 const base = window.location.origin;
 
 const notifsEl = document.getElementById("notifs");
@@ -72,5 +70,6 @@ function makeToast(data) {
     console.log(toastContainer.lastElementChild);
 
     // must use lastElementChild because toastElement is a DocumentFragment
-    bootstrap.Toast.getOrCreateInstance(toastContainer.lastElementChild).show();
+    // TODO: Replace now that no longer using bootstrap
+    // bootstrap.Toast.getOrCreateInstance(toastContainer.lastElementChild).show();
 }

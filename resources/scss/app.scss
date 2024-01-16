@@ -1,9 +1,9 @@
-// Overrides for Bootstrap variables and various additional styles
+// Color variables
 @import "_variables";
 
-// Bootstrap
-@import "~bootstrap/scss/bootstrap";
-@import "~bootstrap-icons/font/bootstrap-icons.css";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
     --clr-primary: #{$primary};

@@ -48,11 +48,6 @@ export default defineConfig({
     resolve: {
         alias: {
             "~scss": path.resolve(__dirname, "resources/scss"),
-            "~bootstrap": path.resolve(__dirname, "node_modules/bootstrap"),
-            "~bootstrap-icons": path.resolve(
-                __dirname,
-                "node_modules/bootstrap-icons"
-            ),
             "@modules": path.resolve(__dirname, "resources/js"),
         },
     },
