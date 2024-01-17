@@ -12,5 +12,5 @@
         window.userId = {{ auth()->user()->id ?? 'null' }}
     </script>
     @routes
-    @vite(array_merge(['resources/scss/app.scss', 'resources/js/app.js'], $entries))
+    @vite(array_merge(['resources/css/app.css', 'resources/js/app.js'], $entries))
 </head>

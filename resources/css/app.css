@@ -1,38 +1,13 @@
-// Color variables
-@import "_variables";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-    --clr-primary: #{$primary};
-    --clr-secondary: #{$secondary};
-    --clr-accent: #{$accent};
-    --clr-text: #{$text};
-    --clr-bg: #{$bg};
-}
-
-@function color-var($color-name) {
-    @return var(--clr-#{$color-name});
-}
-
-@mixin btn-invert($color-name, $bg-color-name) {
-    $color: color-var($color-name);
-    $bg-color: color-var($bg-color-name);
-
-    color: $color;
-    background-color: $bg-color;
-
-    &:disabled {
-        color: $color;
-        background-color: $bg-color;
-    }
-
-    &:hover {
-        background-color: $color;
-        color: $bg-color;
-    }
+    --clr-primary: #3832d3;
+    --clr-secondary: #aa84e4;
+    --clr-accent: #612e8a;
+    --clr-text: #050517;
+    --clr-bg: #f0f0fc;
 }
 
 .btn-bold {

@@ -23,19 +23,19 @@ let js = Object.fromEntries(
 );
 js = Object.values(js);
 
-// Same as above but for SCSS files
-let scss = Object.fromEntries(
-    globSync("resources/scss/*.scss").map((file) => [
+// Same as above but for CSS files
+let css = Object.fromEntries(
+    globSync("resources/css/*.css").map((file) => [
         path.relative(
-            "resources/scss",
+            "resources/css",
             file.slice(0, file.length - path.extname(file).length)
         ),
         fileURLToPath(new URL(file, import.meta.url)),
     ])
 );
-scss = Object.values(scss);
+css = Object.values(css);
 
-let input = [js, scss];
+let input = [js, css];
 input = [].concat(...input);
 
 export default defineConfig({
@@ -47,7 +47,7 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            "~scss": path.resolve(__dirname, "resources/scss"),
+            "@css": path.resolve(__dirname, "resources/css"),
             "@modules": path.resolve(__dirname, "resources/js"),
         },
     },

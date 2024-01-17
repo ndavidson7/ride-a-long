@@ -9,7 +9,7 @@
     <meta name="description" content="Ride-A-Long: Carpooling made easy.">
     <meta name="keywords" content="Ride-a-long, ridealong, carpool, rideshare">
     <title>Ride-A-Long - Carpooling made easy</title>
-    @vite(['resources/scss/app.scss', 'resources/scss/views/landing.scss', 'resources/js/app.js', 'resources/js/views/landing.js'])
+    @vite(['resources/css/app.css', 'resources/css/views/landing.css', 'resources/js/app.js', 'resources/js/views/landing.js'])
 </head>
 
 <body>
