@@ -27,6 +27,11 @@ Route::get('/', function () {
     return view('landing');
 })->middleware('guest')->name('landing');
 
+// Random testing page
+Route::get('/test', function () {
+    return view('test');
+})->name('test');
+
 /*
 |--------------------------------------------------------------------------
 | UserController Routes

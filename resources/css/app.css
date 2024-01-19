@@ -10,56 +10,11 @@
     --clr-bg: #f0f0fc;
 }
 
-.btn-bold {
-    font-size: 1rem;
-    font-weight: 700;
-}
-
-.btn:disabled {
-    border-color: transparent;
-}
-
-body {
-    color: var(--clr-text);
-    background: var(--clr-bg);
-}
-
-header {
-    background-color: var(--clr-primary);
-    border-bottom: 10px solid var(--clr-secondary);
-
-    & i {
-        color: white;
-    }
-
-    & h1 {
-        font-size: 5em;
-    }
-}
-
 .notification {
     position: absolute;
     top: 20px;
     right: 10px;
     font-size: 12px;
-}
-
-body.splash {
-    background-color: var(--clr-bg);
-
-    & main {
-        padding-top: 50px;
-        margin-bottom: 30px;
-    }
-
-    & header {
-        padding: 70px 0px;
-    }
-
-    & .btn {
-        font-weight: 800;
-        font-size: 2em;
-    }
 }
 
 .gradient-custom {
@@ -107,9 +62,4 @@ body.splash {
     flex: 1;
     height: 1px;
     background: #eee;
-}
-
-[data-bs-toggle="tooltip"] {
-    color: inherit;
-    text-decoration: none;
 }

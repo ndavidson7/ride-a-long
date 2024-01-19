@@ -3,11 +3,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="author" content="Nicholas Davidson">
-    <meta name="description" content="Ride-A-Long: Carpooling made easy. {{ $title }}">
-    <meta name="keywords" content="Ride-a-long, ridealong, carpool, rideshare">
+    <meta name="description" content="{{ config('app.name') }}: Carpooling made easy. {{ $title }} page.">
+    <meta name="keywords" content="{{ config('app.name') }}, carpool, rideshare">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Ride-A-Long - {{ $title }}</title>
-    <noscript>JavaScript must be enabled to use Ride-A-Long.</noscript>
+    <title>{{ $title }} - {{ config('app.name') }}</title>
+    <noscript>JavaScript must be enabled to use {{ config('app.name') }}.</noscript>
     <script>
         window.userId = {{ auth()->user()->id ?? 'null' }}
     </script>

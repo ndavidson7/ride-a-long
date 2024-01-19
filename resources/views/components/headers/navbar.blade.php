@@ -1,7 +1,7 @@
 <header class="container-fluid ps-4">
     <nav class="navbar navbar-expand navbar-light">
         <a class="navbar-brand fw-bold fs-1 text-white" href="{{ route('rides.index') }}"
-            title="Return to ride listings">Ride-A-Long</a>
+            title="Return to ride listings">{{ config('app.name') }}</a>
         <ul class="navbar-nav ms-auto align-items-center">
             <li class="nav-item me-2">
                 <div class="dropdown nav-link">

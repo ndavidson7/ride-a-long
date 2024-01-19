@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.1",
         "alexpechkarev/google-maps": "^10.0",
+        "blade-ui-kit/blade-icons": "^1.5",
         "blade-ui-kit/blade-ui-kit": "^0.4.0",
         "cloudinary-labs/cloudinary-laravel": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
@@ -16,6 +17,7 @@
         "laravel/tinker": "^2.8",
         "livewire/livewire": "^3.3",
         "musonza/chat": "^6.2",
+        "owenvoke/blade-fontawesome": "^2.5",
         "pusher/pusher-php-server": "^7.2",
         "roach-php/laravel": "^2.0",
         "tightenco/ziggy": "^1.6"

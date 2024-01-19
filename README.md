@@ -44,6 +44,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
 -   [ ] Pricing model
 -   [ ] Overhaul styling
+-   [ ] Distinguish between ride types based on origin/destination: airports, cities, schools, etc.
 -   [ ] Convert HTML template JS code to make use of web components?
 -   [ ] Soft deletes
     -   [ ] old rides (DELETE FROM rides WHERE start_time < NOW();)
@@ -60,6 +61,10 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
 -   [ ] Rides index on large map, show routes when filter applied
 -   [ ] Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
+
+## Production Checklist
+
+-   [ ] Cache (icons, config, routes, etc.)
 
 ## :hammer_and_wrench: Tech Stack
 

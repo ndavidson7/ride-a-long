@@ -3,11 +3,15 @@
 
 <x-head :$title :$entries />
 
-<body class="{{ $bodyClasses }} d-flex flex-column min-vh-100">
+<body {{ $attributes }}>
 
-    <x-dynamic-component :component="$header" />
+    @if ($header)
+        <x-dynamic-component :component="$header" />
+    @endif
 
-    {{ $slot }}
+    <main>
+        {{ $slot }}
+    </main>
 
     {{-- <x-footer /> --}}
 

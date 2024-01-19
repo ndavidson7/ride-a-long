@@ -1,17 +1,8 @@
-<div class="{{ $attributes->merge(['class' => 'form-floating'])->get('class') }}">
-    <input @class([
-        'form-control',
-        'is-invalid' => $errors->has($attributes->get('name')),
-    ]) placeholder="" value="{{ old($attributes->get('name')) }}"
-        @isset($help)aria-describedby="{{ $attributes->get('id') }}-help"@endisset
-        {{ $attributes->whereDoesntStartWith('size') }} />
-    <label for="{{ $attributes->get('id') }}">{{ $label }}</label>
-    @isset($help)
-        <div id="{{ $attributes->get('id') }}-help" class="form-text">{{ $help }}</div>
-    @endisset
-    <div class="invalid-feedback">
-        @error($attributes->get('name'))
-            {{ $message }}
-        @enderror
-    </div>
+<div class="relative">
+    <x-dynamic-component :$component {{ $attributes->merge(['class' => 'peer pt-6']) }} />
+    <x-buk-label
+        class="absolute left-3 top-1.5 text-xs text-gray-600 transition-all peer-placeholder-shown:top-6 peer-placeholder-shown:text-sm peer-placeholder-shown:text-gray-500 peer-focus:top-1.5 peer-focus:text-xs peer-focus:text-gray-600"
+        for="{{ $attributes->get('id') ?? $attributes->get('name') }}">
+        {{ $slot }}
+    </x-buk-label>
 </div>

@@ -8,6 +8,8 @@ use Illuminate\View\Component;
 
 abstract class Layout extends Component
 {
+    protected static string $header = '';
+
     /**
      * Create a new component instance.
      * 
@@ -26,12 +28,12 @@ abstract class Layout extends Component
     public function render(): View|Closure|string
     {
         return view('components.layouts.layout', [
-            'bodyClasses' => $this->getBodyClasses(),
             'header' => $this->getHeader(),
         ]);
     }
 
-    abstract protected function getBodyClasses(): string;
-
-    abstract protected function getHeader(): string;
+    protected static function getHeader(): string
+    {
+        return static::$header;
+    }
 }
