@@ -7,13 +7,14 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use CloudinaryLabs\CloudinaryLaravel\MediaAlly;
 use Illuminate\Contracts\Auth\CanResetPassword;
-use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
+use Illuminate\Auth\Passwords\CanResetPassword as CanResetPasswordTrait;
 
 class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
 {
@@ -79,24 +80,12 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     |--------------------------------------------------------------------------
     */
 
-    /**
-     * Mutate the user's password prior to storing it.
-     *
-     * @param string $password
-     * @return void
-     */
-    public function setPasswordAttribute(string $password): void
+    public function phone(): Attribute
     {
-        $this->attributes['password'] = bcrypt($password);
-    }
-
-    public function getPhoneAttribute(string $phone): string
-    {
-        $ac = substr($phone, 0, 3);
-        $prefix = substr($phone, 3, 3);
-        $suffix = substr($phone, 6);
-
-        return "({$ac}) {$prefix}-{$suffix}";
+        return Attribute::make(
+            get: fn (string $value) => phone($value, 'US')->formatForMobileDialingInCountry('US'),
+            set: fn (string $value) => phone($value, 'US')->formatE164()
+        );
     }
 
     public function getNameAttribute(): string

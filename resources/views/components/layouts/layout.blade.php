@@ -5,9 +5,7 @@
 
 <body {{ $attributes }}>
 
-    @if ($header)
-        <x-dynamic-component :component="$header" />
-    @endif
+    <x-dynamic-component :component="$header" />
 
     <main>
         {{ $slot }}

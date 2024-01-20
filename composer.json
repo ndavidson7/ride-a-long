@@ -18,6 +18,7 @@
         "livewire/livewire": "^3.3",
         "musonza/chat": "^6.2",
         "owenvoke/blade-fontawesome": "^2.5",
+        "propaganistas/laravel-phone": "^5.1",
         "pusher/pusher-php-server": "^7.2",
         "roach-php/laravel": "^2.0",
         "tightenco/ziggy": "^1.6"

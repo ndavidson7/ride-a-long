@@ -4,7 +4,7 @@ export class MapComponent {
     constructor(component) {
         if (!component) {
             throw new TypeError(
-                "MapComponent constructor requires HTML element referring to map component."
+                "MapComponent constructor requires HTML element referring to map component.",
             );
         }
 
@@ -78,17 +78,17 @@ export class MapComponent {
         return {
             origin: new google.maps.LatLng(
                 data.origin.latitude,
-                data.origin.longitude
+                data.origin.longitude,
             ),
             destination: new google.maps.LatLng(
                 data.destination.latitude,
-                data.destination.longitude
+                data.destination.longitude,
             ),
             waypoints:
                 data.waypoints?.map((waypoint) => ({
                     location: new google.maps.LatLng(
                         waypoint.address.latitude,
-                        waypoint.address.longitude
+                        waypoint.address.longitude,
                     ),
                     stopover: true,
                 })) ?? [],
@@ -194,7 +194,7 @@ export class MapComponent {
                       .flatMap((address, index) =>
                           index > 0
                               ? `${address.latitude}%2C${address.longitude}`
-                              : []
+                              : [],
                       )
                       .join("&daddr=")}`
                 : `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
@@ -207,7 +207,7 @@ export class MapComponent {
                                 .flatMap((address, index) =>
                                     index > 0 && index < addresses.length - 1
                                         ? `${address.latitude}%2C${address.longitude}`
-                                        : []
+                                        : [],
                                 )
                                 .join("%7C")
                           : ""
@@ -218,7 +218,7 @@ export class MapComponent {
                 : `https://www.google.com/maps/search/?api=1&query=${addresses.latitude}%2C${addresses.longitude}`;
         } else {
             throw new TypeError(
-                "MapComponent.constructDirectionsUrl() requires an object or array of objects."
+                "MapComponent.constructDirectionsUrl() requires an object or array of objects.",
             );
         }
     }
@@ -306,7 +306,7 @@ class RequestMapComponent extends MapComponent {
     static getOrCreateWaypoint(waypoints, address, id) {
         return (
             waypoints.find(
-                (waypoint) => waypoint.address.address === address.address
+                (waypoint) => waypoint.address.address === address.address,
             ) ?? {
                 id: id,
                 address: address,
@@ -321,7 +321,7 @@ class RequestMapComponent extends MapComponent {
                 headers: {
                     Accept: "application/json",
                     "X-CSRF-TOKEN": document.querySelector(
-                        'meta[name="csrf-token"]'
+                        'meta[name="csrf-token"]',
                     ).content,
                 },
                 method: "POST",
@@ -338,7 +338,7 @@ class RequestMapComponent extends MapComponent {
             });
         } catch (error) {
             alert(
-                "Error optimizing route. Try different pickup and/or dropoff locations, or try again later."
+                "Error optimizing route. Try different pickup and/or dropoff locations, or try again later.",
             );
             throw error;
         }
@@ -360,7 +360,7 @@ class RequestMapComponent extends MapComponent {
             data.waypoints = await RequestMapComponent.optimizeWaypoints(
                 data,
                 pickup,
-                dropoff
+                dropoff,
             );
         } else {
             data.waypoints.push(pickup ?? dropoff);
@@ -392,7 +392,7 @@ export class RequestCreateMapComponent extends RequestMapComponent {
                     latitude: pickupLatitude.value,
                     longitude: pickupLongitude.value,
                 },
-                -2
+                -2,
             );
         }
 
@@ -412,7 +412,7 @@ export class RequestCreateMapComponent extends RequestMapComponent {
                     latitude: dropoffLatitude.value,
                     longitude: dropoffLongitude.value,
                 },
-                -1
+                -1,
             );
         }
 
@@ -423,20 +423,20 @@ export class RequestCreateMapComponent extends RequestMapComponent {
 export class RequestShowMapComponent extends RequestMapComponent {
     async getData() {
         // Request will be defined in a script tag in the Blade view
-        const data = JSON.parse(JSON.stringify(request.ride)); // TODO: Probably not the most efficient way to do this. Maybe destructure?
+        const data = JSON.parse(JSON.stringify(request.ride)); // TODO: See above
 
         const pickup = request.pickup
             ? RequestMapComponent.getOrCreateWaypoint(
                   data.waypoints,
                   request.pickup,
-                  -2
+                  -2,
               )
             : null;
         const dropoff = request.dropoff
             ? RequestMapComponent.getOrCreateWaypoint(
                   data.waypoints,
                   request.dropoff,
-                  -1
+                  -1,
               )
             : null;
 
@@ -486,7 +486,7 @@ export class NewRideAlertCreateMapComponent extends RideCreateMapComponent {
             this.updateCircle(
                 "destination",
                 data.destination,
-                data.destination.radius
+                data.destination.radius,
             );
         } else if (this.destinationCircle) {
             this.destinationCircle.setMap(null);

@@ -24,7 +24,7 @@ class SessionController extends Controller
 
         if (!Auth::attempt($fields, $request->has('remember'))) {
             throw ValidationException::withMessages([
-                'incorrect' => 'The provided credentials do not match our records.',
+                'incorrect' => 'Invalid email or password.',
             ]);
         }
 

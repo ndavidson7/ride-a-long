@@ -8,6 +8,11 @@ use Illuminate\Contracts\View\View;
 
 class Input extends ResizableComponent
 {
+    public function __construct(public bool $withValidation = false, ?string $size = null)
+    {
+        parent::__construct($size);
+    }
+
     /**
      * Get the view / contents that represent the component.
      */

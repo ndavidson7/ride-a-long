@@ -22,7 +22,7 @@ return new class extends Migration
             $table->timestamps();
             $table->string('first_name');
             $table->string('last_name');
-            $table->string('phone', 10)->unique('phone');
+            $table->string('phone', 15)->unique('phone');
             $table->unsignedTinyInteger('year')->nullable();
             $table->unsignedTinyInteger('major_id')->nullable();
             $table->string('bio')->nullable();

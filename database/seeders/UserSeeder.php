@@ -22,7 +22,7 @@ class UserSeeder extends Seeder
         $userId = User::create([
             'email' => 'nid3dhu@virginia.edu',
             'password' => 'password',
-            'phone' => '1234567890',
+            'phone' => '9312005811',
             'first_name' => 'Nicholas',
             'last_name' => 'Davidson',
             'email_verified_at' => now(),
@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
         $user2Id = User::create([
             'email' => 'ab1cd@virginia.edu',
             'password' => 'password',
-            'phone' => '1112223333',
+            'phone' => '9312658853',
             'first_name' => 'John',
             'last_name' => 'Doe',
             'email_verified_at' => now(),

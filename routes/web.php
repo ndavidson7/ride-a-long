@@ -30,7 +30,17 @@ Route::get('/', function () {
 // Random testing page
 Route::get('/test', function () {
     return view('test');
-})->name('test');
+})->name('test.index');
+
+Route::post('/test', function (Request $request) {
+    $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'message' => 'required',
+    ]);
+
+    return back()->with(['status' => 'success', 'message' => 'Message sent!']);
+})->name('test.store');
 
 /*
 |--------------------------------------------------------------------------

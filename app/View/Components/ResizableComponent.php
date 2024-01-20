@@ -8,8 +8,8 @@ use Illuminate\Contracts\View\View;
 
 abstract class ResizableComponent extends Component
 {
-    const SIZES = ['sm', 'md', 'lg'];
-    const DEFAULT_SIZE = 'md';
+    private static array $sizes = ['sm', 'md', 'lg'];
+    private static string $defaultSize = 'md';
 
     public string $size;
 
@@ -18,8 +18,8 @@ abstract class ResizableComponent extends Component
      * 
      * @param string $size The size of the input (sm, md, lg)
      */
-    public function __construct(string $size = self::DEFAULT_SIZE)
+    public function __construct(?string $size = null)
     {
-        $this->size = in_array($size, ['sm', 'md', 'lg']) ? $size : self::DEFAULT_SIZE;
+        $this->size = in_array($size, self::$sizes) ? $size : self::$defaultSize;
     }
 }

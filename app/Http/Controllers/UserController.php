@@ -10,23 +10,34 @@ use Illuminate\Validation\Rule;
 use App\Jobs\UploadProfilePicture;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Auth\Events\Registered;
+use Propaganistas\LaravelPhone\Exceptions\NumberParseException;
 
 class UserController extends Controller
 {
     public function create()
     {
         return view('auth.signup', [
-            'entries' => ['resources/js/form-validation.js']
+            // 'entries' => ['resources/js/form-validation.js']
+            'entries' => []
         ]);
     }
 
     public function store(Request $request)
     {
+        // TODO: Consider accepting international numbers.
+        // Also, if phone is not unique, the old value returned to the form is formatted with a leading 1, which displays incorrectly due to the x-mask.
+        try {
+            $phone = phone($request->input('phone'), 'US')->formatE164();
+            $request->merge(['phone' => $phone]);
+        } catch (NumberParseException $e) {
+            // ignore and let validation handle it in the next step so that any other errors are also shown
+        }
+
         $fields = $request->validate([
-            'first-name' => 'required|alpha|max:255', // Might consider some legitimate names invalid?
+            'first-name' => 'required|alpha|max:255',
             'last-name' => 'required|alpha|max:255',
             'email' => 'required|email|ends_with:@virginia.edu|max:255|unique:users,email',
-            'phone' => 'required|digits:10|unique:users,phone',
+            'phone' => 'bail|required|phone:US|unique:users,phone', // TODO: see above
             'password' => 'required|min:8|max:255|confirmed'
         ]);
 

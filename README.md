@@ -29,6 +29,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Attractive landing page
 -   [x] Forgot password route
 -   [x] text-muted deprecated
+-   [ ] Sign in with phone number
 -   [ ] Convert to TALL stack
 -   [ ] Allow users to create alerts to be notified when:
     -   [ ] Seat becomes available in previously full ride
