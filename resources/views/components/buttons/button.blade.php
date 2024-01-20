@@ -3,7 +3,7 @@
 @endphp
 
 @if ($withValidation)
-    <button {{ $attributes }} ::disabled="!valid">
+    <button {{ $attributes }} :disabled="!valid">
         {{ $slot }}
     </button>
 @else

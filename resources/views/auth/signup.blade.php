@@ -17,10 +17,10 @@
                         type="tel" x-data x-mask="(999) 999-9999" size="lg" autocomplete="tel-national"
                         placeholder="Phone number" pattern="\([0-9]{3}\) [0-9]{3}-[0-9]{4}" required withValidation />
                     <x-inputs.password class="!rounded-full !border-0 bg-gray-100 !px-5 !ring-offset-0" size="lg"
-                        autocomplete="new-password" minlength="8" maxlength="255" required withValidation />
+                        autocomplete="new-password" required withValidation />
                     <x-inputs.password class="!rounded-full !border-0 bg-gray-100 !px-5 !ring-offset-0"
-                        name="password_confirmation" size="lg" autocomplete="new-password" minlength="8"
-                        maxlength="255" placeholder="Confirm password" required withValidation />
+                        name="password_confirmation" size="lg" autocomplete="new-password"
+                        placeholder="Confirm password" required withValidation />
                 </div>
 
                 <x-buttons.button

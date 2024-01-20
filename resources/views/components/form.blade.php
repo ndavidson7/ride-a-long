@@ -1,5 +1,5 @@
 @if ($withValidation)
-    <x-buk-form {{ $attributes }} x-data="{ valid: false }" @input="valid = $el.checkValidity()">
+    <x-buk-form {{ $attributes }} x-data="{ valid: false }" x-init="valid = $el.checkValidity()" @input="valid = $el.checkValidity()">
         {{ $slot }}
     </x-buk-form>
 @else
