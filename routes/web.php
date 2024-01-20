@@ -25,7 +25,7 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
 Route::get('/', function () {
     return view('landing');
-})->middleware('guest')->name('landing');
+})->name('landing');
 
 // Random testing page
 Route::get('/test', function () {

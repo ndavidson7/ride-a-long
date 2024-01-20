@@ -1,13 +1,13 @@
-<x-layouts.main title="View request" :$entries>
+<x-layouts.app title="View request" :$entries>
     <main class="py-4">
-        <div class="container col-sm-10 col-md-8 col-lg-6 mb-3">
-            <h2 class="text-center mb-3">Preview</h2>
+        <div class="col-sm-10 col-md-8 col-lg-6 container mb-3">
+            <h2 class="mb-3 text-center">Preview</h2>
             <div class="row">
                 <x-map />
             </div>
         </div>
-        <div class="container col-sm-8 col-md-6 col-lg-5 col-xl-4">
-            <h2 class="text-center mb-3">Request Details</h2>
+        <div class="col-sm-8 col-md-6 col-lg-5 col-xl-4 container">
+            <h2 class="mb-3 text-center">Request Details</h2>
             @if ($request->ride->detours_allowed)
                 <h3>Pickup address</h3>
                 <div class="row mb-3">
@@ -39,8 +39,8 @@
                     @method('PUT')
                     @csrf
                     <div class="d-flex justify-content-start gap-2">
-                        <button type="submit" class="btn btn-success" name="response" value="1">Accept</button>
-                        <button type="submit" class="btn btn-danger" name="response" value="0">Deny</button>
+                        <button class="btn btn-success" name="response" type="submit" value="1">Accept</button>
+                        <button class="btn btn-danger" name="response" type="submit" value="0">Deny</button>
                     </div>
                 </form>
             @elseif ($request->response !== null)
@@ -51,7 +51,7 @@
                         <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
                             @method('DELETE')
                             @csrf
-                            <button type="submit" class="btn btn-danger">Mark as Read</button>
+                            <button class="btn btn-danger" type="submit">Mark as Read</button>
                         </form>
                     @endif
                 </div>
@@ -61,4 +61,4 @@
             </script>
         </div>
     </main>
-</x-layouts.main>
+</x-layouts.app>

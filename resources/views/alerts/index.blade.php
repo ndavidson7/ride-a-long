@@ -1,4 +1,4 @@
-<x-layouts.main title="Your alerts"> {{-- :$entries> --}}
+<x-layouts.app title="Your alerts"> {{-- :$entries> --}}
     <main>
         <div class="container-xl py-4">
             <h1>New ride alerts</h1>
@@ -28,13 +28,13 @@
                                         <i class="bi bi-x-circle-fill text-danger"></i>
                                     @endif
                                 </td>
-                                <td class="d-flex gap-1 flex-wrap">
-                                    <a href="{{ route('new-ride-alerts.edit', $newRideAlert) }}"
-                                        class="btn btn-primary">Edit</a>
+                                <td class="d-flex flex-wrap gap-1">
+                                    <a class="btn btn-primary"
+                                        href="{{ route('new-ride-alerts.edit', $newRideAlert) }}">Edit</a>
                                     <form action="{{ route('new-ride-alerts.destroy', $newRideAlert) }}" method="POST">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-danger">Delete</button>
+                                        <button class="btn btn-danger" type="submit">Delete</button>
                                     </form>
                                 </td>
                             </tr>
@@ -43,7 +43,7 @@
                     <tfoot>
                         <tr>
                             <th scope="col" colspan="6">
-                                <a href="{{ route('new-ride-alerts.create') }}" class="btn btn-primary">Create new
+                                <a class="btn btn-primary" href="{{ route('new-ride-alerts.create') }}">Create new
                                     alert</a>
                             </th>
                         </tr>
@@ -54,4 +54,4 @@
             {{-- TODO: Ride card for each ride with a seat open alert --}}
         </div>
     </main>
-</x-layouts.main>
+</x-layouts.app>

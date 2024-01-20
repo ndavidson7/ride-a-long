@@ -10,9 +10,7 @@ class SessionController extends Controller
 {
     public function create()
     {
-        return view('auth.signin', [
-            'entries' => ['resources/js/form-validation.js']
-        ]);
+        return view('auth.signin');
     }
 
     public function store(Request $request)

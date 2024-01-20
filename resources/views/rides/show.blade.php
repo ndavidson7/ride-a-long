@@ -1,9 +1,9 @@
-<x-layouts.main title="{{ $ride->driver->name }}'s ride" :$entries>
+<x-layouts.app title="{{ $ride->driver->name }}'s ride" :$entries>
     <main class="container py-4">
         <div class="row">
             <div class="col-lg">
                 <x-cards.ride.details class="mb-3" :$ride />
-                <x-cards.ride.driver class="mb-3 mb-lg-0" :$ride />
+                <x-cards.ride.driver class="mb-lg-0 mb-3" :$ride />
             </div>
             @if (in_array($ride->user_relation, ['driver', 'passenger']))
                 <div class="col-lg">
@@ -19,4 +19,4 @@
     <script>
         var ride = @json($ride);
     </script>
-</x-layouts.main>
+</x-layouts.app>

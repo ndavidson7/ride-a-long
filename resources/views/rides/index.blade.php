@@ -1,14 +1,14 @@
-<x-layouts.main title="Ride listings" :$entries>
+<x-layouts.app title="Ride listings" :$entries>
     <main class="flex-grow-1 container-fluid py-3">
         <x-ride-filter />
         <hr class="border-2">
         @if ($rides->count())
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-3">
                 <div class="col">
-                    <div class="card text-center h-100">
+                    <div class="card h-100 text-center">
                         <div class="card-body d-flex flex-column">
-                            <a href="{{ route('rides.create') }}"
-                                class="stretched-link my-auto orange orange-darken-hover" title="Create new ride"><i
+                            <a class="stretched-link orange orange-darken-hover my-auto"
+                                href="{{ route('rides.create') }}" title="Create new ride"><i
                                     class="bi bi-plus-circle-fill" title="Plus icon" aria-hidden="true"
                                     style="font-size: 5em;"></i></a>
                         </div>
@@ -25,7 +25,7 @@
             </div>
             <x-modals.ride />
         @else
-            <div class="text-center mt-5">
+            <div class="mt-5 text-center">
                 @php
                     $heading = request('my-rides') ? 'You have no rides' : 'No rides available';
                     if (request('origin-city')) {
@@ -49,4 +49,4 @@
             </div>
         @endif
     </main>
-</x-layouts.main>
+</x-layouts.app>

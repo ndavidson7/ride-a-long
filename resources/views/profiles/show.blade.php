@@ -1,4 +1,4 @@
-<x-layouts.main title="{{ $user->name }}'s Profile" :$entries>
+<x-layouts.app title="{{ $user->name }}'s Profile" :$entries>
     <main class="flex-grow-1 d-flex justify-content-center align-items-center">
         <div class="col-10 col-lg-8 col-xl-6 py-5">
             <div class="card" style="border-radius: .5rem;">
@@ -6,10 +6,10 @@
                     <div class="col-md-4 gradient-custom text-center"
                         style="border-top-left-radius: .5rem; border-bottom-left-radius: .5rem;">
                         {{-- Only wrapped in div because can't give font icon margin for some reason --}}
-                        <div class="my-4 w-75 mx-auto placeholder-glow">
+                        <div class="w-75 placeholder-glow mx-auto my-4">
                             @if ($pfp = $user->fetchFirstMedia())
-                                <img src="{{ $pfp['file_url'] }}" alt="Profile picture"
-                                    class="img-fluid rounded-circle shadow-lg">
+                                <img class="img-fluid rounded-circle shadow-lg" src="{{ $pfp['file_url'] }}"
+                                    alt="Profile picture">
                             @elseif ($uploadedPfp)
                                 <div class="spinner-border" role="status">
                                     <span class="visually-hidden">Loading...</span>
@@ -46,4 +46,4 @@
             </div>
         </div>
     </main>
-</x-layouts.main>
+</x-layouts.app>

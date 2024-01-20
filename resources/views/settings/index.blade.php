@@ -1,4 +1,4 @@
-<x-layouts.main title="Settings" :$entries>
+<x-layouts.app title="Settings" :$entries>
     <main class="container-md py-5">
         <div class="row">
             <nav class="col-3">
@@ -17,7 +17,7 @@
                     <h4>Location</h4>
                     <hr class="mt-0">
                     <div class="form-check form-switch">
-                        <input type="checkbox" class="form-check-input" role="switch" id="location-switch">
+                        <input class="form-check-input" id="location-switch" type="checkbox" role="switch">
                         <label class="form-check-label" for="location-switch">Share location</label>
                         <div class="form-text">This will allow autocomplete results to be biased towards your
                             location and timestamps to be formatted to your timezone. Your location will be saved but
@@ -31,4 +31,4 @@
             </div>
         </div>
     </main>
-</x-layouts.main>
+</x-layouts.app>

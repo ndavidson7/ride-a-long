@@ -1,16 +1,16 @@
-<x-layouts.main title="Create ride" :$entries>
+<x-layouts.app title="Create ride" :$entries>
     <main class="py-4">
-        <div class="container col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4">
-            <h1 class="text-center mb-3">Preview</h1>
+        <div class="col-11 col-sm-9 col-md-7 col-lg-6 col-xl-5 col-xxl-4 container">
+            <h1 class="mb-3 text-center">Preview</h1>
             <div class="row mb-3">
                 <x-map class="d-none" />
             </div>
         </div>
 
-        <form id="ride-create" class="container col-sm-10 col-md-8 col-lg-6" action="{{ route('rides.store') }}"
+        <form class="col-sm-10 col-md-8 col-lg-6 container" id="ride-create" action="{{ route('rides.store') }}"
             method="post" disabled>
             @csrf
-            <h1 class="text-center mb-3">Ride Details</h1>
+            <h1 class="mb-3 text-center">Ride Details</h1>
 
             @if ($errors->any())
                 @foreach ($errors->all() as $error)
@@ -19,32 +19,32 @@
             @endif
 
             <div class="row mb-3">
-                <div class="col-sm-8 mb-3 mb-sm-0">
-                    <label for="start-time" class="form-label">Date and Time</label>
-                    <input type="datetime-local" class="form-control" id="start-time" name="start-time"
+                <div class="col-sm-8 mb-sm-0 mb-3">
+                    <label class="form-label" for="start-time">Date and Time</label>
+                    <input class="form-control" id="start-time" name="start-time" type="datetime-local"
                         min="{{ Carbon\Carbon::now()->setTimezone('America/New_York')->format('Y-m-d\TH:i') }}"
                         required />
                 </div>
                 <div class="col-sm-4">
-                    <label for="seats" class="form-label">Seats</label>
-                    <input type="number" class="form-control" id="seats" name="seats" min="1" required />
+                    <label class="form-label" for="seats">Seats</label>
+                    <input class="form-control" id="seats" name="seats" type="number" min="1" required />
                 </div>
             </div>
 
-            <x-inputs.autocomplete class="mb-3" name="origin" id="origin" required>
+            <x-inputs.autocomplete class="mb-3" id="origin" name="origin" required>
                 <x-slot:label>Origin</x-slot:label>
             </x-inputs.autocomplete>
 
-            <x-inputs.autocomplete class="mb-3" name="destination" id="destination" required>
+            <x-inputs.autocomplete class="mb-3" id="destination" name="destination" required>
                 <x-slot:label>Destination</x-slot:label>
             </x-inputs.autocomplete>
 
             <div class="form-check mb-3">
-                <label class="form-check-label" for="detours-checkbox">Allow Detours <a href="#"
-                        data-bs-toggle="tooltip" data-bs-placement="right"
-                        data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination"><i
-                            class="bi bi-question-circle"></i></a></label>
-                <input type="checkbox" class="form-check-input" id="detours-checkbox" name="detours" />
+                <label class="form-check-label" for="detours-checkbox">Allow Detours <a data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-title="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination"
+                        href="#"><i class="bi bi-question-circle"></i></a></label>
+                <input class="form-check-input" id="detours-checkbox" name="detours" type="checkbox" />
             </div>
 
             {{-- <div class="row mb-3">
@@ -68,8 +68,8 @@
                 <textarea class="form-control" id="description" name="description" rows=3 maxlength="255"></textarea>
             </div>
 
-            <button type="submit" class="btn btn-primary" disabled>Post</button>
-            <button type="button" class="btn btn-primary" id="preview-button" disabled>Preview</button>
+            <button class="btn btn-primary" type="submit" disabled>Post</button>
+            <button class="btn btn-primary" id="preview-button" type="button" disabled>Preview</button>
         </form>
     </main>
-</x-layouts.main>
+</x-layouts.app>

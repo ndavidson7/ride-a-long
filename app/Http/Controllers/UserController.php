@@ -16,10 +16,7 @@ class UserController extends Controller
 {
     public function create()
     {
-        return view('auth.signup', [
-            // 'entries' => ['resources/js/form-validation.js']
-            'entries' => []
-        ]);
+        return view('auth.signup');
     }
 
     public function store(Request $request)
@@ -54,7 +51,7 @@ class UserController extends Controller
 
         Auth::login($user);
 
-        return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Account created!']);
+        return redirect()->route('verification.notice')->with(['status' => 'success', 'message' => 'Account created!']);
     }
 
     public function show(User $user = null)

@@ -3,9 +3,9 @@
 
 <x-head :$title :$entries />
 
-<body {{ $attributes }}>
+<body {{ $attributes->class(['grid', 'md:grid-cols-2']) }}>
 
-    <x-dynamic-component :component="$header" />
+    <x-headers.splash />
 
     <main>
         {{ $slot }}
