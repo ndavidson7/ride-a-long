@@ -2,9 +2,7 @@
 
 namespace App\View\Components;
 
-use Closure;
 use Illuminate\View\Component;
-use Illuminate\Contracts\View\View;
 
 abstract class ResizableComponent extends Component
 {
