@@ -1,24 +1,34 @@
-<x-layouts.splash title="Reset password" :$entries>
-    <main class="mx-auto">
-        <div class="card" style="width: min(500px, 80vw);">
-            <div class="card-body">
-                <h1 class="card-title fs-3">Reset password</h1>
-                <p class="card-subtitle fs-4 mb-3">Enter a new password.</p>
-                <form action="{{ route('password.update') }}" method="POST" disabled>
-                    @csrf
-                    <x-inputs.email class="mb-2" />
-                    <x-inputs.floating type="password" class="mb-2" name="password" id="password" minlength="8"
-                        maxlength="255" autocomplete="new-password" required>
-                        <x-slot:label>Password</x-slot:label>
-                    </x-inputs.floating>
-                    <x-inputs.floating type="password" class="mb-2" name="password_confirmation"
-                        id="password_confirmation" minlength="8" maxlength="255" autocomplete="new-password" required>
-                        <x-slot:label>Confirm Password</x-slot:label>
-                    </x-inputs.floating>
-                    <input type="hidden" name="token" value="{{ $token }}" />
-                    <button type="submit" class="btn btn-primary w-100">Reset</button>
-                </form>
+<x-layouts.splash title="Reset password">
+
+    <h1 class="mb-10 text-center text-3xl font-semibold">Reset password</h1>
+    <div class="w-full max-w-md">
+        <x-form action="{{ route('password.update') }}" withValidation>
+            <div class="relative mb-2">
+                <span class="absolute left-0 top-[18px] flex items-center pl-5">
+                    <x-fas-user class="h-5 w-5" />
+                </span>
+                <x-inputs.email class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0" size="lg"
+                    required withValidation />
             </div>
-        </div>
-    </main>
+            <div class="relative mb-2">
+                <span class="absolute left-0 top-[18px] flex items-center pl-5">
+                    <x-fas-key class="h-5 w-5" />
+                </span>
+                <x-inputs.password class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0"
+                    size="lg" autocomplete="new-password" placeholder="New password" required withValidation />
+            </div>
+            <div class="relative mb-4">
+                <span class="absolute left-0 top-[18px] flex items-center pl-5">
+                    <x-fas-key class="h-5 w-5" />
+                </span>
+                <x-inputs.password class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0"
+                    name="password_confirmation" size="lg" autocomplete="new-password"
+                    placeholder="Confirm password" required withValidation />
+            </div>
+            <input name="token" type="hidden" value="{{ $token }}" />
+            <x-buttons.button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
+                size="lg" withValidation>Reset</x-buttons.button>
+        </x-form>
+    </div>
+
 </x-layouts.splash>

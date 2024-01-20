@@ -31,6 +31,13 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] text-muted deprecated
 -   [ ] Sign in with phone number
 -   [ ] Convert to TALL stack
+    -   [ ] Overhaul styling. Pages left:
+    -   rides.\*
+    -   requests.\*
+    -   alerts.\*
+    -   profiles.\*
+    -   settings.\*
+    -   landing
 -   [ ] Allow users to create alerts to be notified when:
     -   [ ] Seat becomes available in previously full ride
     -   [ ] New ride is created matching desired criteria
@@ -44,7 +51,6 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
 -   [ ] Pricing model
--   [ ] Overhaul styling
 -   [ ] Distinguish between ride types based on origin/destination: airports, cities, schools, etc.
 -   [ ] Convert HTML template JS code to make use of web components?
 -   [ ] Soft deletes
@@ -69,8 +75,15 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 ## :hammer_and_wrench: Tech Stack
 
--   Laravel/PHP
--   Vanilla JavaScript
+Primary built using the TALL stack:
+
+-   [TailwindCSS](https://tailwindcss.com)
+-   [AlpineJS](https://alpinejs.dev)
+-   [Laravel](https://laravel.com/)
+-   [Livewire](https://livewire.laravel.com/)
+
+Additional technologies:
+
 -   MySQL
 -   Vite
 -   Pusher
@@ -114,12 +127,8 @@ If you followed the above instructions exactly, you can either host Ride-A-Long 
 1. Start your MySQL server.
 1. In separate terminals, run:
 
-    `php artisan serve`
-
-    and
-
-    `npm run dev`
+    `php artisan serve`, `npm run dev`, and `php artisan queue:listen`
 
 The application should now be reachable at [http://localhost:8000]([http://localhost:8000]).
 
-There are a number of randomly generated users in the `users` database table. All use the highly secure password _password_. My user, _nid3dhu@virginia.edu_, owns a ride and the second user, _ab1cd@virginia.edu_, has requested to join it. Use these to test the application, or make your own user, rides, requests, etc.
+There are a number of randomly generated users in the `users` database table. All use the highly secure password "password". Two users will always exist: "nid3dhu@virginia.edu" and "ab1cd@virginia.edu". Use these to test the application, or make your own user, rides, requests, etc.

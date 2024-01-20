@@ -1,9 +1,9 @@
-<x-layouts.splash title="Sign up" :entries="[]">
+<x-layouts.splash title="Sign up">
 
     <h1 class="mb-10 text-center text-3xl font-semibold">Sign up for {{ config('app.name') }}</h1>
-    <div class="w-full max-w-2xl px-3">
+    <div class="w-full max-w-2xl">
         <x-form action="{{ route('users.store') }}" withValidation>
-            <div class="mb-2 grid grid-cols-[repeat(auto-fit,_minmax(min(275px,_100%),_1fr))] gap-x-4 gap-y-2">
+            <div class="mb-4 grid grid-cols-[repeat(auto-fit,_minmax(min(275px,_100%),_1fr))] gap-x-4 gap-y-2">
                 <x-inputs.input class="!rounded-full !border-0 bg-gray-100 !px-5 !ring-offset-0" name="first-name"
                     size="lg" autocomplete="given-name" maxlength="255" placeholder="First name" pattern="[^\d]+"
                     required withValidation />

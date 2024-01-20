@@ -17,6 +17,23 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\RoutePlannerController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 
+// Random testing page
+if (config('app.env') === 'local') {
+    Route::get('/test', function () {
+        return view('test');
+    })->name('test.index');
+
+    Route::post('/test', function (Request $request) {
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'message' => 'required',
+        ]);
+
+        return back()->with(['status' => 'success', 'message' => 'Message sent!']);
+    })->name('test.store');
+}
+
 /*
 |--------------------------------------------------------------------------
 | Landing Route
@@ -26,21 +43,6 @@ use Illuminate\Foundation\Auth\EmailVerificationRequest;
 Route::get('/', function () {
     return view('landing');
 })->name('landing');
-
-// Random testing page
-Route::get('/test', function () {
-    return view('test');
-})->name('test.index');
-
-Route::post('/test', function (Request $request) {
-    $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'message' => 'required',
-    ]);
-
-    return back()->with(['status' => 'success', 'message' => 'Message sent!']);
-})->name('test.store');
 
 /*
 |--------------------------------------------------------------------------
@@ -98,7 +100,7 @@ Route::post('/email/verification-notification', function (Request $request) {
 */
 
 Route::get('/forgot-password', function () {
-    return view('auth.forgot-password', ['entries' => ['resources/js/form-validation.js']]);
+    return view('auth.forgot-password');
 })->middleware('guest')->name('password.request');
 
 Route::post('/forgot-password', function (Request $request) {
@@ -114,7 +116,7 @@ Route::post('/forgot-password', function (Request $request) {
 })->middleware(['guest', 'throttle:2,1'])->name('password.email');
 
 Route::get('/reset-password/{token}', function (string $token) {
-    return view('auth.reset-password', ['token' => $token, 'entries' => ['resources/js/form-validation.js']]);
+    return view('auth.reset-password', ['token' => $token]);
 })->middleware('guest')->name('password.reset');
 
 Route::post('/reset-password', function (Request $request) {

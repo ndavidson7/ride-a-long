@@ -1,7 +1,7 @@
-<x-layouts.splash class="grid md:grid-cols-2" title="Sign in" :entries="[]">
+<x-layouts.splash class="grid md:grid-cols-2" title="Sign in">
 
     <h1 class="mb-10 text-center text-3xl font-semibold">Sign in to {{ config('app.name') }}</h1>
-    <div class="w-full max-w-md px-3">
+    <div class="w-full max-w-md">
         <x-form action="{{ route('sessions.store') }}" withValidation>
             @error('incorrect')
                 <div class="relative mb-6 w-full rounded-lg bg-red-500 p-4 text-white [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:fill-white [&>svg~*]:pl-7"
