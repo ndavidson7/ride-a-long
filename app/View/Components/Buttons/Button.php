@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 
 class Button extends ResizableComponent
 {
-    public function __construct(public bool $withValidation = false, ?string $size = null)
+    public function __construct(public bool $withValidation = false, public bool $withoutStyles = false, ?string $size = null)
     {
         parent::__construct($size);
     }
