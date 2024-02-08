@@ -30,6 +30,7 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   [x] Forgot password route
 -   [x] text-muted deprecated
 -   [ ] Sign in with phone number
+-   [ ] Login with Google to verify student status (https://laravel.com/docs/10.x/socialite)
 -   [ ] Convert to TALL stack
     -   [ ] Overhaul styling. Pages left:
     -   rides.\*
@@ -51,7 +52,6 @@ Ride sharing web app designed by and for college students. Carpool with your cla
     -   [ ] Request user's location OR allow user to set their location/timezone
 -   [ ] Allow users to upload multiple cars, and decouple it from profile edit
 -   [ ] Pricing model
--   [ ] Google login allows UVA authentication
 -   [ ] Distinguish between ride types based on origin/destination: airports, cities, schools, etc.
 -   [ ] Convert HTML template JS code to make use of web components?
 -   [ ] Soft deletes

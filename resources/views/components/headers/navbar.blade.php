@@ -110,7 +110,7 @@
             </button>
 
             {{-- Panel --}}
-            <div class="w-32 rounded-md bg-white text-left text-sm shadow-md" aria-label="Account Dropdown" x-cloak
+            <div class="z-40 w-32 rounded-md bg-white text-left text-sm shadow-md" aria-label="Account Dropdown" x-cloak
                 x-anchor.bottom-end="$refs.button" x-ref="panel" x-show="open" x-transition.origin.top.right
                 x-on:click.outside="close($refs.button)" :id="$id('dropdown-button')">
                 <a class="flex w-full items-center gap-2 rounded-t-md px-4 py-2.5 hover:bg-gray-50 disabled:text-gray-500"

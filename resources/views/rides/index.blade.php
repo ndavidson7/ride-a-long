@@ -1,5 +1,5 @@
 <x-layouts.app title="Ride listings" :$entries>
-    <main class="flex-grow-1 container-fluid py-3">
+    <main class="">
         <x-ride-filter />
         <hr class="border-2">
         @if ($rides->count())
