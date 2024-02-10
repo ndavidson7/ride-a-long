@@ -3,11 +3,11 @@
 
 <x-head :$title :$entries />
 
-<body {{ $attributes }}>
+<body>
 
     <x-headers.navbar />
 
-    <main>
+    <main {{ $attributes }}>
         {{ $slot }}
     </main>
 

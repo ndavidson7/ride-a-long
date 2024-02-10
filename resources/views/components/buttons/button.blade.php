@@ -23,8 +23,10 @@
             'focus-visible:ring-1',
             'disabled:pointer-events-none',
             'disabled:opacity-50'
-        ])->merge(['type' => 'submit']);
+        ]);
     }
+
+    $attributes = $attributes->merge(['type' => 'submit']);
 @endphp
 {{-- blade-formatter-enable --}}
 
