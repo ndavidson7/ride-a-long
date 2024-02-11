@@ -1,7 +1,7 @@
 <x-modals.modal title="Filter" {{ $attributes }}>
 
-    <x-slot:button class="h-8 w-8 rounded-full text-gray-600 hover:bg-gray-50 hover:text-gray-800">
-        <x-fas-sliders class="h-5 w-5" />
+    <x-slot:button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
+        <x-fas-sliders class="h-8 w-8" />
     </x-slot:button>
 
     <x-slot:body>

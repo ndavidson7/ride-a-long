@@ -4,7 +4,7 @@
         {{-- Branding --}}
         <a class="me-auto flex items-center text-4xl font-black italic text-white" href="{{ route('rides.index') }}"
             title="Return to ride listings">
-            <x-fas-car class="h-6 w-6 sm:hidden" />
+            <x-fas-car class="h-12 w-12 sm:hidden" />
             <span class="hidden sm:block">{{ config('app.name') }}</span>
         </a>
 
@@ -45,7 +45,7 @@
                 'after:hidden' => !auth()->user()->unreadNotifications()->exists(),
             ]) x-ref="button" x-on:click="toggle()"
                 :aria-expanded="open" :aria-controls="$id('dropdown-button')">
-                <x-far-bell class="h-6 w-6 text-white"></x-far-bell>
+                <x-far-bell class="h-8 w-8 text-white"></x-far-bell>
             </button>
 
             {{-- Panel --}}
@@ -98,22 +98,20 @@
         }" x-on:keydown.escape.prevent.stop="close($refs.button)"
             x-on:focusin.window="! $refs.panel.contains($event.target) && close()" x-id="['dropdown-button']">
             {{-- Button --}}
-            <button class="flex items-center gap-2 rounded-md bg-white px-3 py-2 shadow" type="button" x-ref="button"
+            <button class="grid place-items-center rounded-full shadow" type="button" x-ref="button"
                 x-on:click="toggle()" :aria-expanded="open" :aria-controls="$id('dropdown-button')">
                 @if ($pfp = auth()->user()->fetchFirstMedia())
-                    <img class="h-5 w-5" src="{{ $pfp['file_url'] }}" alt="Profile picture">
+                    <img class="h-12 w-12" src="{{ $pfp['file_url'] }}" alt="Profile picture">
                 @else
-                    <x-fas-circle-user class="h-5 w-5"></x-fas-circle-user>
+                    <x-fas-circle-user class="h-12 w-12"></x-fas-circle-user>
                 @endif
-
-                <x-fas-chevron-down class="h-4 w-4 duration-200 ease-out" ::class="open && 'rotate-180'" />
             </button>
 
             {{-- Panel --}}
-            <div class="z-40 w-32 rounded-md bg-white text-left text-sm shadow-md" aria-label="Account Dropdown" x-cloak
+            <div class="z-40 w-32 rounded-md bg-white text-left shadow-md" aria-label="Account Dropdown" x-cloak
                 x-anchor.bottom-end="$refs.button" x-ref="panel" x-show="open" x-transition.origin.top.right
                 x-on:click.outside="close($refs.button)" :id="$id('dropdown-button')">
-                <a class="flex w-full items-center gap-2 rounded-t-md px-4 py-2.5 hover:bg-gray-50 disabled:text-gray-500"
+                <a class="flex w-full items-center rounded-t-md px-4 py-2.5 hover:bg-gray-50 disabled:text-gray-500"
                     href="{{ route('users.show') }}">Profile</a>
 
                 <a class="flex w-full items-center gap-2 px-4 py-2.5 hover:bg-gray-50 disabled:text-gray-500"
@@ -132,7 +130,7 @@
                     href="{{ route('settings.index') }}">Settings</a>
 
                 <x-buttons.form
-                    class="flex w-full items-center gap-2 rounded-b-md px-4 py-2.5 text-red-500 hover:bg-gray-50 disabled:text-gray-500"
+                    class="flex w-full items-center gap-2 rounded-b-md border-t-2 px-4 py-2.5 text-red-500 hover:bg-gray-50 disabled:text-gray-500"
                     action="{{ route('sessions.destroy') }}" method="delete" withoutStyles>Sign out</x-buttons.form>
             </div>
         </div>
