@@ -103,7 +103,7 @@
                 @if ($pfp = auth()->user()->fetchFirstMedia())
                     <img class="h-12 w-12" src="{{ $pfp['file_url'] }}" alt="Profile picture">
                 @else
-                    <x-fas-circle-user class="h-12 w-12"></x-fas-circle-user>
+                    <x-fas-circle-user class="h-12 w-12 text-white"></x-fas-circle-user>
                 @endif
             </button>
 

@@ -20,8 +20,9 @@
     },
     "dependencies": {
         "@googlemaps/js-api-loader": "^1.16.2",
-        "@mapbox/search-js-web": "^1.0.0-beta.18",
         "dayjs": "^1.11.10",
-        "mapbox-gl": "^3.1.2"
+        "mapbox-gl": "^3.1.2",
+        "maplibre-gl": "^3.6.2",
+        "radar-sdk-js": "^4.1.18"
     }
 }

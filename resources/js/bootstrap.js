@@ -35,7 +35,15 @@ window.Echo = new Echo({
 
 // Mapbox
 import { token } from "@modules/mapbox/config";
-import { MapboxAddressAutofill } from "@mapbox/search-js-web";
 import mapboxgl from "mapbox-gl";
 mapboxgl.accessToken = token;
 window.mapboxgl = mapboxgl;
+
+// Radar
+import Radar from "radar-sdk-js";
+Radar.initialize(
+    import.meta.env.VITE_APP_ENV == "local"
+        ? import.meta.env.VITE_RADAR_TEST_API_KEY
+        : import.meta.env.VITE_RADAR_LIVE_API_KEY,
+);
+window.Radar = Radar;

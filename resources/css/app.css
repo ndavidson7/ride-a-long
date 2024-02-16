@@ -1,4 +1,5 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
+@import "radar-sdk-js/dist/radar.css";
 
 @tailwind base;
 @tailwind components;
