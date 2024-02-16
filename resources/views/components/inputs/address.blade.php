@@ -1,6 +1,19 @@
-<div class="{{ $attributes->merge(['class' => 'autocomplete'])->get('class') }}">
+<div>
     {{-- ID needed for inputs that supply information to map.js MapComponent --}}
-    <input type="text" autocomplete="address-level2" />
+    <mapbox-address-autofill access-token="{{ config('mapbox.token') }}" x-init="$el.options = {
+        country: '{{ $country }}',
+        limit: {{ $limit }},
+        proximity: 'ip',
+        streets: false
+    };
+    
+    $el.addEventListener('retrieve', (event) => {
+        const featureCollection = event.detail;
+        const inputEl = event.target;
+        console.log(featureCollection);
+    });">
+        <x-inputs.input autocomplete="address-level2" {{ $attributes }} />
+    </mapbox-address-autofill>
     {{-- <input type="hidden" class="address" id="{{ $attributes->get('id') }}-address"
         name="{{ $attributes->get('name') }}-address" maxlength="255" value="{{ $address?->address }}" />
     <input type="hidden" class="city" name="{{ $attributes->get('name') }}-city" value="{{ $address?->city }}" />

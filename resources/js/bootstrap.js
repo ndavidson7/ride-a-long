@@ -32,3 +32,10 @@ window.Echo = new Echo({
     forceTLS: (import.meta.env.VITE_PUSHER_SCHEME ?? "https") === "https",
     enabledTransports: ["ws", "wss"],
 });
+
+// Mapbox
+import { token } from "@modules/mapbox/config";
+import { MapboxAddressAutofill } from "@mapbox/search-js-web";
+import mapboxgl from "mapbox-gl";
+mapboxgl.accessToken = token;
+window.mapboxgl = mapboxgl;

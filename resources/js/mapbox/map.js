@@ -1,5 +1,5 @@
 import mapboxgl from "mapbox-gl";
-const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
+import { token } from "./config";
 
 // initialize map
 if (document.getElementById("map")) {

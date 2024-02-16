@@ -21,9 +21,8 @@
                 <x-inputs.checkbox name="detours" value="1" :checked="request('detours') ?? false" />
                 <x-buk-label for="detours">Detours allowed</x-buk-label>
                 <x-tooltip class="h-4 w-4"
-                    text="If detours are allowed, you can request pickup and/or dropoff locations that are different than the ride's origin and destination"
-                    position="right">
-                    <x-far-circle-question /></x-tooltip>
+                    text="If detours are allowed, you can request a pickup and/or dropoff address." position="right">
+                    <x-fas-circle-info /></x-tooltip>
             </div>
 
             {{-- <div class=" form-check">
