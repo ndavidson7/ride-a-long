@@ -20,4 +20,3 @@ yarn-error.log
 .DS_Store
 _ide_helper.php
 _ide_helper_models.php
-resources/views/test.blade.php

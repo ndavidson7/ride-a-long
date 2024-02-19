@@ -5,16 +5,15 @@
     </x-slot:button>
 
     <x-slot:body>
-        <x-form class="grid gap-2" id="filter" method="get">
+        <form class="grid gap-2" id="filter" method="get">
 
-            <x-inputs.input name="origin-city" value="{{ request('origin-city') }}" size="sm"
-                placeholder="Origin City" />
+            <x-inputs.address name="origin" value="{{ request('origin') }}" size="sm" placeholder="Origin City"
+                layers="locality" />
 
-            <x-inputs.input name="destination-city" value="{{ request('destination-city') }}" size="sm"
-                placeholder="Destination City" />
+            <x-inputs.address name="destination" value="{{ request('destination') }}" size="sm"
+                placeholder="Destination City" layers="locality" />
 
             <x-inputs.input name="start-date" type="date" value="{{ request('start-date') }}" size="sm"
-                placeholder="Origin City"
                 min="{{ Carbon\Carbon::now()->setTimezone('America/New_York')->format('Y-m-d') }}" />
 
             <div class="text-nowrap flex items-center gap-1">
@@ -36,7 +35,7 @@
                 <x-buk-label for="my-rides">My rides</x-buk-label>
             </div>
 
-        </x-form>
+        </form>
     </x-slot:body>
 
     <x-slot:footer>
