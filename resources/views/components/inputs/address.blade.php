@@ -1,15 +1,15 @@
 @php
     $name = $attributes->get('name');
-    if (empty($address->getAttributes()) && !is_null(old($name, request($name)))) {
-        $address->fill([
-            'address' => old($name, request($name)),
-            'city' => old($name . '-city', request($name . '-city')),
-            'state' => old($name . '-state', request($name . '-state')),
-            'country' => old($name . '-country', request($name . '-country')),
-            'latitude' => old($name . '-latitude', request($name . '-latitude')),
-            'longitude' => old($name . '-longitude', request($name . '-longitude')),
-        ]);
-    }
+    // if (empty($address->getAttributes()) && !is_null(old($name, request($name)))) {
+    //     $address->fill([
+    //         'address' => old($name, request($name)),
+    //         'city' => old($name . '-city', request($name . '-city')),
+    //         'state' => old($name . '-state', request($name . '-state')),
+    //         'country' => old($name . '-country', request($name . '-country')),
+    //         'latitude' => old($name . '-latitude', request($name . '-latitude')),
+    //         'longitude' => old($name . '-longitude', request($name . '-longitude')),
+    //     ]);
+    // }
 @endphp
 
 <div x-data="{
@@ -23,8 +23,16 @@
         latitude: '{{ $address?->latitude }}',
         longitude: '{{ $address?->longitude }}'
     }
+    {{-- address: $persist({
+        formattedAddress: '{{ $address?->address }}',
+        city: '{{ $address?->city }}',
+        state: '{{ $address?->state }}',
+        country: '{{ $address?->country }}',
+        latitude: '{{ $address?->latitude }}',
+        longitude: '{{ $address?->longitude }}'
+    }).as('{{ $name }}') --}}
 }">
-    <x-inputs.input value="{{ $address?->address }}" {{ $attributes }} autocomplete="off" x-data="{
+    <x-inputs.input form="none" ::value="address.formattedAddress" {{ $attributes }} autocomplete="off" x-data="{
         checkIfSelected() {
             resultsShown = false;
             if (!selected) {
@@ -60,7 +68,7 @@
             checkIfSelected();
         }"
         @blur="checkIfSelected" />
-    @foreach ($addressComponents as $component)
-        <x-buk-input name="{{ $name }}-{{ $component }}" type="hidden" ::value="address.{{ $component }}" />
+    @foreach ($addressComponents as $addressComponent)
+        <x-buk-input name="{{ $name }}-{{ $addressComponent }}" type="hidden" ::value="address.{{ $addressComponent }}" />
     @endforeach
 </div>
