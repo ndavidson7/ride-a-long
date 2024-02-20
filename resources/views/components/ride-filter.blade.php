@@ -7,11 +7,9 @@
     <x-slot:body>
         <form class="grid gap-2" id="filter" method="get">
 
-            <x-inputs.address name="origin" value="{{ request('origin') }}" size="sm" placeholder="Origin City"
-                layers="locality" />
+            <x-inputs.address name="origin" size="sm" placeholder="Origin City" layers="locality" />
 
-            <x-inputs.address name="destination" value="{{ request('destination') }}" size="sm"
-                placeholder="Destination City" layers="locality" />
+            <x-inputs.address name="destination" size="sm" placeholder="Destination City" layers="locality" />
 
             <x-inputs.input name="start-date" type="date" value="{{ request('start-date') }}" size="sm"
                 min="{{ Carbon\Carbon::now()->setTimezone('America/New_York')->format('Y-m-d') }}" />

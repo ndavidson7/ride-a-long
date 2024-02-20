@@ -1,7 +1,15 @@
 @php
     $name = $attributes->get('name');
-    $previousAddress = old($name) ?? request($name);
-
+    if (empty($address->getAttributes()) && !is_null(old($name, request($name)))) {
+        $address->fill([
+            'address' => old($name, request($name)),
+            'city' => old($name . '-city', request($name . '-city')),
+            'state' => old($name . '-state', request($name . '-state')),
+            'country' => old($name . '-country', request($name . '-country')),
+            'latitude' => old($name . '-latitude', request($name . '-latitude')),
+            'longitude' => old($name . '-longitude', request($name . '-longitude')),
+        ]);
+    }
 @endphp
 
 <div x-data="{
@@ -52,20 +60,7 @@
             checkIfSelected();
         }"
         @blur="checkIfSelected" />
-    @if (in_array('address', $addressComponents))
-        <x-buk-input name="{{ $attributes->get('name') }}-address" type="hidden" maxlength="255" ::value="address.formattedAddress" />
-    @endif
-    @if (in_array('city', $addressComponents))
-        <x-buk-input name="{{ $attributes->get('name') }}-city" type="hidden" ::value="address.city" />
-    @endif
-    @if (in_array('state', $addressComponents))
-        <x-buk-input name="{{ $attributes->get('name') }}-state" type="hidden" ::value="address.state" />
-    @endif
-    @if (in_array('country', $addressComponents))
-        <x-buk-input name="{{ $attributes->get('name') }}-country" type="hidden" ::value="address.country" />
-    @endif
-    @if (in_array('coordinates', $addressComponents))
-        <x-buk-input name="{{ $attributes->get('name') }}-latitude" type="hidden" ::value="address.latitude" />
-        <x-buk-input name="{{ $attributes->get('name') }}-longitude" type="hidden" ::value="address.longitude" />
-    @endif
+    @foreach ($addressComponents as $component)
+        <x-buk-input name="{{ $name }}-{{ $component }}" type="hidden" ::value="address.{{ $component }}" />
+    @endforeach
 </div>
