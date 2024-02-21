@@ -1,27 +1,23 @@
-<x-layouts.app class="relative" title="Ride listings" :$entries>
-    <x-ride-filter class="absolute left-3 top-3" />
+<x-layouts.app class="space-y-3" title="Ride listings" :$entries>
+
+    <x-ride-filter />
 
     @if ($rides->count())
-        {{-- <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4 mb-3">
-            <div class="col">
-                <div class="card h-100 text-center">
-                    <div class="card-body d-flex flex-column">
-                        <a class="stretched-link orange orange-darken-hover my-auto" href="{{ route('rides.create') }}"
-                            title="Create new ride"><i class="bi bi-plus-circle-fill" title="Plus icon"
-                                aria-hidden="true" style="font-size: 5em;"></i></a>
-                    </div>
-                </div>
+        <div class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+            <div class="rounded border shadow-lg">
+                <a class="size-full grid place-items-center text-blue-500 hover:text-blue-700"
+                    href="{{ route('rides.create') }}">
+                    <x-fas-circle-plus class="size-16" /></a>
             </div>
+
             @foreach ($rides as $ride)
-                <div class="col">
-                    <x-cards.ride.preview :$ride />
-                </div>
+                <x-cards.ride.preview :$ride />
             @endforeach
         </div>
-        <div class="row">
+        <div>
             {{ $rides->links() }}
         </div>
-        <x-modals.ride /> --}}
+        {{-- <x-modals.ride /> --}}
     @else
         @php
             $heading = request('my-rides') ? 'You have no rides' : 'No rides available';
@@ -47,4 +43,5 @@
                 be notified when a ride becomes available!</p>
         </div>
     @endif
+
 </x-layouts.app>

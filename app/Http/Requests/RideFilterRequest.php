@@ -23,7 +23,9 @@ class RideFilterRequest extends FormRequest
     {
         return [
             'origin-city' => 'nullable|string',
+            'origin-state' => 'nullable|string',
             'destination-city' => 'nullable|string',
+            'destination-state' => 'nullable|string',
             'start-date' => 'nullable|date',
             'detours' => 'nullable|boolean',
             'my-rides' => 'nullable|boolean',

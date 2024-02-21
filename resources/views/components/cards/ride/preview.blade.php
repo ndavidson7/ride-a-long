@@ -1,52 +1,55 @@
-<div class="card text-center h-100">
-    <h5 class="card-header">{{ $ride->origin->city }}, {{ $ride->origin->state }}
+<div class="flex cursor-pointer flex-col gap-1 rounded border p-3 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+    role="button" tabindex="0">
+    <h2 class="text-lg font-semibold">{{ $ride->origin->city }}, {{ $ride->origin->state }}
         &#8594;
         {{ $ride->destination->city }}, {{ $ride->destination->state }}
-    </h5>
-    <div class="card-body d-flex flex-column">
-        <h6 class="card-subtitle mb-2">{{ $ride->start_time->format('n/j \@ g:i a') }}
-        </h6>
-        <h6 class="card-subtitle mb-2"> {{ $ride->seats_open }} out of {{ $ride->seats_total }}
+    </h2>
+    <div class="flex flex-wrap justify-between gap-2">
+        <span class="">{{ $ride->start_time->format('n/j \@ g:i a') }}
+        </span>
+        <span class=""> {{ $ride->seats_open }} out of {{ $ride->seats_total }}
             seats
             left!
-        </h6>
-        <h6 class="card-subtitle mb-2">
+        </span>
+        {{-- <h6 class="card-subtitle mb-2">
             Detours Allowed: {{ $ride->detours_allowed ? 'Yes' : 'No' }}
-        </h6>
-        <p class="card-text mt-auto">{{ $ride->description }}</p>
-        <div class="d-flex justify-content-center align-items-center mt-auto">
-            <h6 class="card-subtitle">{{ $ride->driver->name }}
-            </h6>
-            @if ($pfp = $ride->driver->fetchFirstMedia())
-                <img src="{{ $pfp['file_url'] }}" alt="Profile picture" class="rounded-circle shadow-lg ms-2"
-                    style="display:inline-block; height:3em; width:auto;">
-            @endif
-        </div>
+        </h6> --}}
     </div>
-    <div class="card-footer">
-        <button type="button" class="card-link btn btn-primary stretched-link" data-bs-toggle="modal"
-            data-bs-target="#mapModal" data-ride="{{ $ride->id }}" data-user-relation="{{ $ride->user_relation }}"
-            data-related-model-id="{{ $ride->related_model_id }}">
-            @switch($ride->user_relation)
-                @case('driver')
-                    <i class="bi bi-car-front-fill"></i> Driving
-                @break
-
-                @case('requester')
-                    <i class="bi bi-hourglass-split"></i> Requested
-                @break
-
-                @case('passenger')
-                    <i class="bi bi-car-front-fill"></i> Riding
-                @break
-
-                @default
-                    @if ($ride->seats_open > 0)
-                        <i class="bi bi-info-circle-fill"></i> More info
-                    @else
-                        <i class="bi bi-x-circle-fill"></i> Full
-                    @endif
-            @endswitch
-        </button>
+    <p class="text-pretty text-sm text-gray-700">{{ $ride->description }}</p>
+    <div class="flex flex-wrap items-center gap-1">
+        @if ($ride->detours_allowed)
+            <span class="rounded-full bg-blue-300 px-2.5 py-1 text-xs font-semibold">Detours</span>
+        @endif
+    </div>
+    <div class="mt-auto">
+        @if ($pfp = $ride->driver->fetchFirstMedia())
+            <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
+        @endif
+        <span class="">{{ $ride->driver->name }}
+        </span>
     </div>
 </div>
+{{-- <x-buttons.button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
+    data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
+    type="button" size="sm">
+    @switch($ride->user_relation)
+        @case('driver')
+            <x-fas-car-side /> Driving
+        @break
+
+        @case('requester')
+            <x-fas-hourglass-half /> Requested
+        @break
+
+        @case('passenger')
+            <x-fas-car-side /> Riding
+        @break
+
+        @default
+            @if ($ride->seats_open > 0)
+                <i class="bi bi-info-circle-fill"></i> More info
+            @else
+                <i class="bi bi-x-circle-fill"></i> Full
+            @endif
+    @endswitch
+</x-buttons.button> --}}

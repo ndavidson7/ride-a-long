@@ -7,7 +7,7 @@
 
     <x-headers.navbar />
 
-    <main {{ $attributes }}>
+    <main {{ $attributes->class(['p-5']) }}>
         {{ $slot }}
     </main>
 

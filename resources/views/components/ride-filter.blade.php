@@ -1,7 +1,7 @@
 <x-modals.modal title="Filter" {{ $attributes }}>
 
     <x-slot:button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
-        <x-fas-sliders class="h-8 w-8" />
+        <x-fas-sliders class="size-8" />
     </x-slot:button>
 
     <x-slot:body>
@@ -19,7 +19,7 @@
             <div class="text-nowrap flex items-center gap-1">
                 <x-inputs.checkbox name="detours" value="1" :checked="request('detours') ?? false" />
                 <x-buk-label for="detours">Detours allowed</x-buk-label>
-                <x-tooltip class="h-4 w-4"
+                <x-tooltip class="size-4"
                     text="If detours are allowed, you can request a pickup and/or dropoff address." position="right">
                     <x-fas-circle-info /></x-tooltip>
             </div>

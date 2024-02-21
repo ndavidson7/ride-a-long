@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Events\RideSaved;
 use App\Events\RideDeleted;
 use Musonza\Chat\Models\Conversation;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -64,7 +65,7 @@ class Ride extends Model
 
     public $timestamps = false;
 
-    public function scopeFilter($query, array $filters)
+    public function scopeFilter(Builder $query, array $filters)
     {
         $query->when($filters['origin-city'] ?? false, function ($query, $city) {
             $query->whereHas('origin', function ($query) use ($city) {
@@ -72,9 +73,21 @@ class Ride extends Model
             });
         });
 
+        $query->when($filters['origin-state'] ?? false, function ($query, $state) {
+            $query->whereHas('origin', function ($query) use ($state) {
+                $query->where('state', 'like', '%' . $state . '%');
+            });
+        });
+
         $query->when($filters['destination-city'] ?? false, function ($query, $city) {
             $query->whereHas('destination', function ($query) use ($city) {
                 $query->where('city', 'like', '%' . $city . '%');
+            });
+        });
+
+        $query->when($filters['destination-state'] ?? false, function ($query, $state) {
+            $query->whereHas('destination', function ($query) use ($state) {
+                $query->where('state', 'like', '%' . $state . '%');
             });
         });
 

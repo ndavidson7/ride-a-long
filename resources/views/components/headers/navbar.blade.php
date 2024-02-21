@@ -66,7 +66,7 @@
                         </a>
                         <x-buttons.form action="{{ route('notifications.destroy', $notification['id']) }}"
                             method="delete" withoutStyles>
-                            <x-fas-times class="h-4 w-4 text-red-500 hover:text-red-600"></x-fas-times>
+                            <x-fas-times class="size-4 text-red-500 hover:text-red-600" />
                         </x-buttons.form>
                     </div>
                 @empty
@@ -101,9 +101,9 @@
             <button class="grid place-items-center rounded-full shadow" type="button" x-ref="button"
                 x-on:click="toggle()" :aria-expanded="open" :aria-controls="$id('dropdown-button')">
                 @if ($pfp = auth()->user()->fetchFirstMedia())
-                    <img class="h-12 w-12" src="{{ $pfp['file_url'] }}" alt="Profile picture">
+                    <img class="size-12" src="{{ $pfp['file_url'] }}" alt="Profile picture">
                 @else
-                    <x-fas-circle-user class="h-12 w-12 text-white"></x-fas-circle-user>
+                    <x-fas-circle-user class="size-12 text-white" />
                 @endif
             </button>
 
