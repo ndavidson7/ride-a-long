@@ -1,34 +1,29 @@
-<div class="flex cursor-pointer flex-col gap-1 rounded border p-3 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
+<li class="min-h-60 flex cursor-pointer flex-col gap-1 rounded border bg-white p-3 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
     role="button" tabindex="0">
     <h2 class="text-lg font-semibold">{{ $ride->origin->city }}, {{ $ride->origin->state }}
         &#8594;
         {{ $ride->destination->city }}, {{ $ride->destination->state }}
     </h2>
     <div class="flex flex-wrap justify-between gap-2">
-        <span class="">{{ $ride->start_time->format('n/j \@ g:i a') }}
+        <span class="">{{ $ride->start_time->format('n-j \@ g:i a') }}
         </span>
-        <span class=""> {{ $ride->seats_open }} out of {{ $ride->seats_total }}
-            seats
-            left!
-        </span>
-        {{-- <h6 class="card-subtitle mb-2">
-            Detours Allowed: {{ $ride->detours_allowed ? 'Yes' : 'No' }}
-        </h6> --}}
+        <span class="">{{ $ride->seats_open }}/{{ $ride->seats_total }} seats left!</span>
     </div>
-    <p class="text-pretty text-sm text-gray-700">{{ $ride->description }}</p>
+    <p class="truncate text-sm text-gray-700">{{ $ride->description }}</p>
     <div class="flex flex-wrap items-center gap-1">
         @if ($ride->detours_allowed)
-            <span class="rounded-full bg-blue-300 px-2.5 py-1 text-xs font-semibold">Detours</span>
+            <span
+                class="inline-flex items-center gap-1 rounded-full bg-blue-300 px-2.5 py-1 text-xs font-semibold"><x-fas-arrows-turn-to-dots
+                    class="size-3" /> Detours</span>
         @endif
     </div>
     <div class="mt-auto">
         @if ($pfp = $ride->driver->fetchFirstMedia())
             <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
         @endif
-        <span class="">{{ $ride->driver->name }}
-        </span>
+        <span class="align-middle">{{ $ride->driver->name }}</span>
     </div>
-</div>
+</li>
 {{-- <x-buttons.button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
     data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
     type="button" size="sm">

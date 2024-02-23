@@ -21,13 +21,16 @@ class RideController extends Controller
 
     public function index(RideFilterRequest $request)
     {
+        $filters = array_filter($request->validated());
+
         return view('rides.index', [
             'entries' => ['resources/js/views/rides/index.js'],
             'rides' =>
             Ride::query()
-                ->filter($request->validated())
+                ->filter($filters)
                 ->upcoming()->paginate(7)
-                ->withQueryString()
+                ->withQueryString(),
+            'filters' => $filters,
         ]);
     }
 

@@ -1,19 +1,31 @@
 <x-layouts.app class="space-y-3" title="Ride listings" :$entries>
 
-    <x-ride-filter />
+    <div class="flex gap-2">
+        <x-ride-filter class="inline-block" />
+
+        <ul class="flex flex-wrap items-center gap-2">
+            @foreach ($filters as $filter => $value)
+                <li>
+                    <button>
+                        <x-pill class="bg-gray-300 px-3 py-1.5 text-sm">{{ $filter }}: {{ $value }}</x-pill>
+                    </button>
+                </li>
+            @endforeach
+        </ul>
+    </div>
 
     @if ($rides->count())
-        <div class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
-            <div class="rounded border shadow-lg">
+        <ol class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+            <li class="rounded border bg-white shadow-lg">
                 <a class="size-full grid place-items-center text-blue-500 hover:text-blue-700"
                     href="{{ route('rides.create') }}">
                     <x-fas-circle-plus class="size-16" /></a>
-            </div>
+            </li>
 
             @foreach ($rides as $ride)
                 <x-cards.ride.preview :$ride />
             @endforeach
-        </div>
+        </ol>
         <div>
             {{ $rides->links() }}
         </div>
