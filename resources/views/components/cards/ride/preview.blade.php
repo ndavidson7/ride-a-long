@@ -1,5 +1,5 @@
 <li class="min-h-60 flex cursor-pointer flex-col gap-1 rounded border bg-white p-3 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-    role="button" tabindex="0">
+    role="button" tabindex="0" @click="open=true">
     <h2 class="text-lg font-semibold">{{ $ride->origin->city }}, {{ $ride->origin->state }}
         &#8594;
         {{ $ride->destination->city }}, {{ $ride->destination->state }}

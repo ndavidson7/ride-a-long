@@ -1,4 +1,15 @@
-<div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">
+<div {{ $attributes->class(['aspect-video']) }} x-data="{
+    init() {
+        this.map = new mapboxgl.Map({
+            container: $el,
+            {{-- center: [-96, 37.8],
+            zoom: 3, --}}
+            performanceMetricsCollection: false,
+        });
+    }
+}"></div>
+
+{{-- <div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">
     <div class="map ratio ratio-21x9 w-100"></div>
     <div class="d-flex gap-2 align-items-center">
         <a class="btn btn-primary btn-bold" target="_blank" id="route-directions">View Directions</a>
@@ -15,4 +26,4 @@
             (<span id="running-total"></span>)
         </div>
     </li>
-</template>
+</template> --}}

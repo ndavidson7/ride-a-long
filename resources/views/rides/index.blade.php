@@ -15,21 +15,30 @@
     </div>
 
     @if ($rides->count())
-        <ol class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-            <li class="rounded border bg-white shadow-lg">
-                <a class="size-full grid place-items-center text-blue-500 hover:text-blue-700"
-                    href="{{ route('rides.create') }}">
-                    <x-fas-circle-plus class="size-16" /></a>
-            </li>
+        <x-modals.modal title="Ride info" size="lg">
 
-            @foreach ($rides as $ride)
-                <x-cards.ride.preview :$ride />
-            @endforeach
-        </ol>
-        <div>
-            {{ $rides->links() }}
-        </div>
-        {{-- <x-modals.ride /> --}}
+            <ol class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
+                <li class="rounded border bg-white shadow-lg">
+                    <a class="size-full grid place-items-center text-blue-500 hover:text-blue-700"
+                        href="{{ route('rides.create') }}">
+                        <x-fas-circle-plus class="size-16" /></a>
+                </li>
+                @foreach ($rides as $ride)
+                    <x-cards.ride.preview :$ride />
+                @endforeach
+            </ol>
+
+            <x-slot:body>
+                <x-map />
+            </x-slot:body>
+
+            <x-slot:footer>
+                <x-buttons.button size="sm">Test button</x-buttons.button>
+            </x-slot:footer>
+
+        </x-modals.modal>
+
+        {{ $rides->links() }}
     @else
         @php
             $heading = request('my-rides') ? 'You have no rides' : 'No rides available';

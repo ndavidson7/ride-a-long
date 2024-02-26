@@ -1,4 +1,4 @@
-<x-modals.modal title="Filter" {{ $attributes }}>
+<x-modals.modal title="Filter" size="sm" {{ $attributes }}>
 
     <x-slot:button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800">
         <x-fas-sliders class="size-8" />
