@@ -1,29 +1,75 @@
-<li class="min-h-60 flex cursor-pointer flex-col gap-1 rounded border bg-white p-3 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500"
-    role="button" tabindex="0" @click="open=true">
-    <h2 class="text-lg font-semibold">{{ $ride->origin->city }}, {{ $ride->origin->state }}
-        &#8594;
-        {{ $ride->destination->city }}, {{ $ride->destination->state }}
-    </h2>
-    <div class="flex flex-wrap justify-between gap-2">
-        <span class="">{{ $ride->start_time->format('n-j \@ g:i a') }}
-        </span>
-        <span class="">{{ $ride->seats_open }}/{{ $ride->seats_total }} seats left!</span>
-    </div>
-    <p class="truncate text-sm text-gray-700">{{ $ride->description }}</p>
-    <div class="flex flex-wrap items-center gap-1">
-        @if ($ride->detours_allowed)
+<div
+    class="flex cursor-pointer flex-col items-center gap-3 rounded-lg border bg-white p-4 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+    {{-- Route and dates --}}
+    <div class="flex w-full flex-col items-center gap-x-3 text-center sm:flex-row">
+
+        {{-- Origin and departure --}}
+        <div class="flex flex-col-reverse items-center justify-center sm:flex-col">
+            <h2 class="text-wrap font-bold sm:text-lg md:text-xl">
+                {{ $ride->origin->city }}, {{ $ride->origin->state }}
+            </h2>
             <span
-                class="inline-flex items-center gap-1 rounded-full bg-blue-300 px-2.5 py-1 text-xs font-semibold"><x-fas-arrows-turn-to-dots
-                    class="size-3" /> Detours</span>
-        @endif
+                class="text-sm font-medium text-gray-700 md:text-base">{{ $ride->start_time->format('M j g:i a') }}</span>
+        </div>
+
+        {{-- Divider, duration, and stops --}}
+        <div class="flex w-full flex-1 items-center justify-center gap-x-2">
+            <hr class="w-1/3 flex-1 border-t-2 border-dotted border-gray-400">
+
+            <div class="flex items-center justify-center gap-x-2 sm:flex-col">
+                <span class="text-xs font-medium md:text-sm">Xh Ym</span>
+                <x-fas-car-side class="size-6 text-gray-400" />
+                <span class="text-xs font-medium md:text-sm">
+                    @if ($ride->detours_allowed)
+                        {{ $ride->waypoints->count() }} {{ $ride->waypoints->count() == 1 ? 'stop' : 'stops' }}
+                    @else
+                        Direct
+                    @endif
+                </span>
+            </div>
+
+            <hr class="flex-1 border-t-2 border-dotted border-gray-400">
+        </div>
+
+        {{-- Destination and ETA --}}
+        <div class="flex flex-col items-center justify-center">
+            <h2 class="text-wrap font-bold sm:text-lg md:text-xl">
+                {{ $ride->destination->city }}, {{ $ride->destination->state }}
+            </h2>
+            <span class="text-sm font-medium text-gray-700 md:text-base">ETA</span>
+        </div>
+
     </div>
-    <div class="mt-auto">
-        @if ($pfp = $ride->driver->fetchFirstMedia())
-            <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
-        @endif
-        <span class="align-middle">{{ $ride->driver->name }}</span>
+
+    {{-- <p class="truncate text-sm text-gray-700">{{ $ride->description }}</p> --}}
+
+    {{-- Driver and ride info pills --}}
+    <div class="flex w-full flex-col-reverse items-center gap-3 sm:flex-row sm:justify-between">
+
+        {{-- Driver --}}
+        <div class="text-center">
+            @if ($pfp = $ride->driver->fetchFirstMedia())
+                <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
+            @endif
+            <span class="align-middle">{{ $ride->driver->name }}</span>
+        </div>
+
+        {{-- Pills --}}
+        <div class="flex flex-wrap items-center justify-center gap-1">
+            <x-pill class="gap-1 bg-blue-300 px-2.5 py-1 text-xs font-semibold">
+                {{ $ride->seats_open }} {{ $ride->seats_open == 1 ? 'seat' : 'seats' }} left
+            </x-pill>
+            @if ($ride->detours_allowed)
+                <x-pill class="gap-1 bg-blue-300 px-2.5 py-1 text-xs font-semibold">
+                    <x-fas-arrows-turn-to-dots class="size-3" /> Detours
+                </x-pill>
+            @endif
+        </div>
+
     </div>
-</li>
+
+</div>
 {{-- <x-buttons.button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
     data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
     type="button" size="sm">

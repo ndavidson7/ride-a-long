@@ -1,4 +1,4 @@
-<x-layouts.app class="space-y-3" title="Ride listings" :$entries>
+<x-layouts.app class="mx-auto max-w-5xl space-y-3" title="Ride listings" :$entries>
 
     <div class="flex gap-2">
         <x-ride-filter class="inline-block" />
@@ -12,24 +12,40 @@
                 </li>
             @endforeach
         </ul>
+
+        <a class="ms-auto rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
+            href="{{ route('rides.create') }}">
+            <x-fas-plus class="size-8" />
+        </a>
     </div>
 
     @if ($rides->count())
         <x-modals.modal title="Ride info" size="lg">
 
-            <ol class="grid auto-rows-fr grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
-                <li class="rounded border bg-white shadow-lg">
-                    <a class="size-full grid place-items-center text-blue-500 hover:text-blue-700"
-                        href="{{ route('rides.create') }}">
-                        <x-fas-circle-plus class="size-16" /></a>
-                </li>
+            {{-- sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 --}}
+            <ol class="grid auto-rows-fr grid-cols-1 gap-4">
                 @foreach ($rides as $ride)
-                    <x-cards.ride.preview :$ride />
+                    <li data-ride="{{ $ride->id }}" role="button" tabindex="0"
+                        @click="open=true; $dispatch('mapupdate', $el.dataset.ride);">
+                        <x-cards.ride.preview :$ride />
+                    </li>
                 @endforeach
             </ol>
 
             <x-slot:body>
                 <x-map />
+
+                <ol class="space-y-3 pl-1">
+                    <li
+                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:bottom-0 before:left-1 before:top-1/2 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
+                        first</li>
+                    <li
+                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-3 before:-top-3 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
+                        second</li>
+                    <li
+                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:bottom-1/2 before:left-1 before:top-0 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
+                        third</li>
+                </ol>
             </x-slot:body>
 
             <x-slot:footer>

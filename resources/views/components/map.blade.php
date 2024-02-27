@@ -1,13 +1,30 @@
 <div {{ $attributes->class(['aspect-video']) }} x-data="{
+    ride: null,
+
     init() {
         this.map = new mapboxgl.Map({
             container: $el,
-            {{-- center: [-96, 37.8],
-            zoom: 3, --}}
+            minZoom: 2,
             performanceMetricsCollection: false,
         });
-    }
-}"></div>
+
+        this.directions = new MapboxDirections({
+            accessToken: mapboxgl.accessToken,
+            interactive: false,
+            profile: 'mapbox/driving',
+            controls: {
+                inputs: false,
+                instructions: false,
+                profileSwitcher: false,
+            }
+        });
+
+        this.map.addControl(this.directions);
+    },
+
+
+}" @mapupdate.window="console.log($event.detail)">
+</div>
 
 {{-- <div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">
     <div class="map ratio ratio-21x9 w-100"></div>
