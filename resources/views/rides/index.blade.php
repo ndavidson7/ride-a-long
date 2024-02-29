@@ -26,7 +26,7 @@
             <ol class="grid auto-rows-fr grid-cols-1 gap-4">
                 @foreach ($rides as $ride)
                     <li data-ride="{{ $ride->id }}" role="button" tabindex="0"
-                        @click="open=true; $dispatch('mapupdate', $el.dataset.ride);">
+                        @click="open=true; $dispatch('mapupdate', { rideId: $el.dataset.ride });">
                         <x-cards.ride.preview :$ride />
                     </li>
                 @endforeach
