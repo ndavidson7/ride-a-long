@@ -20,13 +20,16 @@
     </div>
 
     @if ($rides->count())
-        <x-modals.modal title="Ride info" size="lg">
+        <x-modals.modal title="Ride info" size="lg" :x-data="['ride' => null]">
 
             {{-- sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 --}}
             <ol class="grid auto-rows-fr grid-cols-1 gap-4">
                 @foreach ($rides as $ride)
-                    <li data-ride="{{ $ride->id }}" role="button" tabindex="0"
+                    {{-- <li data-ride="{{ $ride->id }}" role="button" tabindex="0"
                         @click="open=true; $dispatch('mapupdate', { rideId: $el.dataset.ride });">
+                        <x-cards.ride.preview :$ride />
+                    </li> --}}
+                    <li data-ride="{{ $ride->id }}" role="button" tabindex="0" @click="open=true;">
                         <x-cards.ride.preview :$ride />
                     </li>
                 @endforeach

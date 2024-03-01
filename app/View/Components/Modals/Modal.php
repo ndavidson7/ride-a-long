@@ -8,12 +8,15 @@ use Illuminate\Contracts\View\View;
 
 class Modal extends Component
 {
+    public array $xData = ['open' => false];
+
     /**
      * Create a new component instance.
      */
     public function __construct(
-        public string $title
+        array $xData = [],
     ) {
+        $this->xData = array_merge($this->xData, $xData);
     }
 
     /**

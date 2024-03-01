@@ -1,6 +1,6 @@
 @props(['button' => null, 'body', 'footer', 'size' => null, 'title' => ''])
 
-<div {{ $attributes }} x-data="{ open: false }" @keydown.escape.window="open = false" :class="{ 'z-40': open }">
+<div {{ $attributes }} x-data="{{ Js::from($xData) }}" @keydown.escape.window="open = false" :class="{ 'z-40': open }">
 
     @if ($button)
         <button type="button" {{ $button->attributes->class(['inline-flex', 'items-center', 'justify-center']) }}
