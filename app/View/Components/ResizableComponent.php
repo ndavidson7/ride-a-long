@@ -7,7 +7,6 @@ use Illuminate\View\Component;
 abstract class ResizableComponent extends Component
 {
     private static array $sizes = ['sm', 'md', 'lg'];
-    private static string $defaultSize = 'md';
 
     public string $size;
 
@@ -16,8 +15,12 @@ abstract class ResizableComponent extends Component
      * 
      * @param string $size The size of the input (sm, md, lg)
      */
-    public function __construct(?string $size = null)
+    public function __construct(string $size)
     {
-        $this->size = in_array($size, self::$sizes) ? $size : self::$defaultSize;
+        if (!in_array($size, self::$sizes)) {
+            throw new \InvalidArgumentException("Invalid size: $size. Valid sizes are: " . implode(', ', self::$sizes));
+        }
+
+        $this->size = $size;
     }
 }

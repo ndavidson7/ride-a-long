@@ -82,7 +82,7 @@
     },
 
     async fetchData(rideId) {
-        if (!rideId) throw new TypeError(`Missing argument 'rideId'`);
+        if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
 
         return fetch(route('rides.show', rideId), {
                 headers: { Accept: 'application/json' },

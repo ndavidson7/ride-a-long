@@ -22,7 +22,7 @@
         longitude: '{{ $address?->longitude }}'
     },
     resultsShown: false
-}" x-effect="console.log({resultsShown}, {address})">
+}">
     <x-inputs.input ::value="address.formattedAddress" {{ $attributes }} autocomplete="off" x-data="{
         checkIfSelected() {
                 resultsShown = false;
