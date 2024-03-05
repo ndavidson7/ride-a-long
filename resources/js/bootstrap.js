@@ -31,9 +31,8 @@ import mapboxgl from "mapbox-gl";
 mapboxgl.accessToken = token;
 window.mapboxgl = mapboxgl;
 
-import MapboxDirections from "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions";
-import "@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css";
-window.MapboxDirections = MapboxDirections;
+import createMapboxDirections from "@mapbox/mapbox-sdk/services/directions";
+window.createMapboxDirections = createMapboxDirections;
 
 // Radar
 import Radar from "radar-sdk-js";

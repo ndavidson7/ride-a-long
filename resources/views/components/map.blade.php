@@ -1,12 +1,11 @@
-@props(['type' => 'rideModal'])
-
 <div {{ $attributes->class(['aspect-video']) }} x-data="{
-    type: '{{ $type }}',
     map: null,
-    directions: null,
-    origin: { lng: null, lat: null },
-    waypoints: null,
-    destination: { lng: null, lat: null },
+    directionsClient: null,
+    route: {
+        origin: [],
+        waypoints: [],
+        destination: [],
+    },
 
     init() {
         this.map = new mapboxgl.Map({
@@ -16,69 +15,107 @@
             performanceMetricsCollection: false,
         });
 
-        this.directions = new MapboxDirections({
-            accessToken: mapboxgl.accessToken,
-            interactive: false,
-            profile: 'mapbox/driving',
-            controls: {
-                inputs: false,
-                instructions: false,
-                profileSwitcher: false,
-            },
-            flyTo: false,
-        });
+        this.directionsClient = createMapboxDirections({ accessToken: mapboxgl.accessToken });
 
-        this.map.addControl(this.directions);
-
-        $watch('origin', value => {
-            if (!isValidPoint(value)) return;
-
-            this.directions.setOrigin([value.lng, value.lat]);
-        });
-        $watch('waypoints', value => {
-            value.forEach((waypoint, index) => {
-                if (!isValidPoint(waypoint)) return;
-
-                this.directions.addWaypoint(index, [waypoint.lng, waypoint.lat]);
-            });
-        });
-        $watch('destination', value => {
-            if (!isValidPoint(value)) return;
-
-            this.directions.setDestination([value.lng, value.lat]);
+        $watch('route', value => {
+            console.log('Map received route: ', value);
+            this.getDirections();
         });
     },
 
-    isValidPoint(point) {
-        return point.lng && point.lat;
-    },
+    update(directions) {
+        console.log(directions);
 
-    setOrigin(origin) {
-        this.directions.setOrigin(origin);
-    },
+        this.map.resize();
 
-    setWaypoints(waypoints) {
-        waypoints.forEach(waypoint => this.directions.addWaypoint(waypoint));
-    },
-
-    setDestination(destination) {
-        this.directions.setDestination(destination);
-    },
-
-    async update(args) {
-        switch (this.type) {
-            case 'rideModal':
-                this.directions.removeRoutes();
-                $nextTick(() => this.map.resize());
-
-                const data = await this.fetchData(args.rideId);
-                console.log(data);
-                this.directions.setOrigin([data.origin.longitude, data.origin.latitude]);
-                data.waypoints.forEach((waypoint, index) => this.directions.addWaypoint(index, [waypoint.address.longitude, waypoint.address.latitude]));
-                this.directions.setDestination([data.destination.longitude, data.destination.latitude]);
-
-                break;
+        if (this.map.getLayer('route')) {
+            this.map.removeLayer('route');
         }
+
+        if (this.map.getSource('route')) {
+            this.map.removeSource('route');
+        }
+
+        this.map.addSource('route', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: [{
+                        type: 'Feature',
+                        properties: {},
+                        geometry: directions.routes[0].geometry,
+                    },
+                    ...directions.waypoints.map(waypoint => {
+                        return {
+                            type: 'Feature',
+                            properties: {},
+                            geometry: {
+                                type: 'Point',
+                                coordinates: waypoint.location,
+                            },
+                        };
+                    })
+                ]
+            },
+        });
+
+        this.map.addLayer({
+            id: 'route',
+            type: 'line',
+            source: 'route',
+            layout: {
+                'line-join': 'round',
+                'line-cap': 'round'
+            },
+            paint: {
+                'line-color': '#BF93E4',
+                'line-width': 5
+            },
+            filter: ['==', '$type', 'LineString']
+        });
+
+        this.map.addLayer({
+            id: 'waypoints',
+            type: 'circle',
+            source: 'route',
+            paint: {
+                'circle-radius': 5,
+                'circle-color': '#000000',
+            },
+            filter: ['==', '$type', 'Point']
+        });
+
+        const coordinates = directions.routes[0].geometry.coordinates;
+
+        const bounds = coordinates.reduce((bounds, coord) => {
+            return bounds.extend(coord);
+        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+
+        this.map.fitBounds(bounds, {
+            padding: 40,
+        });
+    },
+
+    getDirections() {
+        this.directionsClient.getDirections({
+                waypoints: [{
+                        coordinates: this.route.origin,
+                    },
+                    ...this.route.waypoints.map(waypoint => {
+                        return {
+                            coordinates: waypoint,
+                        };
+                    }),
+                    {
+                        coordinates: this.route.destination,
+                    }
+                ],
+                geometries: 'geojson',
+            })
+            .send()
+            .then(response => {
+                this.update(response.body);
+            });
     },
 
     async fetchData(rideId) {
@@ -92,7 +129,7 @@
                 return data;
             });
     }
-}" @mapupdate.window="update($event.detail)">
+}">
 </div>
 
 {{-- <div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">

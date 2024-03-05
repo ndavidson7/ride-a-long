@@ -1,8 +1,9 @@
 @props(['size' => null, 'title' => '', 'xData' => '{}'])
 
 <template x-teleport="body" {{ $attributes }} x-data="{ open: false, ...{!! $xData !!} }" @keydown.escape.window="open = false"
-    @modal:open.window="open = $event.detail.id == $el.id"
-    @modal:update.window="if ($event.detail.id != $el.id) return; update($event.detail.args);" :class="{ 'z-40': open }">
+    @modal:open.window="open = $event.detail.id === $el.id"
+    @modal:update.window="if ($event.detail.id !== $el.id) return; update($event.detail.args);"
+    :class="{ 'z-40': open }">
     <div class="fixed left-0 top-0 z-[99] flex h-screen w-screen items-center justify-center" x-show="open" x-cloak>
         {{-- Background blur --}}
         <div class="absolute inset-0 h-full w-full cursor-pointer bg-white bg-opacity-70 backdrop-blur-sm" x-show="open"

@@ -34,23 +34,17 @@
     </div>
 
     @if ($rides->count())
-        {{-- sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 --}}
         <ol class="grid auto-rows-fr grid-cols-1 gap-4">
             @foreach ($rides as $ride)
-                {{-- <li data-ride="{{ $ride->id }}" role="button" tabindex="0"
-                    @click="open=true; $dispatch('mapupdate', { rideId: $el.dataset.ride });">
-                    <x-cards.ride.preview :$ride />
-                </li> --}}
                 <li>
-                    {{-- data-ride-id="{{ $ride->id }}" x-data @click="$dispatch('modal:update', { id: modalId, args: { rideId: $el.dataset.rideId } })" --}}
-                    <x-modal.trigger modal-id="ride-info">
+                    <x-modal.trigger modal-id="ride-info" x-data="{ rideId: {{ $ride->id }} }"
+                        @click="$dispatch('modal:update', { id: modalId, args: { rideId: rideId } });">
                         <x-cards.ride.preview :$ride />
                     </x-modal.trigger>
                 </li>
             @endforeach
         </ol>
 
-        {{-- :x-data="['ride' => null]" --}}
         <x-modal id="ride-info" title="Ride info" size="lg" x-data="{
             ride: null,
         
@@ -66,31 +60,34 @@
                     });
             },
         
-            async update(rideId) {
-                this.ride = await this.fetchData(rideId);
+            async update(args) {
+                if (args.rideId === undefined) throw new TypeError(`Missing arguments property 'rideId'`);
+        
+                this.ride = await this.fetchData(args.rideId);
             }
         }" x-effect="console.log(ride)">
             <x-slot:body>
-                <x-map />
+                <x-map x-init="$watch('ride', value => {
+                    route = {
+                        origin: [+value?.origin?.longitude, +value?.origin?.latitude],
+                        waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
+                        destination: [+value?.destination?.longitude, +value?.destination?.latitude]
+                    };
+                })" />
 
                 <ol class="space-y-3 pl-1">
-                    <li
-                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:bottom-0 before:left-1 before:top-1/2 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
-                        first</li>
-                    <li
-                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-3 before:-top-3 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
-                        second</li>
-                    <li
-                        class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:bottom-1/2 before:left-1 before:top-0 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet">
-                        third</li>
+                    <template
+                        x-for="(stop, index) in [ride?.origin, ...Array.from(ride?.waypoints ?? [], (waypoint) => waypoint.address), ride?.destination]">
+                        <li class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-1.5 before:-top-1.5 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet"
+                            x-text="stop?.address"
+                            :class="index === 0 ? 'before:!top-1/2' : stop === ride?.destination ? 'before:!bottom-1/2' : ''">
+                        </li>
+                    </template>
                 </ol>
-                {{-- <template x-for="">
-
-                </template> --}}
             </x-slot:body>
 
             <x-slot:footer>
-                <x-buttons.button size="sm">Test button</x-buttons.button>
+                <x-buttons.anchor ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request</x-buttons.anchor>
             </x-slot:footer>
         </x-modal>
 
