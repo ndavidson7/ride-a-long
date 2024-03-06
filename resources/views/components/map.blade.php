@@ -1,11 +1,7 @@
 <div {{ $attributes->class(['aspect-video']) }} x-data="{
     map: null,
     directionsClient: null,
-    route: {
-        origin: [],
-        waypoints: [],
-        destination: [],
-    },
+    bounds: null,
     markers: [],
 
     init() {
@@ -17,74 +13,75 @@
         });
 
         this.directionsClient = createMapboxDirections({ accessToken: mapboxgl.accessToken });
-
-        $watch('route', value => {
-            console.log('Map received route: ', value);
-            this.getDirections();
-        });
     },
 
-    update(directions) {
-        console.log(directions);
+    async update(route) {
+        console.log('Map received route: ', route);
+        const directions = await this.getDirections(route);
+        console.log('Directions: ', directions);
 
-        this.map.resize();
+        this.renderDirections(directions);
 
-        if (this.map.getLayer('route')) {
-            this.map.removeLayer('route');
-        }
+        const coordinates = directions.routes[0].geometry.coordinates;
+        this.bounds = coordinates.reduce((bounds, coord) => {
+            return bounds.extend(coord);
+        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
+    },
 
-        if (this.map.getSource('route')) {
-            this.map.removeSource('route');
-        }
-
-        this.map.addSource('route', {
-            type: 'geojson',
-            data: {
-                type: 'FeatureCollection',
-                features: [{
-                        type: 'Feature',
-                        properties: {},
-                        geometry: directions.routes[0].geometry,
+    async getDirections(route) {
+        return this.directionsClient.getDirections({
+                waypoints: [{
+                        coordinates: route.origin,
                     },
-                    {{-- ...directions.waypoints.map(waypoint => {
+                    ...route.waypoints.map(waypoint => {
                         return {
-                            type: 'Feature',
-                            properties: {},
-                            geometry: {
-                                type: 'Point',
-                                coordinates: waypoint.location,
-                            },
+                            coordinates: waypoint,
                         };
-                    }) --}}
-                ]
-            },
-        });
+                    }),
+                    {
+                        coordinates: route.destination,
+                    }
+                ],
+                geometries: 'geojson',
+            })
+            .send()
+            .then(response => {
+                return response.body;
+            });
+    },
 
-        this.map.addLayer({
-            id: 'route',
-            type: 'line',
-            source: 'route',
-            layout: {
-                'line-join': 'round',
-                'line-cap': 'round'
-            },
-            paint: {
-                'line-color': '#BF93E4',
-                'line-width': 5
-            },
-            filter: ['==', '$type', 'LineString']
-        });
+    renderDirections(directions) {
+        const geojsonData = {
+            type: 'Feature',
+            properties: {},
+            geometry: directions.routes[0].geometry,
+        };
 
-        {{-- this.map.addLayer({
-            id: 'waypoints',
-            type: 'circle',
-            source: 'route',
-            paint: {
-                'circle-radius': 5,
-                'circle-color': '#000000',
-            },
-            filter: ['==', '$type', 'Point']
-        }); --}}
+        const source = this.map.getSource('route');
+        if (source) {
+            source.setData(geojsonData);
+        } else {
+            this.map.addSource('route', {
+                type: 'geojson',
+                data: geojsonData,
+            });
+        }
+
+        if (!this.map.getLayer('route')) {
+            this.map.addLayer({
+                id: 'route',
+                type: 'line',
+                source: 'route',
+                layout: {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                paint: {
+                    'line-color': '#BF93E4',
+                    'line-width': 5
+                }
+            });
+        }
 
         {{-- Add markers for each waypoint --}}
         this.markers.forEach(marker => {
@@ -96,55 +93,12 @@
         directions.waypoints.forEach(waypoint => {
             this.markers.push(new mapboxgl.Marker({ color: 'black' })
                 .setLngLat(waypoint.location)
-                .setPopup(new mapboxgl.Popup().setText(waypoint.name))
+                .setPopup(new mapboxgl.Popup({ className: '[&_.mapboxgl-popup-close-button]:px-1.5' }).setText(waypoint.name))
                 .addTo(this.map));
         });
-
-        const coordinates = directions.routes[0].geometry.coordinates;
-
-        const bounds = coordinates.reduce((bounds, coord) => {
-            return bounds.extend(coord);
-        }, new mapboxgl.LngLatBounds(coordinates[0], coordinates[0]));
-
-        this.map.fitBounds(bounds, {
-            padding: 40,
-        });
     },
-
-    getDirections() {
-        this.directionsClient.getDirections({
-                waypoints: [{
-                        coordinates: this.route.origin,
-                    },
-                    ...this.route.waypoints.map(waypoint => {
-                        return {
-                            coordinates: waypoint,
-                        };
-                    }),
-                    {
-                        coordinates: this.route.destination,
-                    }
-                ],
-                geometries: 'geojson',
-            })
-            .send()
-            .then(response => {
-                this.update(response.body);
-            });
-    },
-
-    async fetchData(rideId) {
-        if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
-
-        return fetch(route('rides.show', rideId), {
-                headers: { Accept: 'application/json' },
-            })
-            .then((response) => response.json())
-            .then((data) => {
-                return data;
-            });
-    }
-}">
+}"
+    x-intersect="map.resize(); map.fitBounds(bounds, { animate: false, padding: 40, });">
 </div>
 
 {{-- <div {{ $attributes->merge(['class' => 'd-flex flex-column row-gap-2 placeholder-glow']) }} id="map-component">

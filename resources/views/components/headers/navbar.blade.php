@@ -42,6 +42,7 @@
                 'after:w-2.5',
                 'after:rounded-full',
                 'after:bg-red-500',
+                'after:animate-ping',
                 'after:hidden' => !auth()->user()->unreadNotifications()->exists(),
             ]) x-ref="button" x-on:click="toggle()"
                 :aria-expanded="open" :aria-controls="$id('dropdown-button')">

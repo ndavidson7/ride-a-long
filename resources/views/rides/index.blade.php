@@ -47,6 +47,7 @@
 
         <x-modal id="ride-info" title="Ride info" size="lg" x-data="{
             ride: null,
+            loading: false,
         
             async fetchData(rideId) {
                 if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
@@ -54,8 +55,8 @@
                 return fetch(route('rides.show', rideId), {
                         headers: { Accept: 'application/json' },
                     })
-                    .then((response) => response.json())
-                    .then((data) => {
+                    .then(response => response.json())
+                    .then(data => {
                         return data;
                     });
             },
@@ -63,27 +64,44 @@
             async update(args) {
                 if (args.rideId === undefined) throw new TypeError(`Missing arguments property 'rideId'`);
         
+                if (args.rideId === this.ride?.id) return;
+        
+                this.loading = true;
                 this.ride = await this.fetchData(args.rideId);
             }
-        }" x-effect="console.log(ride)">
+        }"
+            x-effect="console.log('Ride:',ride)">
             <x-slot:body>
-                <x-map x-init="$watch('ride', value => {
-                    route = {
-                        origin: [+value?.origin?.longitude, +value?.origin?.latitude],
-                        waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
-                        destination: [+value?.destination?.longitude, +value?.destination?.latitude]
-                    };
-                })" />
+                <div class="animate-pulse space-y-3" x-show="loading">
+                    <div class="aspect-video bg-gray-300"></div>
+                    <div class="space-y-3">
+                        <div class="h-6 w-1/2 rounded bg-gray-300"></div>
+                        <div class="h-6 w-2/3 rounded bg-gray-300"></div>
+                        <div class="h-6 w-1/3 rounded bg-gray-300"></div>
+                    </div>
+                </div>
 
-                <ol class="space-y-3 pl-1">
-                    <template
-                        x-for="(stop, index) in [ride?.origin, ...Array.from(ride?.waypoints ?? [], (waypoint) => waypoint.address), ride?.destination]">
-                        <li class="after:size-2.5 relative bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-1.5 before:-top-1.5 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet"
-                            x-text="stop?.address"
-                            :class="index === 0 ? 'before:!top-1/2' : stop === ride?.destination ? 'before:!bottom-1/2' : ''">
-                        </li>
-                    </template>
-                </ol>
+                <div class="space-y-2" x-show="!loading">
+                    <x-map x-init="$watch('ride', async value => {
+                        await update({
+                            origin: [+value?.origin?.longitude, +value?.origin?.latitude],
+                            waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
+                            destination: [+value?.destination?.longitude, +value?.destination?.latitude]
+                        });
+                    
+                        loading = false;
+                    })" />
+                    <ol class="pl-1">
+                        <template
+                            x-for="(stop, index) in [ride?.origin, ...(ride?.waypoints?.map(waypoint => waypoint.address) ?? []), ride?.destination]">
+                            <li class="after:size-2.5 relative mt-3 bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-1.5 before:-top-1.5 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet"
+                                x-text="stop?.address"
+                                :class="index === 0 ? 'before:!top-1/2 !mt-0' : stop === ride?.destination ?
+                                    'before:!bottom-1/2' : ''">
+                            </li>
+                        </template>
+                    </ol>
+                </div>
             </x-slot:body>
 
             <x-slot:footer>
