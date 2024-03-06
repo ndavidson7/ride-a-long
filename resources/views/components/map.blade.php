@@ -6,6 +6,7 @@
         waypoints: [],
         destination: [],
     },
+    markers: [],
 
     init() {
         this.map = new mapboxgl.Map({
@@ -45,7 +46,7 @@
                         properties: {},
                         geometry: directions.routes[0].geometry,
                     },
-                    ...directions.waypoints.map(waypoint => {
+                    {{-- ...directions.waypoints.map(waypoint => {
                         return {
                             type: 'Feature',
                             properties: {},
@@ -54,7 +55,7 @@
                                 coordinates: waypoint.location,
                             },
                         };
-                    })
+                    }) --}}
                 ]
             },
         });
@@ -74,7 +75,7 @@
             filter: ['==', '$type', 'LineString']
         });
 
-        this.map.addLayer({
+        {{-- this.map.addLayer({
             id: 'waypoints',
             type: 'circle',
             source: 'route',
@@ -83,6 +84,20 @@
                 'circle-color': '#000000',
             },
             filter: ['==', '$type', 'Point']
+        }); --}}
+
+        {{-- Add markers for each waypoint --}}
+        this.markers.forEach(marker => {
+            marker.getPopup().remove();
+            marker.remove()
+        });
+        this.markers = [];
+
+        directions.waypoints.forEach(waypoint => {
+            this.markers.push(new mapboxgl.Marker({ color: 'black' })
+                .setLngLat(waypoint.location)
+                .setPopup(new mapboxgl.Popup().setText(waypoint.name))
+                .addTo(this.map));
         });
 
         const coordinates = directions.routes[0].geometry.coordinates;
