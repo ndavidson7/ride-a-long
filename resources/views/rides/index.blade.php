@@ -6,7 +6,7 @@
             <x-fas-sliders class="size-8" />
         </x-modal.button>
 
-        <x-modal id="ride-filter" title="Filter" size="sm">
+        <x-modal class="sm:max-w-lg" id="ride-filter" title="Filter">
             <x-slot:body>
                 <x-ride-filter />
             </x-slot:body>
@@ -45,7 +45,7 @@
             @endforeach
         </ol>
 
-        <x-modal id="ride-info" title="Ride info" size="lg" x-data="{
+        <x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info" x-data="{
             ride: null,
             loading: false,
         
@@ -68,43 +68,87 @@
         
                 this.loading = true;
                 this.ride = await this.fetchData(args.rideId);
+            },
+        
+            constructDirectionsUrl(addresses) {
+                const apple = navigator.userAgent.includes('Mac OS');
+        
+                if (Array.isArray(addresses)) {
+                    return apple ?
+                        `maps://https://maps.apple.com/?dirflg=d&saddr=${
+                                                                      addresses[0].latitude
+                                                                  }%2C${addresses[0].longitude}&daddr=${addresses
+                                                                      .flatMap((address, index) =>
+                                                                          index > 0
+                                                                              ? `${address.latitude}%2C${address.longitude}`
+                                                                              : [],
+                                                                      )
+                                                                      .join('&daddr=')}` :
+                        `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
+                                                                      addresses[0].latitude
+                                                                  }%2C${addresses[0].longitude}&destination=${
+                                                                      addresses[addresses.length - 1].latitude
+                                                                  }%2C${addresses[addresses.length - 1].longitude}&waypoints=${
+                                                                      addresses.length > 2
+                                                                          ? addresses
+                                                                                .flatMap((address, index) =>
+                                                                                    index > 0 && index < addresses.length - 1
+                                                                                        ? `${address.latitude}%2C${address.longitude}`
+                                                                                        : [],
+                                                                                )
+                                                                                .join('%7C')
+                                                                          : ''
+                                                                  }`;
+                } else if (typeof addresses === 'object') {
+                    return apple ?
+                        `maps://https://maps.apple.com/?q=${addresses.latitude}%2C${addresses.longitude}` :
+                        `https://www.google.com/maps/search/?api=1&query=${addresses.latitude}%2C${addresses.longitude}`;
+                } else {
+                    throw new TypeError(
+                        'MapComponent.constructDirectionsUrl() requires an object or array of objects.',
+                    );
+                }
             }
         }"
             x-effect="console.log('Ride:',ride)">
             <x-slot:body>
-                <div class="animate-pulse space-y-3" x-show="loading">
-                    <div class="aspect-video bg-gray-300"></div>
-                    <div class="space-y-3">
-                        <div class="h-6 w-1/2 rounded bg-gray-300"></div>
-                        <div class="h-6 w-2/3 rounded bg-gray-300"></div>
-                        <div class="h-6 w-1/3 rounded bg-gray-300"></div>
-                    </div>
+                <div class="relative space-y-4 lg:space-y-0" x-show="loading">
+                    <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
+                    {{-- <div
+                        class="left-2.5 top-2.5 divide-y divide-[#ddd] rounded-lg bg-white shadow-[0_0_0_2px_rgba(0,0,0,.1)] lg:absolute">
+                        <div class="flex flex-wrap items-center gap-3 p-3">
+                            <div class="space-x-1">
+                                <x-fas-route class="size-5 inline-block text-neutral-600" />
+                                <span class="h-6 w-10 animate-pulse bg-neutral-600 align-middle"></span>
+                            </div>
+                            <div class="space-x-1">
+                                <x-fas-clock class="size-5 inline-block text-neutral-600" />
+                                <span class="h-6 w-10 animate-pulse bg-neutral-600"></span>
+                            </div>
+                        </div>
+                        <div class="animate-pulse">
+                            <div class="h-6 w-32 rounded bg-gray-300 p-3"></div>
+                            <div class="h-6 w-40 rounded bg-gray-300 p-3"></div>
+                            <div class="h-6 w-28 rounded bg-gray-300 p-3"></div>
+                        </div>
+                    </div> --}}
                 </div>
 
-                <div class="space-y-2" x-show="!loading">
-                    <x-map x-init="$watch('ride', async value => {
-                        await update({
-                            origin: [+value?.origin?.longitude, +value?.origin?.latitude],
-                            waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
-                            destination: [+value?.destination?.longitude, +value?.destination?.latitude]
-                        });
-                    
-                        loading = false;
-                    })" />
-                    <ol class="pl-1">
-                        <template
-                            x-for="(stop, index) in [ride?.origin, ...(ride?.waypoints?.map(waypoint => waypoint.address) ?? []), ride?.destination]">
-                            <li class="after:size-2.5 relative mt-3 bg-contain bg-no-repeat pl-4 before:absolute before:-bottom-1.5 before:-top-1.5 before:left-1 before:w-0.5 before:bg-gray-700 after:absolute after:left-0 after:top-1/2 after:-translate-y-1/2 after:bg-list-bullet"
-                                x-text="stop?.address"
-                                :class="index === 0 ? 'before:!top-1/2 !mt-0' : stop === ride?.destination ?
-                                    'before:!bottom-1/2' : ''">
-                            </li>
-                        </template>
-                    </ol>
-                </div>
+                <x-map x-show="!loading" x-init="$watch('ride', async value => {
+                    await update({
+                        origin: [+value?.origin?.longitude, +value?.origin?.latitude],
+                        waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
+                        destination: [+value?.destination?.longitude, +value?.destination?.latitude]
+                    });
+                
+                    loading = false;
+                })" />
             </x-slot:body>
 
             <x-slot:footer>
+                <x-buttons.anchor target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address), ride
+                    .destination
+                ]) : ''" size="sm">View directions</x-buttons.anchor>
                 <x-buttons.anchor ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request</x-buttons.anchor>
             </x-slot:footer>
         </x-modal>
