@@ -73,65 +73,47 @@
             constructDirectionsUrl(addresses) {
                 const apple = navigator.userAgent.includes('Mac OS');
         
+                {{-- blade-formatter-disable --}}
                 if (Array.isArray(addresses)) {
-                    return apple ?
-                        `maps://https://maps.apple.com/?dirflg=d&saddr=${
-                                                                      addresses[0].latitude
-                                                                  }%2C${addresses[0].longitude}&daddr=${addresses
-                                                                      .flatMap((address, index) =>
-                                                                          index > 0
-                                                                              ? `${address.latitude}%2C${address.longitude}`
-                                                                              : [],
-                                                                      )
-                                                                      .join('&daddr=')}` :
-                        `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
-                                                                      addresses[0].latitude
-                                                                  }%2C${addresses[0].longitude}&destination=${
-                                                                      addresses[addresses.length - 1].latitude
-                                                                  }%2C${addresses[addresses.length - 1].longitude}&waypoints=${
-                                                                      addresses.length > 2
-                                                                          ? addresses
-                                                                                .flatMap((address, index) =>
-                                                                                    index > 0 && index < addresses.length - 1
-                                                                                        ? `${address.latitude}%2C${address.longitude}`
-                                                                                        : [],
-                                                                                )
-                                                                                .join('%7C')
-                                                                          : ''
-                                                                  }`;
+                    return apple
+                        ? `maps://https://maps.apple.com/?dirflg=d&saddr=${
+                                addresses[0].latitude
+                            }%2C${addresses[0].longitude}&daddr=${addresses
+                                .flatMap((address, index) =>
+                                    index > 0
+                                        ? `${address.latitude}%2C${address.longitude}`
+                                        : [],
+                                )
+                                .join('&daddr=')}`
+                        : `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
+                                addresses[0].latitude
+                            }%2C${addresses[0].longitude}&destination=${
+                                addresses[addresses.length - 1].latitude
+                            }%2C${addresses[addresses.length - 1].longitude}&waypoints=${
+                                addresses.length > 2
+                                    ? addresses
+                                        .flatMap((address, index) =>
+                                            index > 0 && index < addresses.length - 1
+                                                ? `${address.latitude}%2C${address.longitude}`
+                                                : [],
+                                        )
+                                        .join('%7C')
+                                    : ''
+                            }`;
                 } else if (typeof addresses === 'object') {
                     return apple ?
                         `maps://https://maps.apple.com/?q=${addresses.latitude}%2C${addresses.longitude}` :
                         `https://www.google.com/maps/search/?api=1&query=${addresses.latitude}%2C${addresses.longitude}`;
                 } else {
-                    throw new TypeError(
-                        'MapComponent.constructDirectionsUrl() requires an object or array of objects.',
-                    );
+                    throw new TypeError('Argument must be an object or array of objects:', addresses);
                 }
+                {{-- blade-formatter-enable --}}
             }
         }"
             x-effect="console.log('Ride:',ride)">
             <x-slot:body>
                 <div class="relative space-y-4 lg:space-y-0" x-show="loading">
                     <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
-                    {{-- <div
-                        class="left-2.5 top-2.5 divide-y divide-[#ddd] rounded-lg bg-white shadow-[0_0_0_2px_rgba(0,0,0,.1)] lg:absolute">
-                        <div class="flex flex-wrap items-center gap-3 p-3">
-                            <div class="space-x-1">
-                                <x-fas-route class="size-5 inline-block text-neutral-600" />
-                                <span class="h-6 w-10 animate-pulse bg-neutral-600 align-middle"></span>
-                            </div>
-                            <div class="space-x-1">
-                                <x-fas-clock class="size-5 inline-block text-neutral-600" />
-                                <span class="h-6 w-10 animate-pulse bg-neutral-600"></span>
-                            </div>
-                        </div>
-                        <div class="animate-pulse">
-                            <div class="h-6 w-32 rounded bg-gray-300 p-3"></div>
-                            <div class="h-6 w-40 rounded bg-gray-300 p-3"></div>
-                            <div class="h-6 w-28 rounded bg-gray-300 p-3"></div>
-                        </div>
-                    </div> --}}
                 </div>
 
                 <x-map x-show="!loading" x-init="$watch('ride', async value => {

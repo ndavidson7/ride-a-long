@@ -1,4 +1,4 @@
-<div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0']) }} x-data="{
+<div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0', 'group']) }} x-data="{
     map: null,
     directionsClient: null,
     bounds: null,
@@ -126,16 +126,35 @@
         });
     },
 
-    metersToMiles(meters) {
-        return (meters / 1609.34).toFixed(1) + ' miles';
+    metersToMiles(meters, verbose = false) {
+        return (meters / 1609.34).toFixed(1) + (verbose ? ' miles' : 'mi');
     },
 
-    secondsToHoursMins(seconds) {
+    secondsToHoursMins(seconds, verbose = false) {
         const hours = Math.floor(seconds / 3600);
         const mins = Math.floor((seconds % 3600) / 60);
-        const hDisplay = hours > 0 ? `${hours} hour${hours !== 1 ? 's' : ''}` : '';
-        const mDisplay = mins > 0 ? `${mins} minute${mins !== 1 ? 's' : ''}` : '';
-        return `${hDisplay} ${mDisplay}`;
+
+        let ret = '';
+
+        {{-- blade-formatter-disable --}}
+        if (hours > 0) {
+            ret += hours + (verbose
+                ? ' hour' + hours > 1
+                    ? 's'
+                    : ''
+                : 'h');
+        }
+
+        if (mins > 0) {
+            ret += mins + (verbose
+                ? ' minute' + mins > 1
+                    ? 's'
+                    : ''
+                : 'm');
+        }
+        {{-- blade-formatter-enable --}}
+
+        return ret;
     },
 
     onIntersect() {
@@ -186,13 +205,18 @@
         <ol class="">
             <template
                 x-for="(stop, index) in [ride?.origin, ...(ride?.waypoints?.map(waypoint => waypoint.address) ?? []), ride?.destination]">
-                <li class="relative grid cursor-pointer grid-cols-[auto_0.8fr_0.2fr] items-center gap-3 p-3 text-sm font-medium before:absolute before:bottom-0 before:left-[23px] before:top-0 before:z-0 before:border-x before:border-dashed before:border-blue-400 hover:bg-blue-100"
+                <li class="relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-3 p-3 text-sm font-medium before:absolute before:bottom-0 before:left-[23px] before:top-0 before:z-0 before:border-x before:border-dashed before:border-blue-400 hover:bg-blue-100"
                     :class="index === 0 ? 'before:!top-1/2' : stop === ride?.destination ?
                         'before:!bottom-1/2' : ''"
                     @click="flyToMarker(index)">
                     <div class="size-6 relative z-10 grid place-items-center rounded-full bg-blue-700 text-white"
                         x-text="index + 1"></div>
-                    <div class="" x-text="stop?.address"></div>
+                    <div>
+                        <div x-text="stop?.address"></div>
+                        <template x-if="stop?.info">
+                            <div class="text-xs" x-text="stop?.info"></div>
+                        </template>
+                    </div>
                     <div class="text-xs font-normal" x-text="index > 0 ? legs[index-1]?.duration : ''">
                     </div>
                 </li>

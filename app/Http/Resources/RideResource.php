@@ -25,7 +25,7 @@ class RideResource extends JsonResource
             'waypoints' => $this->waypoints,
             'description' => $this->description,
             'driver' => $this->driver,
-            'passengers' => $this->whenLoaded('passengers'),
+            // 'passengers' => $this->whenLoaded('passengers'),
         ];
     }
 }

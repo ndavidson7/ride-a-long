@@ -17,6 +17,16 @@ class Waypoint extends Model
         'after',
     ];
 
+    protected $hidden = [
+        'id',
+        'ride_id',
+        'address_id',
+    ];
+
+    protected $with = [
+        'address',
+    ];
+
     public $timestamps = false;
 
     public function ride()

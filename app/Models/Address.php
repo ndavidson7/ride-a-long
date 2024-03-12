@@ -20,4 +20,13 @@ class Address extends Model
         'longitude',
         'created_at' // for refreshing
     ];
+
+    protected $hidden = [
+        'id',
+        'created_at',
+    ];
+
+    protected $casts = [
+        'created_at' => 'datetime',
+    ];
 }
