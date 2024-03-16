@@ -17,7 +17,8 @@ class ProfilePictureUploaded implements ShouldBroadcast
      * Create a new event instance.
      */
     public function __construct(
-        public User $user
+        public User $user,
+        public string $url
     ) {
     }
 
@@ -29,5 +30,15 @@ class ProfilePictureUploaded implements ShouldBroadcast
     public function broadcastOn(): PrivateChannel
     {
         return new PrivateChannel('profile-pictures.' . $this->user->id);
+    }
+
+    /**
+     * Get the data to broadcast.
+     *
+     * @return array<string, mixed>
+     */
+    public function broadcastWith(): array
+    {
+        return ['url' => $this->url];
     }
 }

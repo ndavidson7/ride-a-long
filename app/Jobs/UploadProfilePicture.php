@@ -36,6 +36,7 @@ class UploadProfilePicture implements ShouldQueue
             'upload_preset' => config('cloudinary.upload_preset')
         ]);
         Storage::delete($this->path);
-        ProfilePictureUploaded::dispatch($this->user);
+
+        ProfilePictureUploaded::dispatch($this->user, $this->user->fetchFirstMedia()['file_url']);
     }
 }

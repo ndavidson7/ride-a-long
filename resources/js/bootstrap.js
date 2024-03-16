@@ -42,3 +42,9 @@ Radar.initialize(
         : import.meta.env.VITE_RADAR_LIVE_API_KEY,
 );
 window.Radar = Radar;
+
+// Day.js
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
+window.dayjs = dayjs;
