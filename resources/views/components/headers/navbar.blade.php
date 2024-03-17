@@ -18,21 +18,16 @@
             },
         
             init() {
-                console.log('Notifications:', this.notifications);
-        
+                {{-- Listen for new notifications --}}
                 Echo.private('App.Models.User.' + window.userId).notification(
                     (notification) => {
-                        console.log('Incoming notification:', notification);
-        
-                        // Show the notification badge if hidden
-                        this.$refs.button.classList.toggle('before:hidden', false);
-                        this.$refs.button.classList.toggle('after:hidden', false);
-        
                         // Add the notification to the list
+                        notification.read_at = null;
                         this.notifications.unshift(notification);
         
                         // Create and show a toast
-                        makeToast(data);
+                        {{-- TODO: Fix toasts --}}
+                        {{-- makeToast(data); --}}
                     }
                 );
             },
@@ -67,7 +62,7 @@
             <div class="z-40 rounded-md bg-white text-sm shadow-md" aria-label="Notifications Dropdown" x-cloak
                 x-anchor.bottom-end="$refs.button" x-show="open" x-transition.origin.top.right
                 @click.outside="close($refs.button)" :id="$id('dropdown-button')">
-                <ol class="w-screen text-left sm:w-[400px]" x-cloak x-show="notifications">
+                <ol class="w-screen text-left sm:w-[400px]" x-cloak x-show="notifications.length > 0">
                     <template x-for="notification in notifications" :key="notification.id">
                         <li class="group relative flex items-center justify-between gap-2 py-2.5 pl-6 pr-4 first-of-type:rounded-t-md last-of-type:rounded-b-md hover:bg-gray-50 disabled:text-gray-500"
                             :class="notification.read_at === null ?
@@ -85,50 +80,8 @@
                         </li>
                     </template>
                 </ol>
-                <div class="text-nowrap rounded-md px-4 py-2.5" x-cloak x-show="!notifications">No notifications</div>
-                {{-- @php
-                    $notifications = auth()->user()->notifications;
-                @endphp
-                @if ($notifications->isNotEmpty())
-                    <ol class="w-screen text-left sm:w-[400px]">
-                        @foreach ($notifications as $notification)
-                            <li @class([
-                                'group',
-                                'flex',
-                                'justify-between',
-                                'items-center',
-                                'gap-2',
-                                'py-2.5',
-                                'pl-6',
-                                'pr-4',
-                                'first-of-type:rounded-t-md',
-                                'last-of-type:rounded-b-md',
-                                'hover:bg-gray-50',
-                                'disabled:text-gray-500',
-                                'before:size-2' => $notification['read_at'] === null,
-                                'before:rounded-full' => $notification['read_at'] === null,
-                                'before:bg-yellow-300' => $notification['read_at'] === null,
-                                'before:absolute' => $notification['read_at'] === null,
-                                'before:top-1/2' => $notification['read_at'] === null,
-                                'before:left-2' => $notification['read_at'] === null,
-                                'before:-translate-y-1/2' => $notification['read_at'] === null,
-                            ])>
-                                <a class="w-full" href="{{ route('notifications.show', $notification['id']) }}">
-                                    <p>{{ $notification['data']['message'] }}</p>
-                                    <time class="text-xs text-gray-400"
-                                        datetime="{{ $notification->created_at }}">{{ $notification->created_at->diffForHumans() }}</time>
-                                </a>
-                                <x-buttons.form class="grid place-items-center sm:invisible sm:group-hover:visible"
-                                    action="{{ route('notifications.destroy', $notification['id']) }}" method="delete"
-                                    withoutStyles>
-                                    <x-fas-times class="size-4 text-red-500 hover:text-red-600" />
-                                </x-buttons.form>
-                            </li>
-                        @endforeach
-                    </ol>
-                @else
-                    <div class="text-nowrap rounded-md px-4 py-2.5">No notifications</div>
-                @endif --}}
+                <div class="text-nowrap rounded-md px-4 py-2.5" x-cloak x-show="notifications.length === 0">No
+                    notifications</div>
             </div>
         </div>
 
@@ -206,11 +159,4 @@
             </ul>
         </div>
     </nav>
-    <template id="notif-delete-form">
-        <form action="" method="POST">
-            @csrf
-            @method('DELETE')
-            <button class="dropdown-item" type="submit"><i class="bi bi-x-lg text-body-secondary"></i></button>
-        </form>
-    </template>
 </header>
