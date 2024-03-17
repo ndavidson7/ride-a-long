@@ -59,7 +59,6 @@ class UserController extends Controller
         return view('profiles.show', [
             'entries' => ['resources/js/views/profiles/show.js'],
             'user' => $user ?? Auth::user(),
-            'uploadedPfp' => session('uploadedPfp') ?? false,
         ]);
     }
 

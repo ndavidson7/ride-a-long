@@ -48,12 +48,19 @@
     <div class="flex w-full flex-col-reverse items-center gap-3 sm:flex-row sm:justify-between">
 
         {{-- Driver --}}
-        <div class="text-center">
-            @if ($pfp = $ride->driver->fetchFirstMedia())
-                <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
-            @endif
-            <span class="align-middle">{{ $ride->driver->name }}</span>
-        </div>
+        <x-cards.hover>
+            <x-slot:anchor href="{{ route('users.show', $ride->driver) }}">
+                @if ($pfp = $ride->driver->fetchFirstMedia())
+                    <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}"
+                        alt="Profile picture">
+                @endif
+                <span class="align-middle">{{ $ride->driver->name }}</span>
+            </x-slot:anchor>
+
+            <x-slot:card class="rounded-md border bg-white p-3 shadow-md">
+                <x-cards.user :user="$ride->driver" />
+            </x-slot:card>
+        </x-cards.hover>
 
         {{-- Pills --}}
         <div class="flex flex-wrap items-center justify-center gap-1">
