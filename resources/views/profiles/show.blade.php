@@ -3,6 +3,7 @@
         <x-buttons.anchor class="bg-white" href="{{ route('users.edit') }}" size="sm">Edit profile</x-buttons.anchor>
     @endif
     <x-cards.user :$user />
+
     {{-- <h5 class="card-title">Year</h5>
     <h6 class="card-subtitle mb-5">{{ $user->year_formatted }}</h6>
     <h5 class="card-title">Major</h5>

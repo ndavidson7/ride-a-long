@@ -49,12 +49,12 @@
 
         {{-- Driver --}}
         <x-cards.hover>
-            <x-slot:anchor href="{{ route('users.show', $ride->driver) }}">
+            <x-slot:anchor class="inline-flex items-center gap-1 hover:underline"
+                href="{{ route('users.show', $ride->driver) }}">
                 @if ($pfp = $ride->driver->fetchFirstMedia())
-                    <img class="size-8 inline rounded-full shadow-lg" src="{{ $pfp['file_url'] }}"
-                        alt="Profile picture">
+                    <img class="size-8 rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
                 @endif
-                <span class="align-middle">{{ $ride->driver->name }}</span>
+                <div>{{ $ride->driver->name }}</div>
             </x-slot:anchor>
 
             <x-slot:card class="rounded-md border bg-white p-3 shadow-md">

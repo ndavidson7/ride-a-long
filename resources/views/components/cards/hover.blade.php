@@ -21,7 +21,7 @@
         }, {{ $leaveDelay }});
     }
 }" @mouseenter="hoverCardEnter" @mouseleave="hoverCardLeave" @click.stop="">
-    <a {{ $anchor->attributes->class(['hover:underline']) }} x-ref="anchor">
+    <a {{ $anchor->attributes }} x-ref="anchor">
         {{ $anchor }}
     </a>
     <div {{ $card->attributes->class(['z-[99]']) }} x-show="hovered" x-cloak x-transition
