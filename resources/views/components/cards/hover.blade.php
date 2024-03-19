@@ -20,12 +20,15 @@
             this.hovered = false;
         }, {{ $leaveDelay }});
     }
-}" @mouseenter="hoverCardEnter" @mouseleave="hoverCardLeave" @click.stop="">
-    <a {{ $anchor->attributes }} x-ref="anchor">
+}" @mouseenter="hoverCardEnter" @mouseleave="hoverCardLeave" @click.stop=""
+    x-id="['anchor']">
+    <a {{ $anchor->attributes }} :id="$id('anchor')">
         {{ $anchor }}
     </a>
-    <div {{ $card->attributes->class(['z-[99]']) }} x-show="hovered" x-cloak x-transition
-        x-anchor.offset.10="$refs.anchor">
-        {{ $card }}
-    </div>
+    <template x-teleport="body" @mouseenter="hoverCardEnter" @mouseleave="hoverCardLeave">
+        <div {{ $card->attributes->class(['z-[99]']) }} x-show="hovered" x-cloak x-transition
+            x-anchor.offset.10="document.getElementById($id('anchor'))">
+            {{ $card }}
+        </div>
+    </template>
 </div>

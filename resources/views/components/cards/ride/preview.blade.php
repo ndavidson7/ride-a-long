@@ -57,7 +57,7 @@
                 <div>{{ $ride->driver->name }}</div>
             </x-slot:anchor>
 
-            <x-slot:card class="rounded-md border bg-white p-3 shadow-md">
+            <x-slot:card class="max-w-64 rounded-xl border bg-white p-3 shadow-md">
                 <x-cards.user :user="$ride->driver" />
             </x-slot:card>
         </x-cards.hover>
