@@ -30,7 +30,7 @@
         </div>
     </div>
 </div>
-<div class="mt-4 space-y-3">
+<div class="mt-3 space-y-3">
 
     <h1 class="text-wrap text-left text-lg/none font-medium">{{ $user->name }}</h1>
 

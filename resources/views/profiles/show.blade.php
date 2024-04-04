@@ -1,6 +1,6 @@
 <x-layouts.app class="mx-auto max-w-lg space-y-3" title="{{ $user->name }}'s Profile">
     @if ($user->id == auth()->id())
-        <x-buttons.anchor class="bg-white" href="{{ route('users.edit') }}" size="sm">Edit profile</x-buttons.anchor>
+        <x-button class="bg-white" href="{{ route('users.edit') }}" as="anchor" size="sm">Edit profile</x-button>
     @endif
     <x-cards.user :$user />
 

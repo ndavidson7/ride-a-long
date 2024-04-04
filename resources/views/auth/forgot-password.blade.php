@@ -12,8 +12,8 @@
                 <x-inputs.email class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0" size="lg"
                     required withValidation />
             </div>
-            <x-buttons.button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
-                size="lg" withValidation>Request password reset</x-buttons.button>
+            <x-button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
+                size="lg" withValidation>Request password reset</x-button>
         </x-form>
     </div>
 

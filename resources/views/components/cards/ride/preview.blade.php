@@ -77,7 +77,7 @@
     </div>
 
 </div>
-{{-- <x-buttons.button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
+{{-- <x-button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
     data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
     type="button" size="sm">
     @switch($ride->user_relation)
@@ -100,4 +100,4 @@
                 <i class="bi bi-x-circle-fill"></i> Full
             @endif
     @endswitch
-</x-buttons.button> --}}
+</x-button> --}}

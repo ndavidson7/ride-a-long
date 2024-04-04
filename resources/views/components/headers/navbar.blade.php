@@ -73,10 +73,10 @@
                                 <time class="text-xs text-gray-400" x-text="dayjs(notification.created_at).fromNow()"
                                     :datetime="notification.created_at"></time>
                             </a>
-                            <x-buttons.form class="grid place-items-center sm:invisible sm:group-hover:visible"
+                            <x-button class="grid place-items-center sm:invisible sm:group-hover:visible" as="form"
                                 ::action="route('notifications.destroy', notification.id)" method="delete" withoutStyles>
                                 <x-fas-times class="size-4 text-red-500 hover:text-red-600" />
-                            </x-buttons.form>
+                            </x-button>
                         </li>
                     </template>
                 </ol>
@@ -151,10 +151,10 @@
                 </li>
 
                 <li>
-                    <x-buttons.form
+                    <x-button
                         class="flex w-full items-center gap-2 rounded-b-md border-t-2 px-4 py-2.5 text-red-500 hover:bg-gray-50 disabled:text-gray-500"
-                        action="{{ route('sessions.destroy') }}" method="delete" withoutStyles>Sign
-                        out</x-buttons.form>
+                        as="form" action="{{ route('sessions.destroy') }}" method="delete" withoutStyles>Sign
+                        out</x-button>
                 </li>
             </ul>
         </div>

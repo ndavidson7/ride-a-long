@@ -26,8 +26,8 @@
                     placeholder="Confirm password" required withValidation />
             </div>
             <input name="token" type="hidden" value="{{ $token }}" />
-            <x-buttons.button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
-                size="lg" withValidation>Reset</x-buttons.button>
+            <x-button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
+                size="lg" withValidation>Reset</x-button>
         </x-form>
     </div>
 

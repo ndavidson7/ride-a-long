@@ -22,8 +22,8 @@
                     placeholder="Confirm password" required withValidation />
             </div>
 
-            <x-buttons.button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
-                size="lg" withValidation>Sign up</x-buttons.button>
+            <x-button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
+                size="lg" withValidation>Sign up</x-button>
         </x-form>
     </div>
     <p class="mt-10 font-medium text-slate-500">Already have an account? <a

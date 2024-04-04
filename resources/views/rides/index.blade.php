@@ -12,7 +12,7 @@
             </x-slot:body>
 
             <x-slot:footer>
-                <x-buttons.button form="filter" size="sm">Filter</x-buttons.button>
+                <x-button form="filter" size="sm">Filter</x-button>
             </x-slot:footer>
         </x-modal>
 
@@ -128,10 +128,10 @@
             </x-slot:body>
 
             <x-slot:footer>
-                <x-buttons.anchor target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address), ride
+                <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address), ride
                     .destination
-                ]) : ''" size="sm">View directions</x-buttons.anchor>
-                <x-buttons.anchor ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request</x-buttons.anchor>
+                ]) : ''" size="sm">View directions</x-button>
+                <x-button as="anchor" ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request</x-button>
             </x-slot:footer>
         </x-modal>
 

@@ -34,8 +34,8 @@
                     password?</a>
             </div>
 
-            <x-buttons.button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
-                size="lg" withValidation>Sign in</x-buttons.button>
+            <x-button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
+                size="lg" withValidation>Sign in</x-button>
         </x-form>
     </div>
     <p class="mt-10 font-medium text-slate-500">New user? <a class="font-semibold text-blue-600 hover:underline"
