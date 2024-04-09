@@ -74,7 +74,7 @@
                                     :datetime="notification.created_at"></time>
                             </a>
                             <x-button class="grid place-items-center sm:invisible sm:group-hover:visible" as="form"
-                                ::action="route('notifications.destroy', notification.id)" method="delete" withoutStyles>
+                                ::action="route('notifications.destroy', notification.id)" method="delete" unstyled>
                                 <x-fas-times class="size-4 text-red-500 hover:text-red-600" />
                             </x-button>
                         </li>
@@ -153,7 +153,7 @@
                 <li>
                     <x-button
                         class="flex w-full items-center gap-2 rounded-b-md border-t-2 px-4 py-2.5 text-red-500 hover:bg-gray-50 disabled:text-gray-500"
-                        as="form" action="{{ route('sessions.destroy') }}" method="delete" withoutStyles>Sign
+                        as="form" action="{{ route('sessions.destroy') }}" method="delete" unstyled>Sign
                         out</x-button>
                 </li>
             </ul>

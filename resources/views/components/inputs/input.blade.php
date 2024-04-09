@@ -33,7 +33,7 @@
 @endphp
 
 {{-- Not the cleanest but the only way I could make this work --}}
-@if ($withValidation)
+@if ($validated)
     <div x-data="{ error: '@error($attributes->get('name')){{ $message }}@enderror', validate(el) { this.error = !el.checkValidity() ? el.validationMessage : '' } }">
         <x-buk-input {{ $attributes }} @blur="validate($el)" ::class="error && '!border-transparent !ring-red-600'" @input="if (error) validate($el)" />
         <p class="mx-2 mt-1 min-h-[1lh] text-sm font-light text-red-600" :class="error ? 'visible' : 'invisible'"

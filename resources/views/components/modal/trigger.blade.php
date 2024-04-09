@@ -1,24 +1,9 @@
 @props(['modalId', 'xData' => '{}'])
 
-{{-- @php
-    $attributes = $attributes->merge(['@click' => $attributes->prepends('openModal();')]);
-@endphp
-
-<div role="button" aria-controls="{{ $modalId }}" tabindex="0" {{ $attributes }} x-data="{
-    modalId: '{{ $modalId }}',
-
-    openModal() {
-        $dispatch('modal:open', { id: this.modalId });
-    },
-
-    ...{!! $xData !!}
-}"
-    @keydown.enter="{{ $attributes->get('@click') }}">
-
-    {{ $slot }}
-
-</div> --}}
-
+{{--
+    This simply wraps modal button's slot with a block-display span as a workaround for Chrome's shitty, hidden, default button styling.
+    Doing so also allows us to take advantage of buttons' not-shitty default behaviors and accessibility features.
+--}}
 <x-modal.button :$modalId :$xData {{ $attributes->class(['w-full']) }}>
     <span class="block">
         {{ $slot }}

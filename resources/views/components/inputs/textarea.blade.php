@@ -1,7 +1,7 @@
-@props(['name', 'rows' => '3', 'validated' => false, 'styled' => true])
+@props(['name', 'rows' => '3', 'validated' => false, 'unstyled' => false])
 
 @php
-    if ($styled) {
+    if ($unstyled === false) {
         $attributes = $attributes->class([
             'w-full',
             'rounded-md',

@@ -1,7 +1,7 @@
 @props([
     'size' => 'md',
-    'withValidation' => false,
-    'withoutStyles' => false,
+    'validated' => false,
+    'unstyled' => false,
     'as' => 'button',
     'method' => 'POST',
     'action' => null,
@@ -9,7 +9,7 @@
 
 {{-- blade-formatter-disable --}}
 @php
-    if (!$withoutStyles)
+    if ($unstyled === false)
     {
         $attributes = $attributes->class([
             'px-3',
@@ -21,7 +21,7 @@
             'items-center',
             'justify-center',
             'whitespace-nowrap',
-            'border-2',
+            'border',
             'border-gray-400',
             'ring-2',
             'ring-transparent',
@@ -51,15 +51,15 @@
 
     @case('form')
         <x-form :$method :$action>
-            <x-button type="submit" {{ $attributes }}>
+            <button {{ $attributes }}>
                 {{ $slot }}
-            </x-button>
+            </button>
         </x-form>
         @break
 
     @case('button')
     @default
-        @if ($withValidation)
+        @if ($validated)
             <button {{ $attributes }} :disabled="!valid">
                 {{ $slot }}
             </button>

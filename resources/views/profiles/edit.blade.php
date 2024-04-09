@@ -5,7 +5,7 @@
             pfpUrl: '{{ $user->fetchFirstMedia()['file_url'] ?? '' }}',
             error: '{{ $errors->first('pfp') }}',
         }">
-            <x-buk-label class="inline-block space-y-1 font-medium" for="pfp">
+            <x-buk-label class="block max-w-fit space-y-1 font-medium" for="pfp">
                 <span>Profile picture</span>
                 <div class="size-32 group/pfp relative cursor-pointer rounded-full shadow-md">
                     <template x-if="pfpUrl">

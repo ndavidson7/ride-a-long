@@ -77,27 +77,3 @@
     </div>
 
 </div>
-{{-- <x-button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
-    data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
-    type="button" size="sm">
-    @switch($ride->user_relation)
-        @case('driver')
-            <x-fas-car-side /> Driving
-        @break
-
-        @case('requester')
-            <x-fas-hourglass-half /> Requested
-        @break
-
-        @case('passenger')
-            <x-fas-car-side /> Riding
-        @break
-
-        @default
-            @if ($ride->seats_open > 0)
-                <i class="bi bi-info-circle-fill"></i> More info
-            @else
-                <i class="bi bi-x-circle-fill"></i> Full
-            @endif
-    @endswitch
-</x-button> --}}

@@ -2,7 +2,7 @@
 
     <h1 class="mb-10 text-center text-3xl font-semibold">Sign in to {{ config('app.name') }}</h1>
     <div class="w-full max-w-md">
-        <x-form action="{{ route('sessions.store') }}" withValidation>
+        <x-form action="{{ route('sessions.store') }}" validated>
             @error('incorrect')
                 <div class="relative mb-6 w-full rounded-lg bg-red-500 p-4 text-white [&>svg+div]:translate-y-[-3px] [&>svg]:absolute [&>svg]:left-4 [&>svg]:top-4 [&>svg]:fill-white [&>svg~*]:pl-7"
                     role="alert">
@@ -16,7 +16,7 @@
                     <x-fas-user class="h-5 w-5" />
                 </span>
                 <x-inputs.email class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0" size="lg"
-                    required withValidation />
+                    required validated />
             </div>
 
             <div class="relative mb-2">
@@ -24,7 +24,7 @@
                     <x-fas-key class="h-5 w-5" />
                 </span>
                 <x-inputs.password class="!rounded-full !border-0 bg-gray-100 !pl-12 !pr-5 !ring-offset-0"
-                    size="lg" required withValidation />
+                    size="lg" required validated />
             </div>
 
             <div class="mb-8 flex flex-wrap items-center gap-2">
@@ -35,7 +35,7 @@
             </div>
 
             <x-button class="w-full !rounded-full bg-blue-500 text-white hover:bg-blue-600 active:bg-blue-700"
-                size="lg" withValidation>Sign in</x-button>
+                size="lg" validated>Sign in</x-button>
         </x-form>
     </div>
     <p class="mt-10 font-medium text-slate-500">New user? <a class="font-semibold text-blue-600 hover:underline"

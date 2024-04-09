@@ -1,3 +1,5 @@
+@props(['text', 'position' => 'top', 'arrow' => true, 'visible' => false])
+
 <div class="inline-block w-auto" x-data="{
     visible: {{ $visible ? 'true' : 'false' }},
 }">

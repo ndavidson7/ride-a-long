@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\View;
 
 class Input extends ResizableComponent
 {
-    public function __construct(public bool $withValidation = false, string $size = 'md')
+    public function __construct(public bool $validated = false, string $size = 'md')
     {
         parent::__construct($size);
     }

@@ -1,5 +1,6 @@
 <x-layouts.app class="mx-auto max-w-5xl space-y-3" title="Ride listings" :$entries>
 
+    {{-- Hotbar (ride filters and create ride buttons) --}}
     <div class="flex gap-2">
         <x-modal.button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
             modal-id="ride-filter">
@@ -33,107 +34,17 @@
         </a>
     </div>
 
+    {{-- Rides list --}}
     @if ($rides->count())
         <ol class="grid auto-rows-fr grid-cols-1 gap-4">
             @foreach ($rides as $ride)
                 <li>
-                    <x-modal.trigger modal-id="ride-info" x-data="{ rideId: {{ $ride->id }} }"
-                        @click="$dispatch('modal:update', { id: modalId, args: { rideId: rideId } });">
-                        <x-cards.ride.preview :$ride />
-                    </x-modal.trigger>
+                    <x-modals.ride.trigger :$ride />
                 </li>
             @endforeach
         </ol>
 
-        <x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info" x-data="{
-            ride: null,
-            loading: false,
-        
-            async fetchData(rideId) {
-                if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
-        
-                return fetch(route('rides.show', rideId), {
-                        headers: { Accept: 'application/json' },
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        return data;
-                    });
-            },
-        
-            async update(args) {
-                if (args.rideId === undefined) throw new TypeError(`Missing arguments property 'rideId'`);
-        
-                if (args.rideId === this.ride?.id) return;
-        
-                this.loading = true;
-                this.ride = await this.fetchData(args.rideId);
-            },
-        
-            constructDirectionsUrl(addresses) {
-                const apple = navigator.userAgent.includes('Mac OS');
-        
-                {{-- blade-formatter-disable --}}
-                if (Array.isArray(addresses)) {
-                    return apple
-                        ? `maps://https://maps.apple.com/?dirflg=d&saddr=${
-                                addresses[0].latitude
-                            }%2C${addresses[0].longitude}&daddr=${addresses
-                                .flatMap((address, index) =>
-                                    index > 0
-                                        ? `${address.latitude}%2C${address.longitude}`
-                                        : [],
-                                )
-                                .join('&daddr=')}`
-                        : `https://www.google.com/maps/dir/?api=1&travelmode=driving&origin=${
-                                addresses[0].latitude
-                            }%2C${addresses[0].longitude}&destination=${
-                                addresses[addresses.length - 1].latitude
-                            }%2C${addresses[addresses.length - 1].longitude}&waypoints=${
-                                addresses.length > 2
-                                    ? addresses
-                                        .flatMap((address, index) =>
-                                            index > 0 && index < addresses.length - 1
-                                                ? `${address.latitude}%2C${address.longitude}`
-                                                : [],
-                                        )
-                                        .join('%7C')
-                                    : ''
-                            }`;
-                } else if (typeof addresses === 'object') {
-                    return apple ?
-                        `maps://https://maps.apple.com/?q=${addresses.latitude}%2C${addresses.longitude}` :
-                        `https://www.google.com/maps/search/?api=1&query=${addresses.latitude}%2C${addresses.longitude}`;
-                } else {
-                    throw new TypeError('Argument must be an object or array of objects:', addresses);
-                }
-                {{-- blade-formatter-enable --}}
-            }
-        }"
-            x-effect="console.log('Ride:',ride)">
-            <x-slot:body>
-                <div class="relative space-y-4 lg:space-y-0" x-show="loading">
-                    <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
-                </div>
-
-                <x-map x-show="!loading" x-init="$watch('ride', async value => {
-                    await update({
-                        origin: [+value?.origin?.longitude, +value?.origin?.latitude],
-                        waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
-                        destination: [+value?.destination?.longitude, +value?.destination?.latitude]
-                    });
-                
-                    loading = false;
-                })" />
-            </x-slot:body>
-
-            <x-slot:footer>
-                <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address), ride
-                    .destination
-                ]) : ''" size="sm">View directions</x-button>
-                <x-button as="anchor" ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request</x-button>
-            </x-slot:footer>
-        </x-modal>
+        <x-modals.ride />
 
         {{ $rides->links() }}
     @else
