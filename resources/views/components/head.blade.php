@@ -1,3 +1,5 @@
+@props(['title'])
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -12,5 +14,5 @@
         window.userId = {{ auth()->user()->id ?? 'null' }}
     </script>
     @routes
-    @vite(array_merge(['resources/css/app.css', 'resources/js/app.js'], $entries))
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

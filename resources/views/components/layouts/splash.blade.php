@@ -1,7 +1,9 @@
+@props(['title'])
+
 <!DOCTYPE html>
 <html lang="en">
 
-<x-head :$title :$entries />
+<x-head :$title />
 
 <body {{ $attributes->class(['grid', 'md:grid-cols-2']) }}>
 

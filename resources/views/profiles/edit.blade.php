@@ -1,4 +1,4 @@
-<x-layouts.app class="mx-auto max-w-xl" title="Edit profile" :$entries>
+<x-layouts.app class="mx-auto max-w-xl" title="Edit profile">
     <x-form class="space-y-3" action="{{ route('users.update') }}" method="put" :hasFiles="true">
 
         <div class="space-y-1.5" x-data="{

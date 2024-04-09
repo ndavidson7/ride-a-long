@@ -1,4 +1,4 @@
-<x-layouts.app title="Your alerts"> {{-- :$entries> --}}
+<x-layouts.app title="Your alerts">
     <main>
         <div class="container-xl py-4">
             <h1>New ride alerts</h1>

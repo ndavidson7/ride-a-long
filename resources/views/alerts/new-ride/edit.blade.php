@@ -1,4 +1,4 @@
-<x-layouts.app title="Edit new ride alert" :$entries>
+<x-layouts.app title="Edit new ride alert">
     <main>
         <div class="container py-4">
             <h1 class="mb-3">Edit new ride alert</h1>

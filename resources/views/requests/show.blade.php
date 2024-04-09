@@ -1,4 +1,4 @@
-<x-layouts.app title="View request" :$entries>
+<x-layouts.app title="View request">
     <main class="py-4">
         <div class="col-sm-10 col-md-8 col-lg-6 container mb-3">
             <h2 class="mb-3 text-center">Preview</h2>

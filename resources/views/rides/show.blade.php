@@ -1,4 +1,4 @@
-<x-layouts.app title="{{ $ride->driver->name }}'s ride" :$entries>
+<x-layouts.app title="{{ $ride->driver->name }}'s ride">
     <main class="container py-4">
         <div class="row">
             <div class="col-lg">

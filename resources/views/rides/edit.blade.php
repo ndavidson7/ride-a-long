@@ -1,4 +1,4 @@
-<x-layouts.app title="Edit ride" :$entries>
+<x-layouts.app title="Edit ride">
     <main class="col-sm-10 col-md-8 col-lg-6 container py-4">
         <h2 class="mb-3 text-center">Preview</h2>
         <div class="row mb-3">

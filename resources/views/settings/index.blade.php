@@ -1,4 +1,4 @@
-<x-layouts.app title="Settings" :$entries>
+<x-layouts.app title="Settings">
     <main class="container-md py-5">
         <div class="row">
             <nav class="col-3">

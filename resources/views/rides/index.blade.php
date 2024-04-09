@@ -1,4 +1,4 @@
-<x-layouts.app class="mx-auto max-w-5xl space-y-3" title="Ride listings" :$entries>
+<x-layouts.app class="mx-auto max-w-5xl space-y-3" title="Ride listings">
 
     {{-- Hotbar (ride filters and create ride buttons) --}}
     <div class="flex gap-2">
