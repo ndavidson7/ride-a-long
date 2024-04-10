@@ -38,8 +38,6 @@
             'disabled:opacity-50'
         ]);
     }
-
-    $attributes = $attributes->merge(['type' => 'submit']);
 @endphp
 
 @switch($as)
@@ -51,7 +49,7 @@
 
     @case('form')
         <x-form :$method :$action>
-            <button {{ $attributes }}>
+            <button {{ $attributes }} type="submit">
                 {{ $slot }}
             </button>
         </x-form>
@@ -60,11 +58,11 @@
     @case('button')
     @default
         @if ($validated)
-            <button {{ $attributes }} :disabled="!valid">
+            <button {{ $attributes->merge(['type' => 'submit']) }} :disabled="!valid">
                 {{ $slot }}
             </button>
         @else
-            <button {{ $attributes }}>
+            <button {{ $attributes->merge(['type' => 'submit']) }}>
                 {{ $slot }}
             </button>
         @endif

@@ -1,3 +1,5 @@
+@props(['size' => 'md', 'validated' => false])
+
 @php
     $attributes = $attributes->class([
         'min-h-10' => $size === 'sm',

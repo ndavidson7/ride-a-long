@@ -72,6 +72,27 @@
                     <x-fas-arrows-turn-to-dots class="size-3" /> Detours
                 </x-pill>
             @endif
+            {{-- TODO: --}}
+            {{-- @switch($ride->user_relation)
+                @case('driver')
+                    <x-fas-car-side /> Driving
+                @break
+
+                @case('requester')
+                    <x-fas-hourglass-half /> Requested
+                @break
+
+                @case('passenger')
+                    <x-fas-car-side /> Riding
+                @break
+
+                @default
+                    @if ($ride->seats_open > 0)
+                        <i class="bi bi-info-circle-fill"></i> More info
+                    @else
+                        <i class="bi bi-x-circle-fill"></i> Full
+                    @endif
+            @endswitch --}}
         </div>
 
     </div>
