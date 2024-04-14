@@ -75,45 +75,32 @@
         </div>
 
         <x-map x-show="!loading" x-init="$watch('ride', async value => {
-            await update({
-                origin: [+value?.origin?.longitude, +value?.origin?.latitude],
-                waypoints: value?.waypoints?.map(waypoint => [+waypoint.address.longitude, +waypoint.address.latitude]),
-                destination: [+value?.destination?.longitude, +value?.destination?.latitude]
-            });
+            await update([{
+                    address: value?.origin?.address,
+                    coordinates: [+value?.origin?.longitude, +value?.origin?.latitude],
+                },
+                ...value?.waypoints?.map(waypoint => {
+                    return {
+                        address: waypoint.address.address,
+                        coordinates: [+waypoint.address.longitude, +waypoint.address.latitude],
+                    };
+                }),
+                {
+                    address: value?.destination?.address,
+                    coordinates: [+value?.destination?.longitude, +value?.destination?.latitude],
+                },
+            ]);
         
             loading = false;
         })" />
     </x-slot:body>
 
     <x-slot:footer>
-        <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address), ride
-            .destination
-        ]) : ''" size="sm">View directions</x-button>
-        {{-- <x-button class="[&>svg]:size-5" data-ride="{{ $ride->id }}"
-    data-user-relation="{{ $ride->user_relation }}" data-related-model-id="{{ $ride->related_model_id }}"
-    type="button" size="sm">
-    @switch($ride->user_relation)
-        @case('driver')
-            <x-fas-car-side /> Driving
-        @break
-
-        @case('requester')
-            <x-fas-hourglass-half /> Requested
-        @break
-
-        @case('passenger')
-            <x-fas-car-side /> Riding
-        @break
-
-        @default
-            @if ($ride->seats_open > 0)
-                <i class="bi bi-info-circle-fill"></i> More info
-            @else
-                <i class="bi bi-x-circle-fill"></i> Full
-            @endif
-    @endswitch
-</x-button> --}}
-        <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" size="sm">More info</x-button>
+        <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address),
+            ride.destination
+        ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
+            directions</x-button>
+        <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
         <template x-if="userRelation == 'driver'">
             <x-button as="anchor" ::href="ride ? route('rides.edit', ride.id) : ''" size="sm">Edit ride</x-button>
         </template>

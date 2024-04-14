@@ -1,10 +1,10 @@
-<div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0', 'group']) }} x-data="{
+<div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0']) }} x-data="{
     map: null,
     directionsClient: null,
     bounds: null,
+    route: [],
     totalDistance: null,
     totalDuration: null,
-    legs: [],
     markers: [],
 
     init() {
@@ -22,29 +22,35 @@
     },
 
     async update(route) {
+        {{--
+            Route should follow this format (* indicates required):
+                [
+                    {
+                        address*,
+                        coordinates*: [lng, lat],
+                        info,
+                        duration,
+                        distance,
+                    },
+                    ...
+                ]
+        --}}
+        if (!route || !Array.isArray(route) || route.length < 2) throw new TypeError('Route must be an array of at least 2 waypoints');
+
+        this.route = route;
+
         console.log('Map received route: ', route);
         const directions = await this.getDirections(route);
         console.log('Directions: ', directions);
 
         this.renderDirections(directions);
 
-        this.updateInfo(directions.routes[0]);
+        this.updateInfo(directions);
     },
 
     async getDirections(route) {
         return this.directionsClient.getDirections({
-                waypoints: [{
-                        coordinates: route.origin,
-                    },
-                    ...route.waypoints.map(waypoint => {
-                        return {
-                            coordinates: waypoint,
-                        };
-                    }),
-                    {
-                        coordinates: route.destination,
-                    }
-                ],
+                waypoints: route,
                 geometries: 'geojson',
             })
             .send()
@@ -109,7 +115,9 @@
         });
     },
 
-    updateInfo(route) {
+    updateInfo(directions) {
+        const route = directions.routes[0];
+
         const coordinates = route.geometry.coordinates;
         this.bounds = coordinates.reduce((bounds, coord) => {
             return bounds.extend(coord);
@@ -118,11 +126,9 @@
         this.totalDistance = this.metersToMiles(route.distance);
         this.totalDuration = this.secondsToHoursMins(route.duration);
 
-        this.legs = route.legs.map(leg => {
-            return {
-                distance: this.metersToMiles(leg.distance),
-                duration: this.secondsToHoursMins(leg.duration),
-            };
+        route.legs.forEach((leg, index) => {
+            this.route[index + 1].distance = this.metersToMiles(leg.distance);
+            this.route[index + 1].duration = this.secondsToHoursMins(leg.duration);
         });
     },
 
@@ -159,7 +165,7 @@
 
     onIntersect() {
         this.map.resize();
-        this.fitBounds();
+        if (this.bounds) this.fitBounds();
     },
 
     fitBounds() {
@@ -202,11 +208,10 @@
                 <span class="align-middle text-base font-medium text-neutral-600" x-text="totalDuration"></span>
             </div>
         </div>
-        <ol class="">
-            <template
-                x-for="(stop, index) in [ride?.origin, ...(ride?.waypoints?.map(waypoint => waypoint.address) ?? []), ride?.destination]">
+        <ol>
+            <template x-for="(stop, index) in route">
                 <li class="relative grid cursor-pointer grid-cols-[auto_1fr_auto] items-center gap-3 p-3 text-sm font-medium before:absolute before:bottom-0 before:left-[23px] before:top-0 before:z-0 before:border-x before:border-dashed before:border-blue-400 hover:bg-blue-100"
-                    :class="index === 0 ? 'before:!top-1/2' : stop === ride?.destination ?
+                    :class="index === 0 ? 'before:!top-1/2' : index === route.length - 1 ?
                         'before:!bottom-1/2' : ''"
                     @click="flyToMarker(index)">
                     <div class="size-6 relative z-10 grid place-items-center rounded-full bg-blue-700 text-white"
@@ -217,7 +222,7 @@
                             <div class="text-xs" x-text="stop?.info"></div>
                         </template>
                     </div>
-                    <div class="text-xs font-normal" x-text="index > 0 ? legs[index-1]?.duration : ''">
+                    <div class="text-xs font-normal" x-text="stop?.duration ?? ''">
                     </div>
                 </li>
             </template>

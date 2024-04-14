@@ -1,5 +1,6 @@
 @import "mapbox-gl/dist/mapbox-gl.css";
 @import "radar-sdk-js/dist/radar.css";
+@import "flatpickr/dist/flatpickr.css";
 
 @tailwind base;
 @tailwind components;
