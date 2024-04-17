@@ -73,9 +73,17 @@ class Ride extends Model
             });
         });
 
+        // $query->when($filters['origin-state'] ?? false, function ($query, $state) {
+        //     $query->whereHas('origin', function ($query) use ($state) {
+        //         $query->where('state', 'like', '%' . $state . '%');
+        //     });
+        // });
+
         $query->when($filters['origin-state'] ?? false, function ($query, $state) {
             $query->whereHas('origin', function ($query) use ($state) {
-                $query->where('state', 'like', '%' . $state . '%');
+                $query->whereHas('state', function ($query) use ($state) {
+                    $query->where('name', 'like', '%' . $state . '%');
+                });
             });
         });
 
@@ -85,9 +93,17 @@ class Ride extends Model
             });
         });
 
+        // $query->when($filters['destination-state'] ?? false, function ($query, $state) {
+        //     $query->whereHas('destination', function ($query) use ($state) {
+        //         $query->where('state', 'like', '%' . $state . '%');
+        //     });
+        // });
+
         $query->when($filters['destination-state'] ?? false, function ($query, $state) {
             $query->whereHas('destination', function ($query) use ($state) {
-                $query->where('state', 'like', '%' . $state . '%');
+                $query->whereHas('state', function ($query) use ($state) {
+                    $query->where('name', 'like', '%' . $state . '%');
+                });
             });
         });
 

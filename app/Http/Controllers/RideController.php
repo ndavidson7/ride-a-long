@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use App\Models\Ride;
+use App\Models\Address;
 use Illuminate\Http\Request;
 use App\Services\RideService;
 use App\Http\Resources\RideResource;
@@ -24,7 +25,6 @@ class RideController extends Controller
         $filters = array_filter($request->validated());
 
         return view('rides.index', [
-            'entries' => ['resources/js/views/rides/index.js'],
             'rides' =>
             Ride::query()
                 ->filter($filters)
@@ -36,9 +36,7 @@ class RideController extends Controller
 
     public function create()
     {
-        return view('rides.create', [
-            'entries' => ['resources/js/views/rides/create.js', 'resources/js/form-validation.js']
-        ]);
+        return view('rides.create');
     }
 
     public function store(StoreOrUpdateRideRequest $request, RideService $rideService)

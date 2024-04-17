@@ -14,10 +14,11 @@ class CollegeSeeder extends Seeder
     public function run(): void
     {
         $addressId = Address::create([
-            'address' => '1827 University Ave, Charlottesville, VA 22903, USA',
+            'street_address' => '1827 University Ave',
             'city' => 'Charlottesville',
-            'state' => 'Virginia',
-            'country' => 'United States',
+            'state_id' => 1, // hard-coded for Virginia
+            'postal_code' => '22903',
+            'country_id' => 1, // hard-coded for United States
             'latitude' => 38.0370443,
             'longitude' => -78.505209,
         ])->id;

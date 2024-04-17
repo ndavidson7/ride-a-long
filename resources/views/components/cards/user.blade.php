@@ -15,13 +15,11 @@
             <div class='size-full animate-pulse rounded-full bg-gray-300' role='status'>
                 <span class='sr-only'>Loading...</span>
             </div>
-        @elseif ($pfp = $user->fetchFirstMedia())
-            <img class="size-full rounded-full" src="{{ $pfp['file_url'] }}" alt="{{ $user->name }}'s profile picture">
         @else
-            <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
+            <x-pfp class="size-full" :$user />
         @endif
-
     </div>
+
     <div class="space-y-2">
         <p class="text-xl/none font-medium">5 <span class="text-gray-500">trips</span></p>
         <div class="flex items-center gap-1">

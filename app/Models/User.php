@@ -64,6 +64,10 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'longitude',
     ];
 
+    protected $appends = [
+        'pfp_url',
+    ];
+
     /**
      * The attributes that should be cast.
      *
@@ -88,37 +92,39 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         );
     }
 
-    public function getNameAttribute(): string
+    public function name(): Attribute
     {
-        return "{$this->first_name} {$this->last_name}";
+        return Attribute::make(
+            get: fn ($value, array $attributes) => "{$attributes['first_name']} {$attributes['last_name']}"
+        );
     }
 
-    public function getYearFormattedAttribute(): string|null
+    public function yearFormatted(): Attribute
     {
-        switch ($this->year) {
-            case 1:
-                return 'First';
-            case 2:
-                return 'Second';
-            case 3:
-                return 'Third';
-            case 4:
-                return 'Fourth';
-            case 5:
-                return 'Graduate/Further Studies';
-            default:
-                return null;
-        }
+        return Attribute::make(
+            get: fn (int $value) => match ($value) {
+                1 => 'First',
+                2 => 'Second',
+                3 => 'Third',
+                4 => 'Fourth',
+                5 => 'Graduate/Further Studies',
+                default => null,
+            }
+        );
     }
 
-    public function getIsDriverAttribute(): bool
+    public function isDriver(): Attribute
     {
-        return $this->car()->exists();
+        return Attribute::make(
+            get: fn () => $this->car()->exists()
+        );
     }
 
-    public function getPfpUrlAttribute(): string|null
+    public function pfpUrl(): Attribute
     {
-        return $this->fetchFirstMedia()['file_url'] ?? null;
+        return Attribute::make(
+            get: fn () => $this->fetchFirstMedia()['file_url'] ?? null
+        );
     }
 
     public function getParticipantDetails()

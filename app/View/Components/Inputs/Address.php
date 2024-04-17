@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 
 class Address extends Component
 {
+    public ?AddressModel $address = null;
     public array $layers;
     public array $addressComponents; // The hidden address component inputs that will be submitted with the form.
 
@@ -16,6 +17,7 @@ class Address extends Component
      * Create a new address input instance.
      * 
      * @param ?AddressModel $address Optional address model. If set, the autocomplete input and hidden address component inputs will be pre-populated accordingly.
+     * @param ?string $xModel Optional parent property to 2-way bind the address to in order to pass the address to the parent component. See: https://codepen.io/SimoTod/pen/QWZJvmp
      * @param ?string $near The location to search near, in the format "latitude,longitude". If not specified, the search will automatically be biased based on the client's IP geolocation.
      * @param int $debounceMS The number of milliseconds to wait after typing is complete to refresh the results list.
      * @param int $minCharacters The minimum number of characters that need to be typed before fetching results.
@@ -23,21 +25,23 @@ class Address extends Component
      * @param bool $disabled A boolean that indicates whether the input should be disabled.
      * @param string $countryCode An optional 2-letter ISO 3166 country code. If set, results will only be fetched from the specified country.
      * @param string $layers Optional layer filters. A string, comma-separated, including one or more of place, address, postalCode, locality, county, state, country, coarse, and fine. Note that coarse includes all of postalCode, locality, county, state, and country, whereas fine includes address and place.
-     * @param string $addressComponents Optional address component filters. A string, comma-separated, including one or more of formattedAddress, city, state, country, latitude, and longitude.
+     * @param string $addressComponents Optional address components to include in the form submission. A string, comma-separated, of Address model attributes.
      * 
      * @see https://radar.com/documentation/maps/autocomplete and https://radar.com/documentation/api#autocomplete
      */
     public function __construct(
-        public ?AddressModel $address = null,
+        ?AddressModel $address = null,
+        public ?string $xModel = null,
         public ?string $near = null,
         public int $debounceMS = 200,
         public int $minCharacters = 3,
         public int $limit = 5,
         public bool $disabled = false,
         public string $countryCode = "us",
-        string $layers = "address,coarse",
-        string $addressComponents = "formattedAddress,city,state,country,latitude,longitude"
+        string $layers = "address",
+        string $addressComponents = "streetAddress,city,state,stateCode,postalCode,country,countryCode,latitude,longitude"
     ) {
+        if ($address->id) $this->address = $address;
         $this->layers = explode(',', $layers);
         $this->addressComponents = explode(',', $addressComponents);
     }

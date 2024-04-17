@@ -15,13 +15,18 @@ return new class extends Migration
     {
         Schema::create('addresses', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('address')->unique();
-            $table->string('city'); // ->nullable()?
-            $table->string('state'); // ->nullable()?
-            $table->string('country'); // ->nullable()?
+            $table->string('street_address');
+            $table->string('city');
+            $table->unsignedTinyInteger('state_id');
+            $table->string('postal_code', 10);
+            $table->unsignedTinyInteger('country_id');
             $table->decimal('latitude', 10, 7);
             $table->decimal('longitude', 10, 7);
             $table->timestamp('created_at')->nullable();
+
+            $table->unique(['street_address', 'city', 'state_id', 'country_id'], 'unique_address');
+            $table->foreign('state_id')->references('id')->on('states');
+            $table->foreign('country_id')->references('id')->on('countries');
         });
     }
 

@@ -1,6 +1,8 @@
-@props(['id', 'title' => '', 'xData' => '{}'])
+@props(['id', 'title' => ''])
+{{-- @props(['id', 'title' => '', 'xData' => '{}']) --}}
 
-<template id="{{ $id }}" x-teleport="body" x-data="{ open: false, ...{!! $xData !!} }" @keydown.escape.window="open = false"
+{{-- x-data="{ open: false, ...{!! $xData !!} }" --}}
+<template id="{{ $id }}" x-teleport="body" x-data="{ open: false }" @keydown.escape.window="open = false"
     @modal:open.window="open = $event.detail.id === $el.id"
     @modal:update.window="if ($event.detail.id === $el.id) update($event.detail.args);" :class="{ 'z-40': open }">
     <div class="fixed left-0 top-0 z-[99] flex h-screen w-screen items-center justify-center" x-show="open" x-cloak>

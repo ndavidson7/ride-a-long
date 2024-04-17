@@ -5,7 +5,9 @@ namespace App\Services;
 use App\Models\Ride;
 use App\Models\User;
 use App\Models\Address;
+use App\Models\Country;
 use App\Models\Request;
+use App\Models\State;
 use App\Models\Waypoint;
 use App\Services\RouteService;
 use Illuminate\Support\Facades\Auth;
@@ -98,27 +100,8 @@ class RideService
     {
         $fields = $request->validated();
 
-        $originId = Address::firstOrCreate(
-            ['address' => $fields['origin-address']],
-            [
-                'city' => $fields['origin-city'],
-                'state' => $fields['origin-state'],
-                'country' => $fields['origin-country'],
-                'latitude' => $fields['origin-latitude'],
-                'longitude' => $fields['origin-longitude']
-            ]
-        )->id;
-
-        $destinationId = Address::firstOrCreate(
-            ['address' => $fields['destination-address']],
-            [
-                'city' => $fields['destination-city'],
-                'state' => $fields['destination-state'],
-                'country' => $fields['destination-country'],
-                'latitude' => $fields['destination-latitude'],
-                'longitude' => $fields['destination-longitude']
-            ]
-        )->id;
+        $originId = Address::firstOrCreateFromArray($request->origin())->id;
+        $destinationId = Address::firstOrCreateFromArray($request->destination())->id;
 
         // $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
 

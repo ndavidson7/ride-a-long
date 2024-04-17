@@ -1,4 +1,4 @@
-<x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info" x-data="{
+<div x-data="{
     ride: null,
     userRelation: null,
     relatedModelId: null,
@@ -69,46 +69,48 @@
                 {{-- blade-formatter-enable --}}
     }
 }">
-    <x-slot:body>
-        <div class="relative space-y-4 lg:space-y-0" x-show="loading">
-            <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
-        </div>
+    <x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info">
+        <x-slot:body>
+            <div class="relative space-y-4 lg:space-y-0" x-show="loading">
+                <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
+            </div>
 
-        <x-map x-show="!loading" x-init="$watch('ride', async value => {
-            await update([{
-                    address: value?.origin?.address,
-                    coordinates: [+value?.origin?.longitude, +value?.origin?.latitude],
-                },
-                ...value?.waypoints?.map(waypoint => {
-                    return {
-                        address: waypoint.address.address,
-                        coordinates: [+waypoint.address.longitude, +waypoint.address.latitude],
-                    };
-                }),
-                {
-                    address: value?.destination?.address,
-                    coordinates: [+value?.destination?.longitude, +value?.destination?.latitude],
-                },
-            ]);
-        
-            loading = false;
-        })" />
-    </x-slot:body>
+            <x-map x-show="!loading" x-init="$watch('ride', async value => {
+                await update([{
+                        address: value?.origin?.formatted_address,
+                        coordinates: [+value?.origin?.longitude, +value?.origin?.latitude],
+                    },
+                    ...value?.waypoints?.map(waypoint => {
+                        return {
+                            address: waypoint.address.formatted_address,
+                            coordinates: [+waypoint.address.longitude, +waypoint.address.latitude],
+                        };
+                    }),
+                    {
+                        address: value?.destination?.formatted_address,
+                        coordinates: [+value?.destination?.longitude, +value?.destination?.latitude],
+                    },
+                ]);
+            
+                loading = false;
+            })" />
+        </x-slot:body>
 
-    <x-slot:footer>
-        <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address),
-            ride.destination
-        ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
-            directions</x-button>
-        <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
-        <template x-if="userRelation == 'driver'">
-            <x-button as="anchor" ::href="ride ? route('rides.edit', ride.id) : ''" size="sm">Edit ride</x-button>
-        </template>
-        <template x-if="userRelation == 'requester'">
-            <x-button as="form" method="delete" ::action="relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
-        </template>
-        <template x-if="userRelation == 'passenger'">
-            <x-button as="form" method="delete" ::action="ride && relatedModelId ? route('rides.users.destroy', [ride.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
-        </template>
-    </x-slot:footer>
-</x-modal>
+        <x-slot:footer>
+            <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address),
+                ride.destination
+            ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
+                directions</x-button>
+            <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
+            <template x-if="userRelation == 'driver'">
+                <x-button as="anchor" ::href="ride ? route('rides.edit', ride.id) : ''" size="sm">Edit ride</x-button>
+            </template>
+            <template x-if="userRelation == 'requester'">
+                <x-button as="form" method="delete" ::action="relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
+            </template>
+            <template x-if="userRelation == 'passenger'">
+                <x-button as="form" method="delete" ::action="ride && relatedModelId ? route('rides.users.destroy', [ride.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
+            </template>
+        </x-slot:footer>
+    </x-modal>
+</div>

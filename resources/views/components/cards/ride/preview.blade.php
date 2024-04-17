@@ -1,3 +1,5 @@
+@props(['ride'])
+
 <div
     class="flex cursor-pointer flex-col items-center gap-3 rounded-lg border bg-white p-4 shadow-lg hover:bg-blue-100 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500">
 
@@ -7,7 +9,7 @@
         {{-- Origin and departure --}}
         <div class="flex flex-col-reverse items-center justify-center sm:flex-col">
             <h2 class="text-wrap font-bold sm:text-lg md:text-xl">
-                {{ $ride->origin->city }}, {{ $ride->origin->state }}
+                {{ $ride->origin->city }}, {{ $ride->origin->state->code }}
             </h2>
             <span
                 class="text-sm font-medium text-gray-700 md:text-base">{{ $ride->start_time->format('M j g:i a') }}</span>
@@ -35,7 +37,7 @@
         {{-- Destination and ETA --}}
         <div class="flex flex-col items-center justify-center">
             <h2 class="text-wrap font-bold sm:text-lg md:text-xl">
-                {{ $ride->destination->city }}, {{ $ride->destination->state }}
+                {{ $ride->destination->city }}, {{ $ride->destination->state->code }}
             </h2>
             <span class="text-sm font-medium text-gray-700 md:text-base">ETA</span>
         </div>
@@ -51,9 +53,7 @@
         <x-cards.hover>
             <x-slot:anchor class="inline-flex items-center gap-1 hover:underline"
                 href="{{ route('users.show', $ride->driver) }}">
-                @if ($pfp = $ride->driver->fetchFirstMedia())
-                    <img class="size-8 rounded-full shadow-lg" src="{{ $pfp['file_url'] }}" alt="Profile picture">
-                @endif
+                <x-pfp class="size-8 shadow-lg" :user="$ride->driver" />
                 <div>{{ $ride->driver->name }}</div>
             </x-slot:anchor>
 

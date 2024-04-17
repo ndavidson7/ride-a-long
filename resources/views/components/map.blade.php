@@ -26,8 +26,8 @@
             Route should follow this format (* indicates required):
                 [
                     {
-                        address*,
-                        coordinates*: [lng, lat],
+                        *address,
+                        *coordinates: [lng, lat],
                         info,
                         duration,
                         distance,
@@ -46,6 +46,8 @@
         this.renderDirections(directions);
 
         this.updateInfo(directions);
+
+        this.fitBounds();
     },
 
     async getDirections(route) {
@@ -108,7 +110,7 @@
                 .setLngLat(waypoint.location)
                 .setPopup(new mapboxgl.Popup({
                         className: '[&_.mapboxgl-popup-close-button]:px-1.5',
-                        offset: [0, -16]
+                        offset: [0, -16],
                     })
                     .setText(waypoint.name))
                 .addTo(this.map));
@@ -190,7 +192,7 @@
         {{-- if (!marker.getPopup().isOpen()) marker.togglePopup(); --}}
     },
 }"
-    x-intersect="onIntersect">
+    @map:update.window="update($event.detail)" x-intersect="onIntersect">
 
     {{-- Map container element --}}
     <div class="aspect-video rounded-lg" x-ref="map"></div>
