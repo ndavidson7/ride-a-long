@@ -1,5 +1,5 @@
 <x-layouts.app class="mx-auto max-w-5xl" title="Create ride">
-    <x-typography.h1 class="mb-5">Create a ride</x-typography.h1>
+    <x-typography.h1>Create a ride</x-typography.h1>
 
     <x-map class="mb-3" />
 
@@ -31,24 +31,24 @@
 
         <div class="grid gap-3 md:grid-cols-2">
             <div>
-                <x-buk-label class="font-medium" for="origin">Origin</x-buk-label>
+                <x-buk-label class="mb-1 font-medium" for="origin">Origin</x-buk-label>
                 <x-inputs.address name="origin" placeholder="Enter an address" x-model="origin" required />
             </div>
 
             <div>
-                <x-buk-label class="font-medium" for="destination">Destination</x-buk-label>
+                <x-buk-label class="mb-1 font-medium" for="destination">Destination</x-buk-label>
                 <x-inputs.address name="destination" placeholder="Enter an address" x-model="destination" required />
             </div>
         </div>
 
         <div class="grid gap-3 md:grid-cols-2">
             <div>
-                <x-buk-label class="font-medium" for="start-time">Date and Time</x-buk-label>
+                <x-buk-label class="mb-1 font-medium" for="start-time">Date and Time</x-buk-label>
                 <x-inputs.datepicker name="start-time" :options="['enableTime' => true]" required />
             </div>
 
             <div>
-                <x-buk-label class="font-medium" for="seats">Seats</x-buk-label>
+                <x-buk-label class="mb-1 font-medium" for="seats">Seats</x-buk-label>
                 <x-inputs.input name="seats" type="number" placeholder="Number of seats available" min="1"
                     required />
             </div>
@@ -63,7 +63,7 @@
         </div>
 
         <div>
-            <x-buk-label class="font-medium" for="description">Description/Additional info</x-buk-label>
+            <x-buk-label class="mb-1 font-medium" for="description">Description/Additional info</x-buk-label>
             <x-inputs.textarea name="description" rows=3 maxlength="255"></x-inputs.textarea>
         </div>
 

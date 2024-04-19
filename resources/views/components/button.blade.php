@@ -12,11 +12,15 @@
     if ($unstyled === false)
     {
         $attributes = $attributes->class([
-            'px-3',
-            'py-2',
+            'px-3' => $size === 'sm',
+            'py-2' => $size === 'sm',
+            'px-3.5' => $size === 'md',
+            'py-2.5' => $size === 'md',
+            'px-4' => $size === 'lg',
+            'py-3' => $size === 'lg',
             'min-h-10' => $size === 'sm',
-            'min-h-12' => $size === 'md',
-            'min-h-14' => $size === 'lg',
+            'min-h-11' => $size === 'md',
+            'min-h-12' => $size === 'lg',
             'inline-flex',
             'items-center',
             'justify-center',
@@ -34,8 +38,9 @@
             'focus:outline-none',
             'focus:border-blue-600',
             'focus:ring-blue-200',
-            'disabled:pointer-events-none',
-            'disabled:opacity-50'
+            'disabled:pointer-events-none' => $as === 'anchor',
+            'disabled:cursor-not-allowed' => $as !== 'anchor',
+            'disabled:opacity-50',
         ]);
     }
 @endphp

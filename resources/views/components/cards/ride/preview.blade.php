@@ -11,8 +11,8 @@
             <h2 class="text-wrap font-bold sm:text-lg md:text-xl">
                 {{ $ride->origin->city }}, {{ $ride->origin->state->code }}
             </h2>
-            <span
-                class="text-sm font-medium text-gray-700 md:text-base">{{ $ride->start_time->format('M j g:i a') }}</span>
+            <span class="text-sm font-medium text-gray-700 md:text-base" x-data
+                x-text="dayjs({{ Js::from($ride->start_time) }}).format('ddd, MMM D, h:mm A')"></span>
         </div>
 
         {{-- Divider, duration, and stops --}}
@@ -65,34 +65,52 @@
         {{-- Pills --}}
         <div class="flex flex-wrap items-center justify-center gap-1">
             <x-pill class="gap-1 bg-blue-300 px-2.5 py-1 text-xs font-semibold">
-                {{ $ride->seats_open }} {{ $ride->seats_open == 1 ? 'seat' : 'seats' }} left
+                {{ $ride->seats_total - $ride->seats_open }} passengers
             </x-pill>
+
+            @if ($ride->seats_open > 0)
+                <x-pill @class([
+                    'gap-1',
+                    'bg-blue-300' => $ride->seats_open > 2,
+                    'bg-yellow-300' => $ride->seats_open <= 2,
+                    'px-2.5',
+                    'py-1',
+                    'text-xs',
+                    'font-semibold',
+                ])>
+                    {{ $ride->seats_open }} {{ $ride->seats_open == 1 ? 'seat' : 'seats' }} left
+                </x-pill>
+            @else
+                <x-pill class="gap-1 bg-red-300 px-2.5 py-1 text-xs font-semibold">
+                    Full
+                </x-pill>
+            @endif
+
             @if ($ride->detours_allowed)
                 <x-pill class="gap-1 bg-blue-300 px-2.5 py-1 text-xs font-semibold">
                     <x-fas-arrows-turn-to-dots class="size-3" /> Detours
                 </x-pill>
             @endif
-            {{-- TODO: --}}
-            {{-- @switch($ride->user_relation)
+
+            @switch($ride->user_relation)
                 @case('driver')
-                    <x-fas-car-side /> Driving
+                    <x-pill class="gap-1 bg-green-300 px-2.5 py-1 text-xs font-semibold">
+                        <x-fas-car-side class="size-4" /> Driving
+                    </x-pill>
                 @break
 
                 @case('requester')
-                    <x-fas-hourglass-half /> Requested
+                    <x-pill class="gap-1 bg-yellow-300 px-2.5 py-1 text-xs font-semibold">
+                        <x-fas-hourglass-half class="size-3" /> Requested
+                    </x-pill>
                 @break
 
                 @case('passenger')
-                    <x-fas-car-side /> Riding
+                    <x-pill class="gap-1 bg-green-300 px-2.5 py-1 text-xs font-semibold">
+                        <x-fas-car-side class="size-3" /> Riding
+                    </x-pill>
                 @break
-
-                @default
-                    @if ($ride->seats_open > 0)
-                        <i class="bi bi-info-circle-fill"></i> More info
-                    @else
-                        <i class="bi bi-x-circle-fill"></i> Full
-                    @endif
-            @endswitch --}}
+            @endswitch
         </div>
 
     </div>

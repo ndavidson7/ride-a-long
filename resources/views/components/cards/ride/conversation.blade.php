@@ -1,22 +1,20 @@
 @props(['ride', 'messageWrappers'])
 
-<div id="ride-conversation" {{ $attributes->merge(['class' => 'card']) }}>
-    <h3 class="card-header">Chat</h3>
-    <div class="card-body overflow-scroll" id="message-history" style="position: relative; height: 400px">
+<div>
+    <x-typography.h2>Chat</x-typography.h2>
+
+    <div class="min-h-96 relative overflow-y-auto">
         @foreach ($messageWrappers as $messageWrapper)
             <x-messages.wrapper :$messageWrapper />
         @endforeach
     </div>
-    <form class="card-footer text-body-secondary d-flex justify-content-start align-items-center p-3" id="message-form"
-        action="{{ route('conversations.update', $ride->conversation) }}" method="POST" autocomplete="off">
-        @method('PUT')
-        @csrf
-        @if ($pfpUrl = auth()->user()->pfp_url)
-            <img src="{{ $pfpUrl }}" alt="My profile picture" style="width: 50px; height: 50px;">
-        @endif
-        <input class="form-control form-control-lg" name="message" type="text" placeholder="Type message">
-        <button class="btn ms-1" type="submit"><i class="bi bi-send-fill fs-4"></i></button>
-    </form>
+
+    <x-form class="flex items-center gap-2" action="{{ route('conversations.update', $ride->conversation) }}"
+        method="PUT" autocomplete="off">
+        <x-pfp class="size-12 hidden flex-shrink-0 md:block" :user="auth()->user()" />
+        <x-inputs.input class="flex-grow outline-none" name="message" placeholder="Type message" unstyled />
+        <x-button class="text-gray-400 hover:text-gray-500" unstyled><x-fas-paper-plane class="size-6" /></x-button>
+    </x-form>
 </div>
 
 @php

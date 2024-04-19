@@ -1,8 +1,25 @@
+@props(['ride' => null])
+
 <div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0']) }} x-data="{
     map: null,
     directionsClient: null,
     bounds: null,
-    route: [],
+    route: [@isset($ride)
+        {
+            address: {{ Js::from($ride->origin?->formatted_address) }},
+            coordinates: [+{{ Js::from($ride->origin?->longitude) }}, +{{ Js::from($ride->origin?->latitude) }}],
+        },
+        @foreach ($ride->waypoints as $waypoint)
+            {
+                address: {{ Js::from($waypoint->address->formatted_address) }},
+                coordinates: [+{{ Js::from($waypoint->address->longitude) }}, +{{ Js::from($waypoint->address->latitude) }}],
+            },
+        @endforeach
+        {
+            address: {{ Js::from($ride->destination?->formatted_address) }},
+            coordinates: [+{{ Js::from($ride->destination?->longitude) }}, +{{ Js::from($ride->destination?->latitude) }}],
+        }
+    @endisset],
     totalDistance: null,
     totalDuration: null,
     markers: [],
@@ -19,6 +36,8 @@
             .addControl(new mapboxgl.NavigationControl(), 'top-right');
 
         this.directionsClient = createMapboxDirections({ accessToken: mapboxgl.accessToken });
+
+        if (this.route.length > 1) this.map.on('load', () => this.update());
     },
 
     async update(route) {
@@ -35,13 +54,15 @@
                     ...
                 ]
         --}}
-        if (!route || !Array.isArray(route) || route.length < 2) throw new TypeError('Route must be an array of at least 2 waypoints');
+        if (this.route === route) return;
 
-        this.route = route;
+        if (route !== undefined) this.route = route;
 
-        console.log('Map received route: ', route);
-        const directions = await this.getDirections(route);
-        console.log('Directions: ', directions);
+        if (!this.route || !Array.isArray(this.route) || this.route.length < 2) throw new TypeError('Route must be an array of at least 2 waypoints');
+
+        {{-- console.log('Map received route: ', route); --}}
+        const directions = await this.getDirections();
+        {{-- console.log('Directions: ', directions); --}}
 
         this.renderDirections(directions);
 
@@ -50,7 +71,7 @@
         this.fitBounds();
     },
 
-    async getDirections(route) {
+    async getDirections(route = this.route) {
         return this.directionsClient.getDirections({
                 waypoints: route,
                 geometries: 'geojson',
