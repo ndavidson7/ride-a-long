@@ -47,8 +47,12 @@ window.Radar = Radar;
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import localizedFormat from "dayjs/plugin/localizedFormat";
+import utc from "dayjs/plugin/utc";
+import calendar from "dayjs/plugin/calendar";
 dayjs.extend(relativeTime);
 dayjs.extend(localizedFormat);
+dayjs.extend(utc);
+dayjs.extend(calendar);
 window.dayjs = dayjs;
 
 // Flatpickr

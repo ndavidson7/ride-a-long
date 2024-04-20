@@ -47,33 +47,33 @@
 });" @endisset
     x-modelable="address" @isset($xModel)
     x-model="{{ $xModel }}" @endisset>
-    <x-inputs.input ::value="address.formattedAddress" {{ $attributes }} autocomplete="off" x-data="{
-        checkIfSelected() {
-                resultsShown = false;
-                if (!address.formattedAddress) {
-                    $el.value = '';
-                    this.clearAddress();
-                    $el.blur();
+    <x-inputs.input ::value="address.formattedAddress" {{ $attributes->merge(['placeholder' => 'Enter an address']) }} autocomplete="off"
+        x-data="{
+            checkIfSelected() {
+                    resultsShown = false;
+                    if (!address.formattedAddress) {
+                        $el.value = '';
+                        this.clearAddress();
+                        $el.blur();
+                    }
+                },
+                clearAddress() {
+                    if (address.formattedAddress) Object.keys(address).forEach(key => address[key] = '');
+                },
+                updateAddress(newAddress) {
+                    {{-- Object.keys(address).forEach(key => address[key] = newAddress[key] ?? ''); --}}
+                    address.formattedAddress = newAddress.formattedAddress;
+                    address.streetAddress = newAddress.number + ' ' + newAddress.street;
+                    address.city = newAddress.city;
+                    address.state = newAddress.state;
+                    address.stateCode = newAddress.stateCode;
+                    address.postalCode = newAddress.postalCode;
+                    address.country = newAddress.country;
+                    address.countryCode = newAddress.countryCode;
+                    address.latitude = newAddress.latitude;
+                    address.longitude = newAddress.longitude;
                 }
-            },
-            clearAddress() {
-                if (address.formattedAddress) Object.keys(address).forEach(key => address[key] = '');
-            },
-            updateAddress(newAddress) {
-                {{-- Object.keys(address).forEach(key => address[key] = newAddress[key] ?? ''); --}}
-                address.formattedAddress = newAddress.formattedAddress;
-                address.streetAddress = newAddress.number + ' ' + newAddress.street;
-                address.city = newAddress.city;
-                address.state = newAddress.state;
-                address.stateCode = newAddress.stateCode;
-                address.postalCode = newAddress.postalCode;
-                address.country = newAddress.country;
-                address.countryCode = newAddress.countryCode;
-                address.latitude = newAddress.latitude;
-                address.longitude = newAddress.longitude;
-            }
-    }"
-        x-init="Radar.ui.autocomplete({
+        }" x-init="Radar.ui.autocomplete({
             container: $el,
             near: {{ Js::from($near) }},
             debounceMS: {{ $debounceMS }},

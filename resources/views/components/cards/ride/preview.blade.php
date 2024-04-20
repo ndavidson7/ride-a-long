@@ -50,17 +50,7 @@
     <div class="flex w-full flex-col-reverse items-center gap-3 sm:flex-row sm:justify-between">
 
         {{-- Driver --}}
-        <x-cards.hover>
-            <x-slot:anchor class="inline-flex items-center gap-1 hover:underline"
-                href="{{ route('users.show', $ride->driver) }}">
-                <x-pfp class="size-8 shadow-lg" :user="$ride->driver" />
-                <div>{{ $ride->driver->name }}</div>
-            </x-slot:anchor>
-
-            <x-slot:card class="max-w-64 rounded-xl border bg-white p-3 shadow-md">
-                <x-cards.user :user="$ride->driver" />
-            </x-slot:card>
-        </x-cards.hover>
+        <x-anchors.user :user="$ride->driver" size="sm" />
 
         {{-- Pills --}}
         <div class="flex flex-wrap items-center justify-center gap-1">

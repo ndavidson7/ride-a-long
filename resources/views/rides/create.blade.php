@@ -32,12 +32,12 @@
         <div class="grid gap-3 md:grid-cols-2">
             <div>
                 <x-buk-label class="mb-1 font-medium" for="origin">Origin</x-buk-label>
-                <x-inputs.address name="origin" placeholder="Enter an address" x-model="origin" required />
+                <x-inputs.address name="origin" x-model="origin" required />
             </div>
 
             <div>
                 <x-buk-label class="mb-1 font-medium" for="destination">Destination</x-buk-label>
-                <x-inputs.address name="destination" placeholder="Enter an address" x-model="destination" required />
+                <x-inputs.address name="destination" x-model="destination" required />
             </div>
         </div>
 

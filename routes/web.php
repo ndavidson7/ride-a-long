@@ -173,8 +173,7 @@ Route::controller(RequestController::class)->middleware(['auth', 'verified'])->n
 |--------------------------------------------------------------------------
 */
 
-// TODO: store is unused, consider removing
-Route::resource('rides.users', RideUserController::class)->only(['store', 'destroy'])->middleware(['auth', 'verified']);
+Route::resource('rides.users', RideUserController::class)->only(['destroy'])->middleware(['auth', 'verified']);
 
 /*
 |--------------------------------------------------------------------------

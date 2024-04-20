@@ -70,7 +70,6 @@ class RequestController extends Controller
     public function create(Ride $ride)
     {
         return view('requests.create', [
-            'entries' => ['resources/js/views/requests/create.js'],
             'ride' => new RideResource($ride),
         ]);
     }
@@ -102,6 +101,7 @@ class RequestController extends Controller
 
             $request->response = $fields['response'];
             $request->save();
+            $request->delete();
 
             if (!$fields['response']) {
                 DB::commit();

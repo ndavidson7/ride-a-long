@@ -53,10 +53,10 @@
             <p class="text-sm text-red-600" x-show="error" x-text="error"></p>
         </div>
 
-        <div x-data="{ bio: '{{ $user->bio }}' }">
+        <div x-data="{ bio: {{ Js::from($user->bio) }} }">
             <x-buk-label class="font-medium" for="bio">Bio</x-buk-label>
-            <x-inputs.textarea name="bio" aria-describedby="bio-limit" rows=4 maxlength="255" autofocus validated
-                x-model="bio"></x-inputs.textarea>
+            <x-inputs.textarea name="bio" aria-describedby="bio-limit" rows="4" maxlength="255" autofocus
+                validated x-model="bio"></x-inputs.textarea>
             <p class="text-xs/none text-gray-600" id="bio-limit" x-text="`${bio.length}/255 characters`">
             </p>
         </div>

@@ -53,9 +53,7 @@ class RideController extends Controller
             return new RideResource($ride);
         } else if (in_array($ride->user_relation, ['requester', 'none'])) {
             return view('rides.show', [
-                'entries' => ['resources/js/views/rides/show.js'],
                 'ride' => $ride,
-                'messageWrappers' => [],
             ]);
         }
 
@@ -63,7 +61,7 @@ class RideController extends Controller
 
         $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
             return [
-                'sender' => $message->sender,
+                'sender' => $message->sender, // TODO: Sender will be null for users who have left or been removed from the ride. Handle this case.
                 'body' => $message->body,
                 'created_at' => $message->created_at,
             ];
@@ -84,26 +82,32 @@ class RideController extends Controller
         $messageWrappers = $messagePaginator->reduce(function ($carry, $messageModel) {
             $sender = $messageModel['sender'];
             $message = $messageModel['body'];
-            $carbon = $messageModel['created_at']->setTimezone('America/New_York');
-            $timestamp = $carbon->format('g:i A');
+            // $carbon = $messageModel['created_at']->setTimezone('America/New_York');
+            $datetime = $messageModel['created_at'];
+            // $timestamp = $carbon->format('g:i A');
 
             if (empty($carry)) {
                 $carry[] = [
                     'sender' => $sender,
-                    'datetime' => $carbon->calendar(),
-                    'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
+                    // 'datetime' => $carbon->calendar(),
+                    'datetime' => $datetime,
+                    // 'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
+                    'message_chain' => [['message' => $message, 'timestamp' => $datetime]],
                 ];
             } else {
                 $lastMessageWrapper = end($carry);
 
                 if ($lastMessageWrapper['sender']['id'] === $sender['id']) {
-                    $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $timestamp];
-                    $carry[count($carry) - 1] = $lastMessageWrapper;
+                    // $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $timestamp];
+                    $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $datetime];
+                    $carry[array_key_last($carry)] = $lastMessageWrapper;
                 } else {
                     $carry[] = [
                         'sender' => $sender,
-                        'datetime' => $carbon->calendar(),
-                        'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
+                        // 'datetime' => $carbon->calendar(),
+                        'datetime' => $datetime,
+                        // 'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
+                        'message_chain' => [['message' => $message, 'timestamp' => $datetime]],
                     ];
                 }
             }
@@ -112,7 +116,6 @@ class RideController extends Controller
         }, []);
 
         return view('rides.show', [
-            'entries' => ['resources/js/views/rides/show.js'],
             'ride' => $ride,
             'messageWrappers' => $messageWrappers,
         ]);

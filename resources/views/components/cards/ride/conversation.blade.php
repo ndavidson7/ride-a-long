@@ -1,48 +1,108 @@
 @props(['ride', 'messageWrappers'])
 
-<div>
+<div x-data="{
+    messageWrappers: {{ Js::from($messageWrappers) }},
+
+    get isAtBottom() {
+        return $refs.messages.scrollTop + $refs.messages.clientHeight >= $refs.messages.scrollHeight;
+    },
+
+    scrollToBottom() {
+        $refs.messages.scrollTop = $refs.messages.scrollHeight - $refs.messages.clientHeight;
+    },
+
+    addMessage(message) {
+        const { sender, body, created_at } = message;
+        const lastMessageWrapper = this.messageWrappers.length ? this.messageWrappers[this.messageWrappers.length - 1] : null;
+
+        if (lastMessageWrapper && lastMessageWrapper.sender.id === sender.id) {
+            lastMessageWrapper.message_chain.push({ message: body, timestamp: created_at });
+        } else {
+            this.messageWrappers.push({
+                sender: sender,
+                datetime: created_at,
+                message_chain: [{ message: body, timestamp: created_at }],
+            });
+        }
+
+        if (this.isAtBottom) $nextTick(() => this.scrollToBottom());
+    },
+
+    async sendMessage(e) {
+        {{--
+            TODO: Immediately reset form and append message with loading state (transparent/muted text)
+            and reset to normal state when response is ok 
+        --}}
+        const data = new FormData(e.target);
+
+        {{-- Clear message input --}}
+        $refs.messageForm.reset();
+
+        const response = await fetch(e.target.action, {
+            method: 'POST',
+            body: data,
+            headers: { Accept: 'application/json' },
+        });
+
+        if (response.ok) {
+            {{-- Add message to chat --}}
+            {{-- addMessage(data.get('message'), { id: window.userId }); --}}
+        } else {
+            const data = await response.json();
+            alert(data.message ?? 'Something went wrong.');
+        }
+    },
+
+    init() {
+        Echo.private('mc-chat-conversation.{{ Js::from($ride->conversation->id) }}').listen(
+            '.Musonza\\Chat\\Eventing\\MessageWasSent',
+            (e) => {
+                if (e.message.sender.id !== {{ Js::from(auth()->user()->id) }})
+                    this.addMessage(e.message);
+            }
+        );
+
+        this.scrollToBottom();
+    },
+}">
     <x-typography.h2>Chat</x-typography.h2>
 
-    <div class="min-h-96 relative overflow-y-auto">
-        @foreach ($messageWrappers as $messageWrapper)
-            <x-messages.wrapper :$messageWrapper />
-        @endforeach
+    <div class="min-h-96 relative mb-3 overflow-y-auto" x-ref="messages">
+        <template x-for="messageWrapper in messageWrappers">
+            <div class="flex flex-col gap-2" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }" :class="self ? 'items-end' : 'items-start'">
+                <div class="flex items-center gap-2">
+                    <template x-if="messageWrapper.sender.pfp_url">
+                        <img class="size-10 rounded-full" :src="messageWrapper.sender.pfp_url"
+                            :alt="`${messageWrapper.sender.name}'s profile picture`">
+                    </template>
+                    <template x-if="!messageWrapper.sender.pfp_url">
+                        <x-fas-circle-user class="size-10 rounded-full bg-white text-gray-400" />
+                    </template>
+                    <div class="flex flex-col justify-center" :class="self ? 'items-end' : 'items-start'">
+                        <a :href="route('users.show', messageWrapper.sender.id)"
+                            x-text="messageWrapper.sender.name"></a>
+                        <time class="text-sm text-gray-600" x-text="dayjs(messageWrapper.datetime).calendar()"></time>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-1" :class="self ? 'items-end' : 'items-start'">
+                    <template x-for="messageInfo in messageWrapper.message_chain">
+                        <div class="flex items-center gap-2">
+                            <p class="peer rounded-full px-3 py-2"
+                                :class="self ? 'bg-blue-500 text-white' : 'bg-gray-300 order-2'"
+                                x-text="messageInfo.message"></p>
+                            <time class="invisible text-xs text-gray-600 peer-hover:visible"
+                                x-text="dayjs(messageInfo.timestamp).format('LT')"></time>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </template>
     </div>
 
     <x-form class="flex items-center gap-2" action="{{ route('conversations.update', $ride->conversation) }}"
-        method="PUT" autocomplete="off">
+        method="PUT" autocomplete="off" @submit.prevent="sendMessage" x-ref="messageForm">
         <x-pfp class="size-12 hidden flex-shrink-0 md:block" :user="auth()->user()" />
         <x-inputs.input class="flex-grow outline-none" name="message" placeholder="Type message" unstyled />
         <x-button class="text-gray-400 hover:text-gray-500" unstyled><x-fas-paper-plane class="size-6" /></x-button>
     </x-form>
 </div>
-
-@php
-    $senderOther = ['id' => 0, 'name' => '', 'pfp_url' => ''];
-    $senderSelf = auth()->user()->getParticipantDetails();
-
-    $messageWrapperOther = ['sender' => $senderOther, 'datetime' => '', 'message_chain' => []];
-    $messageWrapperSelf = ['sender' => $senderSelf, 'datetime' => '', 'message_chain' => []];
-@endphp
-
-<template id="message-wrapper-template-other">
-    <x-messages.wrapper :messageWrapper="$messageWrapperOther" />
-</template>
-
-<template id="message-template-other">
-    <x-messages.message :sender="$senderOther" :messageInfo="['message' => '', 'timestamp' => '']" />
-</template>
-
-<template id="message-wrapper-template-self">
-    <x-messages.wrapper :messageWrapper="$messageWrapperSelf" />
-</template>
-
-<template id="message-template-self">
-    <x-messages.message :sender="$senderSelf" :messageInfo="['message' => '', 'timestamp' => '']" />
-</template>
-
-<template id="divider-template">
-    <div class="divider d-flex align-items-center mb-4">
-        <p class="content mx-3 mb-0 text-center" style="color: #a2aab7;"></p>
-    </div>
-</template>

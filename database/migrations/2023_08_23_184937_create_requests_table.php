@@ -19,7 +19,7 @@ return new class extends Migration
             $table->unsignedInteger('user_id')->index('user_id');
             $table->unsignedInteger('pickup_id')->nullable();
             $table->unsignedInteger('dropoff_id')->nullable();
-            $table->text('message')->nullable();
+            $table->string('message')->nullable();
             $table->boolean('response')->nullable();
             // Updated_at will show when the response was given:
             // users will not be allowed to edit their own requests,

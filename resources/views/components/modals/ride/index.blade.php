@@ -102,14 +102,17 @@
             ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
                 directions</x-button>
             <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
-            <template x-if="userRelation == 'driver'">
+            <template x-if="userRelation === 'driver'">
                 <x-button as="anchor" ::href="ride ? route('rides.edit', ride.id) : ''" size="sm">Edit ride</x-button>
             </template>
-            <template x-if="userRelation == 'requester'">
+            <template x-if="userRelation === 'requester'">
                 <x-button as="form" method="delete" ::action="relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
             </template>
-            <template x-if="userRelation == 'passenger'">
+            <template x-if="userRelation === 'passenger'">
                 <x-button as="form" method="delete" ::action="ride && relatedModelId ? route('rides.users.destroy', [ride.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
+            </template>
+            <template x-if="userRelation === 'none'">
+                <x-button as="anchor" ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request to join</x-button>
             </template>
         </x-slot:footer>
     </x-modal>
