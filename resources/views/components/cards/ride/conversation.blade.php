@@ -11,21 +11,26 @@
         $refs.messages.scrollTop = $refs.messages.scrollHeight - $refs.messages.clientHeight;
     },
 
-    addMessage(message) {
+    addMessage(message, status = 'received') {
         const { sender, body, created_at } = message;
+        const newMessage = { body, created_at, status };
         const lastMessageWrapper = this.messageWrappers.length ? this.messageWrappers[this.messageWrappers.length - 1] : null;
 
+        let messagesLength = 1;
         if (lastMessageWrapper && lastMessageWrapper.sender.id === sender.id) {
-            lastMessageWrapper.message_chain.push({ message: body, timestamp: created_at });
+            messagesLength = lastMessageWrapper.messages.push(newMessage);
         } else {
             this.messageWrappers.push({
-                sender: sender,
-                datetime: created_at,
-                message_chain: [{ message: body, timestamp: created_at }],
+                sender,
+                created_at,
+                messages: [newMessage],
             });
         }
 
         if (this.isAtBottom) $nextTick(() => this.scrollToBottom());
+
+        {{-- Return the Proxy form of the new message so that updating status triggers reactivity --}}
+        return this.messageWrappers[this.messageWrappers.length - 1].messages[messagesLength - 1];
     },
 
     async sendMessage(e) {
@@ -37,6 +42,7 @@
 
         {{-- Clear message input --}}
         $refs.messageForm.reset();
+        const message = this.addMessage({ sender: {{ Js::from(auth()->user()->getParticipantDetails()) }}, body: data.get('message'), created_at: new Date().toISOString() }, 'sent');
 
         const response = await fetch(e.target.action, {
             method: 'POST',
@@ -45,8 +51,7 @@
         });
 
         if (response.ok) {
-            {{-- Add message to chat --}}
-            {{-- addMessage(data.get('message'), { id: window.userId }); --}}
+            message.status = 'received';
         } else {
             const data = await response.json();
             alert(data.message ?? 'Something went wrong.');
@@ -62,36 +67,43 @@
             }
         );
 
-        this.scrollToBottom();
+        $nextTick(() => this.scrollToBottom());
     },
 }">
     <x-typography.h2>Chat</x-typography.h2>
 
-    <div class="min-h-96 relative mb-3 overflow-y-auto" x-ref="messages">
-        <template x-for="messageWrapper in messageWrappers">
+    <div class="relative mb-3 h-full max-h-96 space-y-2 overflow-y-auto md:px-2" x-ref="messages">
+        <template x-for="messageWrapper in messageWrappers"
+            :key="`${messageWrapper.sender.id}-${messageWrapper.created_at}`">
+            {{-- Message wrapper --}}
             <div class="flex flex-col gap-2" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }" :class="self ? 'items-end' : 'items-start'">
+                {{-- User --}}
                 <div class="flex items-center gap-2">
-                    <template x-if="messageWrapper.sender.pfp_url">
-                        <img class="size-10 rounded-full" :src="messageWrapper.sender.pfp_url"
-                            :alt="`${messageWrapper.sender.name}'s profile picture`">
-                    </template>
-                    <template x-if="!messageWrapper.sender.pfp_url">
-                        <x-fas-circle-user class="size-10 rounded-full bg-white text-gray-400" />
-                    </template>
+                    <div class="size-10" :class="self && 'order-2'">
+                        <template x-if="messageWrapper.sender.pfp_url">
+                            <img class="size-full rounded-full" :src="messageWrapper.sender.pfp_url"
+                                :alt="`${messageWrapper.sender.name}'s profile picture`">
+                        </template>
+                        <template x-if="!messageWrapper.sender.pfp_url">
+                            <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
+                        </template>
+                    </div>
                     <div class="flex flex-col justify-center" :class="self ? 'items-end' : 'items-start'">
                         <a :href="route('users.show', messageWrapper.sender.id)"
                             x-text="messageWrapper.sender.name"></a>
-                        <time class="text-sm text-gray-600" x-text="dayjs(messageWrapper.datetime).calendar()"></time>
+                        <time class="text-sm text-gray-600" x-text="dayjs(messageWrapper.created_at).calendar()"></time>
                     </div>
                 </div>
+                {{-- Message chain --}}
                 <div class="flex flex-col gap-1" :class="self ? 'items-end' : 'items-start'">
-                    <template x-for="messageInfo in messageWrapper.message_chain">
-                        <div class="flex items-center gap-2">
-                            <p class="peer rounded-full px-3 py-2"
-                                :class="self ? 'bg-blue-500 text-white' : 'bg-gray-300 order-2'"
-                                x-text="messageInfo.message"></p>
+                    <template x-for="message in messageWrapper.messages" :key="message.created_at">
+                        {{-- Message --}}
+                        <div class="flex items-center gap-2" :class="message.status === 'sent' && 'opacity-50'">
+                            <p class="peer rounded-3xl px-3 py-2"
+                                :class="self ? 'bg-blue-500 text-white' : 'bg-gray-300 order-2'" x-text="message.body">
+                            </p>
                             <time class="invisible text-xs text-gray-600 peer-hover:visible"
-                                x-text="dayjs(messageInfo.timestamp).format('LT')"></time>
+                                x-text="dayjs(message.created_at).format('LT')"></time>
                         </div>
                     </template>
                 </div>

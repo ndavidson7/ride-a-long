@@ -61,6 +61,7 @@ class RideController extends Controller
 
         $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
             return [
+                'id' => $message->id,
                 'sender' => $message->sender, // TODO: Sender will be null for users who have left or been removed from the ride. Handle this case.
                 'body' => $message->body,
                 'created_at' => $message->created_at,
@@ -69,45 +70,40 @@ class RideController extends Controller
 
         /* 
          * Iterate through $messages and group adjacent messages from the same sender into a message wrapper.
-         * Sender contains properties of the message's creator, datetime is the first message's timestamp in Carbon's calendar() format,
-         * and message_chain holds each message and its timestamp.
          * 
-         * Message wrapper structure:
+         * Message wrapper keys structure:
          * [
          *      'sender' => ['id', 'name', 'pfp_url'],
-         *      'datetime' => 'datetime',
-         *      'message_chain' => [['message', 'timestamp'], ['message', 'timestamp'], ...]
+         *      'created_at',
+         *      'messages' => [['body', 'created_at'], ['body', 'created_at'], ...]
          * ]
          */
         $messageWrappers = $messagePaginator->reduce(function ($carry, $messageModel) {
+            // $id = $messageModel['id'];
             $sender = $messageModel['sender'];
-            $message = $messageModel['body'];
-            // $carbon = $messageModel['created_at']->setTimezone('America/New_York');
-            $datetime = $messageModel['created_at'];
-            // $timestamp = $carbon->format('g:i A');
+            $body = $messageModel['body'];
+            $created_at = $messageModel['created_at'];
+
+            // $message = compact('id', 'body', 'created_at');
+            $message = compact('body', 'created_at');
 
             if (empty($carry)) {
                 $carry[] = [
                     'sender' => $sender,
-                    // 'datetime' => $carbon->calendar(),
-                    'datetime' => $datetime,
-                    // 'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
-                    'message_chain' => [['message' => $message, 'timestamp' => $datetime]],
+                    'created_at' => $created_at,
+                    'messages' => [$message],
                 ];
             } else {
                 $lastMessageWrapper = end($carry);
 
                 if ($lastMessageWrapper['sender']['id'] === $sender['id']) {
-                    // $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $timestamp];
-                    $lastMessageWrapper['message_chain'][] = ['message' => $message, 'timestamp' => $datetime];
+                    $lastMessageWrapper['messages'][] = $message;
                     $carry[array_key_last($carry)] = $lastMessageWrapper;
                 } else {
                     $carry[] = [
                         'sender' => $sender,
-                        // 'datetime' => $carbon->calendar(),
-                        'datetime' => $datetime,
-                        // 'message_chain' => [['message' => $message, 'timestamp' => $timestamp]],
-                        'message_chain' => [['message' => $message, 'timestamp' => $datetime]],
+                        'created_at' => $created_at,
+                        'messages' => [$message],
                     ];
                 }
             }
