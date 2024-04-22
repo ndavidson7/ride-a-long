@@ -34,10 +34,6 @@
     },
 
     async sendMessage(e) {
-        {{--
-            TODO: Immediately reset form and append message with loading state (transparent/muted text)
-            and reset to normal state when response is ok 
-        --}}
         const data = new FormData(e.target);
 
         {{-- Clear message input --}}
@@ -67,46 +63,59 @@
             }
         );
 
+        console.log(this.messageWrappers);
+
         $nextTick(() => this.scrollToBottom());
     },
 }">
     <x-typography.h2>Chat</x-typography.h2>
 
-    <div class="relative mb-3 h-full max-h-96 space-y-2 overflow-y-auto md:px-2" x-ref="messages">
+    <div class="mb-3 h-full max-h-96 space-y-2 overflow-y-auto md:px-1" x-ref="messages">
         <template x-for="messageWrapper in messageWrappers"
             :key="`${messageWrapper.sender.id}-${messageWrapper.created_at}`">
             {{-- Message wrapper --}}
-            <div class="flex flex-col gap-2" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }" :class="self ? 'items-end' : 'items-start'">
-                {{-- User --}}
-                <div class="flex items-center gap-2">
-                    <div class="size-10" :class="self && 'order-2'">
-                        <template x-if="messageWrapper.sender.pfp_url">
-                            <img class="size-full rounded-full" :src="messageWrapper.sender.pfp_url"
-                                :alt="`${messageWrapper.sender.name}'s profile picture`">
-                        </template>
-                        <template x-if="!messageWrapper.sender.pfp_url">
-                            <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
-                        </template>
-                    </div>
-                    <div class="flex flex-col justify-center" :class="self ? 'items-end' : 'items-start'">
-                        <a :href="route('users.show', messageWrapper.sender.id)"
-                            x-text="messageWrapper.sender.name"></a>
-                        <time class="text-sm text-gray-600" x-text="dayjs(messageWrapper.created_at).calendar()"></time>
-                    </div>
-                </div>
-                {{-- Message chain --}}
-                <div class="flex flex-col gap-1" :class="self ? 'items-end' : 'items-start'">
-                    <template x-for="message in messageWrapper.messages" :key="message.created_at">
-                        {{-- Message --}}
-                        <div class="flex items-center gap-2" :class="message.status === 'sent' && 'opacity-50'">
-                            <p class="peer rounded-3xl px-3 py-2"
-                                :class="self ? 'bg-blue-500 text-white' : 'bg-gray-300 order-2'" x-text="message.body">
-                            </p>
-                            <time class="invisible text-xs text-gray-600 peer-hover:visible"
-                                x-text="dayjs(message.created_at).format('LT')"></time>
-                        </div>
+            <div class="relative flex flex-col gap-0.5" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }"
+                :class="self ? 'items-end' : 'items-start'">
+                <a class="size-7 md:size-9 absolute top-0 z-10 rounded-full" :class="self ? 'right-0' : 'left-0'"
+                    :href="route('users.show', messageWrapper.sender.id)">
+                    <template x-if="messageWrapper.sender.pfp_url">
+                        <img class="size-full rounded-full" :src="messageWrapper.sender.pfp_url"
+                            :alt="`${messageWrapper.sender.name}'s profile picture`">
                     </template>
-                </div>
+                    <template x-if="!messageWrapper.sender.pfp_url">
+                        <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
+                    </template>
+                </a>
+                <template x-for="(message, index) in messageWrapper.messages" :key="message.created_at">
+                    {{-- Message --}}
+                    <div
+                        :class="{
+                            'relative': true,
+                            'opacity-50': message
+                                .status === 'sent',
+                            'pr-8 md:pr-10': self,
+                            'pl-8 md:pl-10': !self
+                        }">
+                        <template x-if="index === 0">
+                            <div class="mb-1 flex flex-wrap items-end gap-1">
+                                <a class="text-xs/none font-medium" :class="self && 'order-2'"
+                                    :href="route('users.show', messageWrapper.sender.id)"
+                                    x-text="messageWrapper.sender.name"></a>
+                                <time class="text-[8px] leading-none text-gray-600 md:text-[10px]"
+                                    x-text="dayjs(messageWrapper.created_at).calendar()"></time>
+                            </div>
+                        </template>
+                        <p class="peer w-fit rounded-2xl px-2.5 py-1 text-sm"
+                            :class="self ? 'bg-blue-500 text-white ms-auto' : 'bg-gray-300'" x-text="message.body">
+                        </p>
+                        <template x-if="index !== 0">
+                            <time
+                                class="invisible absolute top-1/2 -translate-y-1/2 text-[8px] text-gray-600 peer-hover:visible md:text-[10px]"
+                                :class="self ? 'right-0' : 'left-0'"
+                                x-text="dayjs(message.created_at).format('LT')"></time>
+                        </template>
+                    </div>
+                </template>
             </div>
         </template>
     </div>

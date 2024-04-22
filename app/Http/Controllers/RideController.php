@@ -59,6 +59,7 @@ class RideController extends Controller
 
         $ride = $ride->load('requests', 'conversation');
 
+        // ->setPaginationParams(['sorting' => 'desc'])
         $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
             return [
                 'id' => $message->id,
