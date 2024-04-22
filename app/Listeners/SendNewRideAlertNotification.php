@@ -5,13 +5,10 @@ namespace App\Listeners;
 use App\Events\RideSaved;
 use App\Models\NewRideAlert;
 use App\Notifications\NewRide;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SendNewRideAlertNotification implements ShouldQueue
 {
-    use InteractsWithQueue;
-
     /**
      * Create the event listener.
      */

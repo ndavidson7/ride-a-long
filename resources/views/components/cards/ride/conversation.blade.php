@@ -1,7 +1,22 @@
-@props(['ride', 'messageWrappers'])
+@props(['ride', 'participants', 'messageWrappers'])
 
 <div x-data="{
+    participants: {{ Js::from($participants) }},
     messageWrappers: {{ Js::from($messageWrappers) }},
+
+    init() {
+        Echo.private('mc-chat-conversation.{{ Js::from($ride->conversation->id) }}').listen(
+            '.Musonza\\Chat\\Eventing\\MessageWasSent',
+            (e) => {
+                if (e.message.sender.id !== {{ Js::from(auth()->user()->id) }})
+                    this.addMessage(e.message);
+            }
+        );
+
+        console.log(this.participants, this.messageWrappers);
+
+        $nextTick(() => this.scrollToBottom());
+    },
 
     get isAtBottom() {
         return $refs.messages.scrollTop + $refs.messages.clientHeight >= $refs.messages.scrollHeight;
@@ -12,8 +27,8 @@
     },
 
     addMessage(message, status = 'received') {
-        const { sender, body, created_at } = message;
-        const newMessage = { body, created_at, status };
+        const { id, sender, body, created_at } = message;
+        const newMessage = { id, body, created_at, status };
         const lastMessageWrapper = this.messageWrappers.length ? this.messageWrappers[this.messageWrappers.length - 1] : null;
 
         let messagesLength = 1;
@@ -38,7 +53,9 @@
 
         {{-- Clear message input --}}
         $refs.messageForm.reset();
-        const message = this.addMessage({ sender: {{ Js::from(auth()->user()->getParticipantDetails()) }}, body: data.get('message'), created_at: new Date().toISOString() }, 'sent');
+
+        {{-- Make message using random string as temporary ID --}}
+        const message = this.addMessage({ id: (Math.random() + 1).toString(36).substring(7), sender: {{ Js::from(auth()->user()->getParticipantDetails()) }}, body: data.get('message'), created_at: new Date().toISOString() }, 'sent');
 
         const response = await fetch(e.target.action, {
             method: 'POST',
@@ -46,37 +63,25 @@
             headers: { Accept: 'application/json' },
         });
 
+        const json = await response.json();
+
         if (response.ok) {
+            message.id = json.id;
             message.status = 'received';
         } else {
-            const data = await response.json();
-            alert(data.message ?? 'Something went wrong.');
+            alert(json.message ?? 'Something went wrong.');
         }
-    },
-
-    init() {
-        Echo.private('mc-chat-conversation.{{ Js::from($ride->conversation->id) }}').listen(
-            '.Musonza\\Chat\\Eventing\\MessageWasSent',
-            (e) => {
-                if (e.message.sender.id !== {{ Js::from(auth()->user()->id) }})
-                    this.addMessage(e.message);
-            }
-        );
-
-        console.log(this.messageWrappers);
-
-        $nextTick(() => this.scrollToBottom());
     },
 }">
     <x-typography.h2>Chat</x-typography.h2>
 
-    <div class="mb-3 h-full max-h-96 space-y-2 overflow-y-auto md:px-1" x-ref="messages">
+    <div class="mb-3 h-96 space-y-2 overflow-y-auto md:px-1" x-ref="messages">
         <template x-for="messageWrapper in messageWrappers"
             :key="`${messageWrapper.sender.id}-${messageWrapper.created_at}`">
             {{-- Message wrapper --}}
             <div class="relative flex flex-col gap-0.5" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }"
                 :class="self ? 'items-end' : 'items-start'">
-                <a class="size-7 md:size-9 absolute top-0 z-10 rounded-full" :class="self ? 'right-0' : 'left-0'"
+                <a class="size-8 md:size-10 absolute top-0 z-10 rounded-full" :class="self ? 'right-0' : 'left-0'"
                     :href="route('users.show', messageWrapper.sender.id)">
                     <template x-if="messageWrapper.sender.pfp_url">
                         <img class="size-full rounded-full" :src="messageWrapper.sender.pfp_url"
@@ -86,15 +91,15 @@
                         <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
                     </template>
                 </a>
-                <template x-for="(message, index) in messageWrapper.messages" :key="message.created_at">
+                <template x-for="(message, index) in messageWrapper.messages" :key="message.id">
                     {{-- Message --}}
                     <div
                         :class="{
                             'relative': true,
                             'opacity-50': message
                                 .status === 'sent',
-                            'pr-8 md:pr-10': self,
-                            'pl-8 md:pl-10': !self
+                            'pr-10 md:pr-12': self,
+                            'pl-10 md:pl-12': !self
                         }">
                         <template x-if="index === 0">
                             <div class="mb-1 flex flex-wrap items-end gap-1">

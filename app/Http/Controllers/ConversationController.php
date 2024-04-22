@@ -53,12 +53,14 @@ class ConversationController extends Controller
         ])['message'];
 
         try {
-            Chat::message($message)
+            $id = Chat::message($message)
                 ->from(Auth::user())
                 ->to($conversation)
-                ->send();
+                ->send()
+                ->id;
 
             return response()->json([
+                'id' => $id,
                 'status' => 'success',
                 'message' => 'Message sent.'
             ], 200);

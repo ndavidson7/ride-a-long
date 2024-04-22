@@ -85,7 +85,7 @@
 
     @if (in_array($ride->user_relation, ['driver', 'passenger']))
         <x-card class="bg-white">
-            <x-cards.ride.conversation :$ride :$messageWrappers />
+            <x-cards.ride.conversation :$ride :$participants :$messageWrappers />
         </x-card>
         <x-card class="bg-white">
             <x-cards.ride.passengers :$ride />

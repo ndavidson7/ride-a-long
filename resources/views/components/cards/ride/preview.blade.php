@@ -97,7 +97,7 @@
 
                 @case('passenger')
                     <x-pill class="gap-1 bg-green-300 px-2.5 py-1 text-xs font-semibold">
-                        <x-fas-car-side class="size-3" /> Riding
+                        <x-fas-car-side class="size-4" /> Riding
                     </x-pill>
                 @break
             @endswitch
