@@ -60,7 +60,9 @@ class RideController extends Controller
         $ride = $ride->load('requests', 'conversation');
 
         // ->setPaginationParams(['sorting' => 'desc'])
-        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages()->through(function ($message) {
+        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages();
+
+        $messages = $messagePaginator->through(function ($message) {
             return [
                 'id' => $message->id,
                 'sender' => $message->sender['id'] ?? null, // TODO: Sender will be null for users who have left or been removed from the ride. Handle this case.
@@ -78,7 +80,7 @@ class RideController extends Controller
          *      'messages' => [['id', 'body', 'created_at'], ...]
          * ]
          */
-        $messageWrappers = $messagePaginator->reduce(function ($carry, $messageModel) {
+        $messageWrappers = $messages->reduce(function ($carry, $messageModel) {
             $sender = $messageModel['sender'];
             $id = $messageModel['id'];
             $body = $messageModel['body'];
@@ -115,6 +117,7 @@ class RideController extends Controller
                 return [$details['id'] => $details->except('id')];
             }),
             'messageWrappers' => $messageWrappers,
+            // 'lastPage' => $messagePaginator->lastPage(),
         ]);
     }
 

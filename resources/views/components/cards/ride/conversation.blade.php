@@ -1,8 +1,11 @@
 @props(['ride', 'participants', 'messageWrappers'])
+{{-- 'lastPage' --}}
 
 <div x-data="{
-    participants: {{ Js::from($participants) }},
+    participants: new Map(Object.entries({{ Js::from($participants) }}).map(([key, value]) => [parseInt(key), value])),
     messageWrappers: {{ Js::from($messageWrappers) }},
+    {{-- currentPage: 1,
+    lastPage: {{ Js::from($lastPage) }}, --}}
 
     init() {
         Echo.private('mc-chat-conversation.{{ Js::from($ride->conversation->id) }}').listen(
@@ -37,7 +40,6 @@
         } else {
             this.messageWrappers.push({
                 sender,
-                created_at,
                 messages: [newMessage],
             });
         }
@@ -55,7 +57,7 @@
         $refs.messageForm.reset();
 
         {{-- Make message using random string as temporary ID --}}
-        const message = this.addMessage({ id: (Math.random() + 1).toString(36).substring(7), sender: {{ Js::from(auth()->user()->getParticipantDetails()) }}, body: data.get('message'), created_at: new Date().toISOString() }, 'sent');
+        const message = this.addMessage({ id: (Math.random() + 1).toString(36).substring(7), sender: {{ Js::from(auth()->user()->id) }}, body: data.get('message'), created_at: new Date().toISOString() }, 'sent');
 
         const response = await fetch(e.target.action, {
             method: 'POST',
@@ -77,17 +79,23 @@
 
     <div class="mb-3 h-96 space-y-2 overflow-y-auto md:px-1" x-ref="messages">
         <template x-for="messageWrapper in messageWrappers"
-            :key="`${messageWrapper.sender.id}-${messageWrapper.created_at}`">
+            :key="`${messageWrapper.sender}-${messageWrapper.messages[0].created_at}`">
             {{-- Message wrapper --}}
-            <div class="relative flex flex-col gap-0.5" x-data="{ self: messageWrapper.sender.id === {{ Js::from(auth()->user()->id) }} }"
+            <div class="relative flex flex-col gap-0.5" x-data="{
+                self: messageWrapper.sender === {{ Js::from(auth()->user()->id) }},
+            
+                get sender() {
+                    return participants.get(messageWrapper.sender);
+                }
+            }"
                 :class="self ? 'items-end' : 'items-start'">
                 <a class="size-8 md:size-10 absolute top-0 z-10 rounded-full" :class="self ? 'right-0' : 'left-0'"
-                    :href="route('users.show', messageWrapper.sender.id)">
-                    <template x-if="messageWrapper.sender.pfp_url">
-                        <img class="size-full rounded-full" :src="messageWrapper.sender.pfp_url"
-                            :alt="`${messageWrapper.sender.name}'s profile picture`">
+                    :href="route('users.show', messageWrapper.sender)">
+                    <template x-if="sender.pfp_url">
+                        <img class="size-full rounded-full" :src="sender.pfp_url"
+                            :alt="`${sender.name}'s profile picture`">
                     </template>
-                    <template x-if="!messageWrapper.sender.pfp_url">
+                    <template x-if="!sender.pfp_url">
                         <x-fas-circle-user class="size-full rounded-full bg-white text-gray-400" />
                     </template>
                 </a>
@@ -104,8 +112,7 @@
                         <template x-if="index === 0">
                             <div class="mb-1 flex flex-wrap items-end gap-1">
                                 <a class="text-xs/none font-medium" :class="self && 'order-2'"
-                                    :href="route('users.show', messageWrapper.sender.id)"
-                                    x-text="messageWrapper.sender.name"></a>
+                                    :href="route('users.show', messageWrapper.sender.id)" x-text="sender.name"></a>
                                 <time class="text-[8px] leading-none text-gray-600 md:text-[10px]"
                                     x-text="dayjs(messageWrapper.created_at).calendar()"></time>
                             </div>
