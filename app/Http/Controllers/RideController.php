@@ -10,7 +10,6 @@ use App\Services\RideService;
 use App\Http\Resources\RideResource;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RideFilterRequest;
-use Musonza\Chat\Facades\ChatFacade as Chat;
 use App\Http\Requests\StoreOrUpdateRideRequest;
 
 class RideController extends Controller
@@ -59,65 +58,8 @@ class RideController extends Controller
 
         $ride = $ride->load('requests', 'conversation');
 
-        // ->setPaginationParams(['sorting' => 'desc'])
-        $messagePaginator = Chat::conversation($ride->conversation)->setParticipant(Auth::user())->getMessages();
-
-        $messages = $messagePaginator->through(function ($message) {
-            return [
-                'id' => $message->id,
-                'sender' => $message->sender['id'] ?? null, // TODO: Sender will be null for users who have left or been removed from the ride. Handle this case.
-                'body' => $message->body,
-                'created_at' => $message->created_at,
-            ];
-        });
-
-        /* 
-         * Iterate through $messages and group adjacent messages from the same sender.
-         * 
-         * Message wrapper keys structure:
-         * [
-         *      'sender',
-         *      'messages' => [['id', 'body', 'created_at'], ...]
-         * ]
-         */
-        $messageWrappers = $messages->reduce(function ($carry, $messageModel) {
-            $sender = $messageModel['sender'];
-            $id = $messageModel['id'];
-            $body = $messageModel['body'];
-            $created_at = $messageModel['created_at'];
-
-            $message = compact('id', 'body', 'created_at');
-
-            if (empty($carry)) {
-                $carry[] = [
-                    'sender' => $sender,
-                    'messages' => [$message],
-                ];
-            } else {
-                $lastMessageWrapper = end($carry);
-
-                if ($lastMessageWrapper['sender'] === $sender) {
-                    $lastMessageWrapper['messages'][] = $message;
-                    $carry[array_key_last($carry)] = $lastMessageWrapper;
-                } else {
-                    $carry[] = [
-                        'sender' => $sender,
-                        'messages' => [$message],
-                    ];
-                }
-            }
-
-            return $carry;
-        }, []);
-
         return view('rides.show', [
             'ride' => $ride,
-            'participants' => $ride->conversation->getParticipants()->mapWithKeys(function ($participant, $key) {
-                $details = collect($participant->getParticipantDetails());
-                return [$details['id'] => $details->except('id')];
-            }),
-            'messageWrappers' => $messageWrappers,
-            // 'lastPage' => $messagePaginator->lastPage(),
         ]);
     }
 

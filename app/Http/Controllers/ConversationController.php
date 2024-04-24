@@ -35,14 +35,18 @@ class ConversationController extends Controller
         return redirect()->route('conversations.show', ['conversation' => $conversation]);
     }
 
-    public function show(Conversation $conversation)
+    public function show(Request $request, Conversation $conversation)
     {
-        $messages = Chat::conversation($conversation)->setParticipant(Auth::user())->getMessages();
+        // Need to return CursorPaginator so that new messages don't cause paginator to return duplicates (I think)
+        $paginator = $conversation->getMessagesCustom($request->query('cursor', null));
+
+        if ($request->expectsJson()) {
+            return response()->json($paginator);
+        }
 
         return view('conversations.show', [
-            'conversation' => $conversation,
-            'messages' => $messages,
-            'entries' => ['resources/js/views/conversations/show.js']
+            // 'conversation' => $conversation,
+            'messages' => $messages
         ]);
     }
 

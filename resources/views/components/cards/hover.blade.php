@@ -1,4 +1,4 @@
-@props(['enterDelay' => 600, 'leaveDelay' => 500, 'anchor', 'card'])
+@props(['enterDelay' => 400, 'leaveDelay' => 0, 'anchor', 'card'])
 
 <div class="relative" x-data="{
     hovered: false,
@@ -27,7 +27,7 @@
     </a>
     <template x-teleport="body" @mouseenter="hoverCardEnter" @mouseleave="hoverCardLeave">
         <div {{ $card->attributes->class(['z-[99]']) }} x-show="hovered" x-cloak x-transition
-            x-anchor.offset.10="document.getElementById($id('anchor'))">
+            x-anchor.top="document.getElementById($id('anchor'))">
             {{ $card }}
         </div>
     </template>

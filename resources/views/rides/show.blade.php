@@ -85,8 +85,8 @@
 
     @if (in_array($ride->user_relation, ['driver', 'passenger']))
         <x-card class="bg-white">
-            <x-cards.ride.conversation :$ride :$participants :$messageWrappers />
-            {{-- :$lastPage --}}
+            <x-typography.h2>Chat</x-typography.h2>
+            <x-cards.ride.conversation :conversation="$ride->conversation" />
         </x-card>
         <x-card class="bg-white">
             <x-cards.ride.passengers :$ride />
