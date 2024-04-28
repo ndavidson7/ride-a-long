@@ -4,75 +4,48 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 
 ## :white_check_mark: TODO
 
--   [x] Rewrite in Laravel
--   [x] Check if user clicked a different ride info card before re-fetching and rendering the same route and instead simply display the modal again
--   [x] Allow riders to request pickup/dropoff spots
--   [ ] Email verification
-    -   [x] Local mailer
-    -   [ ] Prod mailer
--   [x] Route for leave ride button
--   [x] Search/filter on navbar
--   [x] Pagination on rides.index
--   [x] Preview map hidden until updated
--   [x] Profile picture upload
--   [x] Make PFP upload async
--   [x] Display button relevant to user on ride modal
--   [x] Only display city (and maybe state) on rides index cards. Show more detail inside modal
--   [x] Make formatted_address in ride info modal an anchor to the user agent's default GPS app
--   [x] My rides page (sort of hacked... but works well enough)
--   [x] Broadcast new notifications (https://laravel.com/docs/10.x/broadcasting)
--   [ ] Add messaging functionality
-    -   [x] Ride chat
-    -   [ ] Direct messages
--   [x] Only show driver's car to passengers
--   [x] Import majors
--   [x] Attractive landing page
--   [x] Forgot password route
--   [x] text-muted deprecated
--   [ ] Sign in with phone number
--   [ ] Login with Google to verify student status (https://laravel.com/docs/10.x/socialite)
--   [ ] Convert to TALL stack
-    -   [ ] Overhaul styling. Pages left:
+-   Email verification
+    -   Prod mailer
+-   Add chat:
+    -   Use Laravel Echo Presence Channels to track each user's online status (https://laravel.com/docs/11.x/broadcasting#presence-channels)
+    -   Consider switching to Livewire component
+-   Attractive landing page
+-   Sign in with phone number
+-   Login with Google to verify student status (https://laravel.com/docs/10.x/socialite)
+-   Convert to TALL stack
+    -   Overhaul styling. Pages left:
     -   rides.\*
     -   requests.\*
     -   alerts.\*
     -   profiles.\*
     -   settings.\*
     -   landing
--   [ ] Allow users to create alerts to be notified when:
-    -   [ ] Seat becomes available in previously full ride
-    -   [ ] New ride is created matching desired criteria
--   [ ] Overhaul forms
-    -   [ ] Check validation and add error feedback div to every (required?) input
-    -   [ ] Refactor forms JS?
-    -   [ ] Look into datalists (https://getbootstrap.com/docs/5.3/forms/form-control/#datalists)
--   [ ] Make use of form requests, policies, and static factory methods for increased validation and security and reduced controller method complexity
--   [ ] Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
--   [ ] Change all timezone-related code to use user's local timezone (while ensuring DB records use UTC)
-    -   [ ] Request user's location OR allow user to set their location/timezone
--   [ ] Allow users to upload multiple cars, and decouple it from profile edit
--   [ ] Pricing model
--   [ ] Distinguish between ride types based on origin/destination: airports, cities, schools, etc.
--   [ ] Convert HTML template JS code to make use of web components?
--   [ ] Soft deletes
-    -   [ ] old rides (DELETE FROM rides WHERE start_time < NOW();)
-    -   [ ] requests (don't allow users to request the same ride again after soft delete)
--   [ ] Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
--   [ ] Delete from address table after 30 days of record creation in accordance with Google Maps ToS (https://cloud.google.com/maps-platform/terms/maps-service-terms)
-    -   [x] Create scheduled Artisan command
-    -   [ ] Add cron entry to server (https://laravel.com/docs/10.x/scheduling#running-the-scheduler)
--   [ ] Use dividers in messages?
--   [ ] Refactor view-specific JS to be more modular, reusable
--   [ ] Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
--   [ ] Show password toggle
--   [ ] Infinite scroll pagination
--   [ ] Cache Google DirectionsResults in sessionStorage (gray area of Google ToS...)
--   [ ] Rides index on large map, show routes when filter applied
--   [ ] Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
+-   Allow users to create alerts to be notified when:
+    -   Seat becomes available in previously full ride
+    -   New ride is created matching desired criteria
+-   Overhaul forms
+    -   Check validation and add error feedback div to every (required?) input
+    -   Refactor forms JS?
+-   Make use of form requests, policies, and static factory methods for increased validation and security and reduced controller method complexity
+-   Notifications via email and maybe SMS (https://laravel.com/docs/10.x/notifications & https://laravel.com/docs/10.x/events)
+-   Change all timezone-related code to use user's local timezone while ensuring DB records use UTC (dayjs on front end for converting to user's system's timezone)
+-   Allow users to upload multiple cars, and decouple it from profile edit
+-   Pricing model
+-   Distinguish between ride types based on origin/destination: airports, cities, schools, etc.
+-   Soft deletes
+    -   old rides (DELETE FROM rides WHERE start_time < NOW();)
+    -   requests (don't allow users to request the same ride again after soft delete)
+-   Move address geocoding to backend in order to reuse cached coordinates, as well as re-fetch coordinates for old addresses that are still being referenced (see below)
+-   Delete user's outstanding requests when request with conflicting time is accepted (or maybe allow user's to set a priority with their requests)
+-   Show password toggle
+-   Infinite scroll pagination
+-   Cache Mapbox Directions API results in sessionStorage?
+-   Rides index on large map, show routes when filter applied
+-   Database concurrency (https://blog.tobexkee.com/handling-concurrency-attacks-in-laravel)
 
 ## Production Checklist
 
--   [ ] Cache (icons, config, routes, etc.)
+-   Cache (icons, config, routes, etc.)
 
 ## :hammer_and_wrench: Tech Stack
 
