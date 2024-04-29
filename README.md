@@ -14,12 +14,11 @@ Ride sharing web app designed by and for college students. Carpool with your cla
 -   Login with Google to verify student status (https://laravel.com/docs/10.x/socialite)
 -   Convert to TALL stack
     -   Overhaul styling. Pages left:
-    -   rides.\*
-    -   requests.\*
-    -   alerts.\*
-    -   profiles.\*
-    -   settings.\*
-    -   landing
+        -   requests.\*
+        -   alerts.\*
+        -   profiles.\*
+        -   settings.\*
+        -   landing
 -   Allow users to create alerts to be notified when:
     -   Seat becomes available in previously full ride
     -   New ride is created matching desired criteria

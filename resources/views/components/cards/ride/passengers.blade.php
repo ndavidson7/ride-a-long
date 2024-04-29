@@ -4,13 +4,13 @@
     <x-typography.h2>Passengers</x-typography.h2>
 
     @if ($ride->passengers->isNotEmpty())
-        <ul class="">
+        <ul>
             @foreach ($ride->passengers as $passenger)
-                <li class="flex items-center justify-between gap-2">
+                <li class="group flex items-center justify-between gap-2 p-3 hover:bg-gray-100">
                     <x-anchors.user :user="$passenger" size="md" />
                     @if ($ride->user_relation === 'driver')
-                        <x-button class="grid place-items-center rounded-full" as="form"
-                            action="{{ route('rides.users.destroy', [$ride, $passenger]) }}" method="DELETE"
+                        <x-button class="invisible grid place-items-center rounded-full group-hover:visible"
+                            as="form" action="{{ route('rides.users.destroy', [$ride, $passenger]) }}" method="DELETE"
                             onclick="return confirm('Are you sure you want to remove this passenger?');" unstyled>
                             <x-fas-circle-xmark class="size-6 rounded-full text-red-500" />
                         </x-button>
