@@ -26,10 +26,14 @@
 @if ($validated)
     <div x-data="{ error: '@error($name){{ $message }}@enderror', validate(el) { this.error = !el.checkValidity() ? el.validationMessage : '' } }">
         <x-buk-textarea :$name :$rows {{ $attributes }} @blur="validate($el)" ::class="error && '!border-transparent !ring-red-600'"
-            @input="if (error) validate($el)" />
+            @input="if (error) validate($el)">
+            {{ $slot }}
+        </x-buk-textarea>
         <p class="min-h-[1lh] text-sm font-light text-red-600" x-show="error" x-text="error">
         </p>
     </div>
 @else
-    <x-buk-textarea :$name :$rows {{ $attributes }} />
+    <x-buk-textarea :$name :$rows {{ $attributes }}>
+        {{ $slot }}
+    </x-buk-textarea>
 @endif

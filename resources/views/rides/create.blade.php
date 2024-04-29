@@ -67,6 +67,6 @@
             <x-inputs.textarea name="description" rows=3 maxlength="255"></x-inputs.textarea>
         </div>
 
-        <x-button class="bg-white">Post</x-button>
+        <x-button>Post</x-button>
     </x-form>
 </x-layouts.app>

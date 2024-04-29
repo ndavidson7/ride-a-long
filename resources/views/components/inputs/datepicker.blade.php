@@ -3,6 +3,7 @@
 @php
     $options = (object) array_merge(
         [
+            'dateFormat' => 'Z',
             'altInput' => true,
             'altFormat' => 'l, F J h:i K',
             'minDate' => 'today',

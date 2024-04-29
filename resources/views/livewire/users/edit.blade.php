@@ -32,5 +32,5 @@
         </p>
     </div>
 
-    <x-button class="bg-white" size="sm">Save</x-button>
+    <x-button size="sm">Save</x-button>
 </form>

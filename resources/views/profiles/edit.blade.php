@@ -36,11 +36,11 @@
                         await $nextTick();
                         URL.revokeObjectURL(pfpUrl);
                     " />
-                <x-button class="bg-white" type="button" ::class="error && 'ring-1 ring-red-600'" @click="$refs.pfpInput.click()"
+                <x-button type="button" ::class="error && 'ring-1 ring-red-600'" @click="$refs.pfpInput.click()"
                     size="sm">Change</x-button>
 
                 <input class="hidden" name="delete-pfp" type="checkbox" value="1" x-ref="deletePfpInput" />
-                <x-button class="bg-white" type="button" size="sm"
+                <x-button type="button" size="sm"
                     @click="
                         $refs.deletePfpInput.checked = true;
                         pfpUrl = '';
@@ -61,7 +61,7 @@
             </p>
         </div>
 
-        <x-button class="bg-white" size="sm">Save</x-button>
+        <x-button size="sm">Save</x-button>
         <x-button class="bg-white text-red-500" href="{{ route('users.show') }}" as="anchor"
             size="sm">Cancel</x-button>
 

@@ -8,9 +8,7 @@
     <div class="fixed left-0 top-0 z-[99] flex h-screen w-screen items-center justify-center" x-show="open" x-cloak>
         {{-- Background blur --}}
         <div class="absolute inset-0 h-full w-full bg-white bg-opacity-70 backdrop-blur-sm" x-show="open"
-            x-transition:enter="ease-out duration-300" x-transition:enter-start="opacity-0"
-            x-transition:enter-end="opacity-100" x-transition:leave="ease-in duration-300"
-            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @click="open=false"></div>
+            x-transition.opacity.duration.300ms @click="open=false"></div>
 
         {{-- Modal --}}
         <div role="dialog"

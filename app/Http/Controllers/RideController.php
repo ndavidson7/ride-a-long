@@ -66,7 +66,6 @@ class RideController extends Controller
     public function edit(Ride $ride)
     {
         return view('rides.edit', [
-            'entries' => ['resources/js/views/rides/edit.js'],
             'ride' => new RideResource($ride)
         ]);
     }

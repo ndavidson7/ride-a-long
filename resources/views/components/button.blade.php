@@ -5,6 +5,7 @@
     'as' => 'button',
     'method' => 'POST',
     'action' => null,
+    'variant' => 'primary',
 ])
 
 {{-- blade-formatter-disable --}}
@@ -25,6 +26,9 @@
             'items-center',
             'justify-center',
             'whitespace-nowrap',
+            'bg-blue-500' => $variant === 'primary',
+            'bg-red-500' => $variant === 'danger',
+            'text-white' => $variant !== 'plain',
             'border',
             'border-gray-400',
             'ring-2',
@@ -36,8 +40,12 @@
             'font-medium',
             'transition-all',
             'focus:outline-none',
-            'focus:border-blue-600',
-            'focus:ring-blue-200',
+            'focus:border-blue-700' => $variant === 'primary',
+            'focus:ring-blue-200' => $variant === 'primary',
+            'focus:border-red-700' => $variant === 'danger',
+            'focus:ring-red-200' => $variant === 'danger',
+            'active:bg-blue-600' => $variant === 'primary',
+            'active:bg-red-600' => $variant === 'danger',
             'disabled:pointer-events-none' => $as === 'anchor',
             'disabled:cursor-not-allowed' => $as !== 'anchor',
             'disabled:opacity-50',

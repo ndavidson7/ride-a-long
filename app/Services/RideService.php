@@ -104,29 +104,24 @@ class RideService
         $destinationId = Address::firstOrCreateFromArray($request->destination())->id;
 
         // $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
+        $details = [
+            'driver_id' => $request->user()->id,
+            'start_time' => $fields['start-time'],
+            'origin_id' => $originId,
+            'destination_id' => $destinationId,
+            'seats_total' => $fields['seats'],
+            'detours_allowed' => $request->has('detours'),
+            // 'price_per_mile' => $fields['price'],
+            'description' => $fields['description'],
+        ];
 
+        // Todo: Consider creating the conversation as a part of the Ride model creating process, inherent to the model itself
         if ($ride) {
-            $ride->update([
-                'start_time' => $fields['start-time'],
-                'origin_id' => $originId,
-                'destination_id' => $destinationId,
-                'seats_total' => $fields['seats'],
-                'detours_allowed' => $request->has('detours'),
-                // 'price_per_mile' => $fields['price'],
-                'description' => $fields['description'],
-            ]);
+            $ride->update($details);
         } else {
-            Ride::create([
-                'driver_id' => $request->user()->id,
-                'start_time' => $fields['start-time'],
-                'origin_id' => $originId,
-                'destination_id' => $destinationId,
-                'seats_total' => $fields['seats'],
-                'detours_allowed' => $request->has('detours'),
-                // 'price_per_mile' => $fields['price'],
-                'description' => $fields['description'],
+            Ride::create(array_merge($details, [
                 'conversation_id' => Chat::createConversation([Auth::user()])->makePrivate()->id,
-            ]);
+            ]));
         }
     }
 

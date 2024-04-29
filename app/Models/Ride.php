@@ -59,9 +59,17 @@ class Ride extends Model
         'seats_open',
     ];
 
-    protected $casts = [
-        'start_time' => 'datetime',
-    ];
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'start_time' => 'datetime',
+        ];
+    }
 
     public $timestamps = false;
 

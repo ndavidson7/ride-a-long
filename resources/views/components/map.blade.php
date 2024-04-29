@@ -54,12 +54,13 @@
                     ...
                 ]
         --}}
-        if (this.route === route) return;
+        if (JSON.stringify(this.route) === JSON.stringify(route)) return;
 
         if (route !== undefined) this.route = route;
 
         if (!this.route || !Array.isArray(this.route) || this.route.length < 2) throw new TypeError('Route must be an array of at least 2 waypoints');
 
+        {{-- console.log('Updating map...'); --}}
         {{-- console.log('Map received route: ', route); --}}
         const directions = await this.getDirections();
         {{-- console.log('Directions: ', directions); --}}
@@ -213,7 +214,13 @@
         {{-- if (!marker.getPopup().isOpen()) marker.togglePopup(); --}}
     },
 }"
-    @map:update.window="update($event.detail)" x-intersect="onIntersect">
+    @map:update.window="
+        if (map.loaded())
+            update($event.detail);
+        else
+            map.on('load', () => update($event.detail));
+    "
+    x-intersect="onIntersect">
 
     {{-- Map container element --}}
     <div class="aspect-video rounded-lg" x-ref="map"></div>

@@ -29,7 +29,7 @@
             <p class="text-xs/none text-gray-600" id="message-limit" x-text="`${message.length}/255 characters`"></p>
         </div>
 
-        <x-button class="bg-white" size="sm">Request</x-button>
+        <x-button size="sm">Request</x-button>
     </x-form>
 
 </x-layouts.app>
