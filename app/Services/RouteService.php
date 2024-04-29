@@ -14,7 +14,7 @@ class RouteService
 
     public function optimizeRoute($route, $pickup = null, $dropoff = null)
     {
-        $this->throwIfNotInRange(count($route) + isset($pickup) + isset($dropoff));
+        self::throwIfNotInRange(count($route) + isset($pickup) + isset($dropoff));
 
         // if no pickup or dropoff, just optimize the route
         if (!isset($pickup) && !isset($dropoff)) {
@@ -166,7 +166,7 @@ class RouteService
         }
     }
 
-    private function throwIfNotInRange($num)
+    private static function throwIfNotInRange($num)
     {
         if ($num < self::MIN_LOCATIONS) {
             throw new Exception('Not enough addresses. Refresh the page and try again. If the problem persists, try different addresses.');
