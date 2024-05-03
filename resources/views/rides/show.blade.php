@@ -3,7 +3,8 @@
     $car = $driver->car;
 @endphp
 
-<x-layouts.app class="mx-auto max-w-7xl space-y-3" title="{{ $driver->name }}'s ride">
+<x-layouts.app class="mx-auto max-w-7xl gap-5 space-y-5 lg:columns-2 [&>*]:break-inside-avoid"
+    title="{{ $driver->name }}'s ride">
 
     <x-card class="bg-white">
         <x-typography.h2>Ride Details</x-typography.h2>
@@ -66,6 +67,7 @@
             @endswitch
         </div>
     </x-card>
+
     <x-card class="bg-white">
         <x-typography.h2>Driver</x-typography.h2>
         <div class="flex flex-wrap items-center justify-between gap-3">
@@ -86,7 +88,7 @@
     @if (in_array($ride->user_relation, ['driver', 'passenger']))
         <x-card class="bg-white">
             <x-typography.h2>Chat</x-typography.h2>
-            {{-- <x-conversations.chatbox :conversation="$ride->conversation" /> --}}
+            <x-conversations.chatbox :conversation="$ride->conversation" />
         </x-card>
         <x-card class="bg-white">
             <x-cards.ride.passengers :$ride />
