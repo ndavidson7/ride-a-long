@@ -1,9 +1,14 @@
 <div x-data="{
-    ride: null,
+    rideData: null,
     userRelation: null,
     relatedModelId: null,
     loading: false,
 
+    {{--
+        TODO: Consider storing relevant ride data within JS or HTML on rides index page
+        instead of fetching it each time the modal is opened. We already query all the
+        data on the index page, so we could store it in a data attribute or JS object.
+    --}}
     async fetchData(rideId) {
         if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
 
@@ -21,12 +26,12 @@
 
         if (rideId === undefined || userRelation === undefined || relatedModelId === undefined) throw new TypeError(`Missing argument 'rideId', 'userRelation', or 'relatedModelId'`);
 
-        if (rideId === this.ride?.id) return;
+        if (rideId === this.rideData?.id) return;
 
         this.loading = true;
         this.userRelation = userRelation;
         this.relatedModelId = relatedModelId;
-        this.ride = await this.fetchData(rideId);
+        this.rideData = await this.fetchData(rideId);
     },
 
     constructDirectionsUrl(addresses) {
@@ -75,44 +80,31 @@
                 <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
             </div>
 
-            <x-map x-show="!loading" x-init="$watch('ride', async value => {
-                await update([{
-                        address: value?.origin?.formatted_address,
-                        coordinates: [value?.origin?.longitude, value?.origin?.latitude],
-                    },
-                    ...value?.waypoints?.map(waypoint => {
-                        return {
-                            address: waypoint.address.formatted_address,
-                            coordinates: [waypoint.address.longitude, waypoint.address.latitude],
-                        };
-                    }),
-                    {
-                        address: value?.destination?.formatted_address,
-                        coordinates: [value?.destination?.longitude, value?.destination?.latitude],
-                    },
-                ]);
+            <x-map x-show="!loading" x-init="$watch('rideData', async value => {
+                console.log(value);
+                ride = value;
             
-                loading = false;
+                $nextTick(() => loading = false);
             })" />
         </x-slot:body>
 
         <x-slot:footer>
-            <x-button as="anchor" target="_blank" ::href="ride ? constructDirectionsUrl([ride.origin, ...ride.waypoints.map(waypoint => waypoint.address),
-                ride.destination
+            <x-button as="anchor" target="_blank" ::href="rideData ? constructDirectionsUrl([rideData.origin, ...rideData.waypoints.map(waypoint => waypoint.address),
+                rideData.destination
             ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
                 directions</x-button>
-            <x-button as="anchor" ::href="ride ? route('rides.show', ride.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
+            <x-button as="anchor" ::href="rideData ? route('rides.show', rideData.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
             <template x-if="userRelation === 'driver'">
-                <x-button as="anchor" ::href="ride ? route('rides.edit', ride.id) : ''" size="sm">Edit ride</x-button>
+                <x-button as="anchor" ::href="rideData ? route('rides.edit', rideData.id) : ''" size="sm">Edit ride</x-button>
             </template>
             <template x-if="userRelation === 'requester'">
                 <x-button as="form" method="delete" ::action="relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
             </template>
             <template x-if="userRelation === 'passenger'">
-                <x-button as="form" method="delete" ::action="ride && relatedModelId ? route('rides.users.destroy', [ride.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
+                <x-button as="form" method="delete" ::action="rideData && relatedModelId ? route('rides.users.destroy', [rideData.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
             </template>
             <template x-if="userRelation === 'none'">
-                <x-button as="anchor" ::href="ride ? route('requests.create', ride.id) : ''" size="sm">Request to join</x-button>
+                <x-button as="anchor" ::href="rideData ? route('requests.create', rideData.id) : ''" size="sm">Request to join</x-button>
             </template>
         </x-slot:footer>
     </x-modal>

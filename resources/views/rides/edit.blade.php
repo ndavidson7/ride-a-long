@@ -7,22 +7,8 @@
         x-data="{
             origin: {},
             destination: {},
-        
-            updateMap() {
-                if (!this.origin.formattedAddress || !this.destination.formattedAddress) return;
-        
-                $dispatch('map:update', [{
-                        address: this.origin.formattedAddress,
-                        coordinates: [this.origin.longitude, this.origin.latitude],
-                    },
-                    {
-                        address: this.destination.formattedAddress,
-                        coordinates: [this.destination.longitude, this.destination.latitude],
-                    },
-                ]);
-            }
-        }" x-init="$watch('origin', value => updateMap());
-        $watch('destination', value => updateMap());">
+        }" x-init="$watch('origin', value => $dispatch('map:set-origin', value));
+        $watch('destination', value => $dispatch('map:set-destination', value));">
 
         @if ($errors->any())
             @foreach ($errors->all() as $error)
