@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Musonza\Chat\Models\Conversation;
 use Musonza\Chat\Facades\ChatFacade as Chat;
+use App\Services\ChatService;
 
 class ConversationController extends Controller
 {
@@ -38,7 +39,7 @@ class ConversationController extends Controller
     public function show(Request $request, Conversation $conversation)
     {
         // Need to return CursorPaginator so that new messages don't cause paginator to return duplicates (I think)
-        $paginator = $conversation->getMessagesCustom($request->query('cursor', null));
+        $paginator = ChatService::from($conversation)->getMessages($request->query('cursor', null));
 
         if ($request->expectsJson()) {
             return response()->json($paginator);

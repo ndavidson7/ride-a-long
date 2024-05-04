@@ -6,7 +6,7 @@
         return [$details['id'] => $details->except('id')];
     });
 
-    $paginator = $conversation->getMessagesCustom();
+    $paginator = \App\Services\ChatService::from($conversation)->getMessages();
 @endphp
 
 <div x-data="{
