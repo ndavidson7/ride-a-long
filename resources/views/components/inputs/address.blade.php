@@ -18,8 +18,8 @@
 
 <div x-data="{
     address: {
-        formattedAddress: null,
-        streetAddress: null,
+        formatted_address: null,
+        street_address: null,
         city: null,
         state: null,
         stateCode: null,
@@ -33,8 +33,8 @@
 }"
     @isset($address) x-init="$nextTick(() => {
     address = {
-        formattedAddress: {{ Js::from($address->formatted_address) }},
-        streetAddress: {{ Js::from($address->street_address) }},
+        formatted_address: {{ Js::from($address->formatted_address) }},
+        street_address: {{ Js::from($address->street_address) }},
         city: {{ Js::from($address->city) }},
         state: {{ Js::from($address->state?->name) }},
         stateCode: {{ Js::from($address->state?->code) }},
@@ -47,23 +47,23 @@
 });" @endisset
     x-modelable="address" @isset($xModel)
     x-model="{{ $xModel }}" @endisset>
-    <x-inputs.input ::value="address.formattedAddress" {{ $attributes->merge(['placeholder' => 'Enter an address']) }} autocomplete="off"
+    <x-inputs.input ::value="address.formatted_address" {{ $attributes->merge(['placeholder' => 'Enter an address']) }} autocomplete="off"
         x-data="{
             checkIfSelected() {
                     resultsShown = false;
-                    if (!address.formattedAddress) {
+                    if (!address.formatted_address) {
                         $el.value = '';
                         this.clearAddress();
                         $el.blur();
                     }
                 },
                 clearAddress() {
-                    if (address.formattedAddress) Object.keys(address).forEach(key => address[key] = '');
+                    if (address.formatted_address) Object.keys(address).forEach(key => address[key] = '');
                 },
                 updateAddress(newAddress) {
                     {{-- Object.keys(address).forEach(key => address[key] = newAddress[key] ?? ''); --}}
-                    address.formattedAddress = newAddress.formattedAddress;
-                    address.streetAddress = newAddress.number + ' ' + newAddress.street;
+                    address.formatted_address = newAddress.formattedAddress;
+                    address.street_address = newAddress.number + ' ' + newAddress.street;
                     address.city = newAddress.city;
                     address.state = newAddress.state;
                     address.stateCode = newAddress.stateCode;

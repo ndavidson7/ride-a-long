@@ -39,7 +39,7 @@ class Address extends Component
         public bool $disabled = false,
         public string $countryCode = "us",
         string $layers = "address",
-        string $addressComponents = "streetAddress,city,state,stateCode,postalCode,country,countryCode,latitude,longitude"
+        string $addressComponents = "street_address,city,state,stateCode,postalCode,country,countryCode,latitude,longitude"
     ) {
         if ($address->id) $this->address = $address;
         $this->layers = explode(',', $layers);

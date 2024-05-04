@@ -18,6 +18,7 @@
 
     <x-toasts.container />
 
+    @livewireScriptConfig
 </body>
 
 </html>

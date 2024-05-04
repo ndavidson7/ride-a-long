@@ -14,5 +14,6 @@
         window.userId = {{ auth()->user()->id ?? 'null' }}
     </script>
     @routes
+    @livewireStyles
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>

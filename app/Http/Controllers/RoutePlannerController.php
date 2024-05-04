@@ -13,15 +13,9 @@ class RoutePlannerController extends Controller
 
         try {
             $optimizedWaypoints = $routeService->optimizeRoute($data['route'], $data['pickup'] ?? null, $data['dropoff'] ?? null);
-            return response()->json([
-                'error' => false,
-                'content' => $optimizedWaypoints,
-            ]);
+            return response()->json($optimizedWaypoints);
         } catch (\Throwable $th) {
-            return response()->json([
-                'error' => true,
-                'content' => $th->getMessage(),
-            ]);
+            return response()->json($th->getMessage(), 500);
         }
     }
 }

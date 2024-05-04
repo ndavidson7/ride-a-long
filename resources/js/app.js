@@ -1,8 +1,10 @@
 import "./bootstrap";
+import {
+    Livewire,
+    Alpine,
+} from "../../vendor/livewire/livewire/dist/livewire.esm";
+import map from "./components/map";
 
-const alertToast = document.getElementById("alert-toast");
+Alpine.data("map", map);
 
-if (alertToast) {
-    // TODO: Replace now that no longer using bootstrap
-    // bootstrap.Toast.getOrCreateInstance(alertToast).show();
-}
+Livewire.start();

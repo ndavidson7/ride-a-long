@@ -75,7 +75,7 @@ class RouteService
         // returns the original waypoints in the correct order (also with updated order property)
         $optimizedWaypoints = array_map(function ($key) use ($route, $optimizedRoute) {
             // find the original waypoint object using the optimized route entry's name (address)
-            $waypoint = $route[array_search($optimizedRoute[$key]['name'], array_column(array_column($route, 'address'), 'address'))];
+            $waypoint = $route[array_search($optimizedRoute[$key]['name'], array_column(array_column($route, 'address'), 'formatted_address'))];
             // add its order according to the optimized route's key (want order to be 1-indexed)
             $waypoint['order'] = $key + 1;
             return $waypoint;
@@ -92,7 +92,7 @@ class RouteService
             // Origin and destination have different structure
             if ($key === 0 || $key === count($route) - 1) {
                 return [
-                    'address' => $location['address'],
+                    'address' => $location['formatted_address'],
                     'lat' => $location['latitude'],
                     'lng' => $location['longitude'],
                 ];
@@ -100,7 +100,7 @@ class RouteService
 
             $address = $location['address'];
             $tmp = [
-                'address' => $address['address'],
+                'address' => $address['formatted_address'],
                 'lat' => $address['latitude'],
                 'lng' => $address['longitude'],
             ];
@@ -124,8 +124,10 @@ class RouteService
     }
 
     /**
-     * Used for previewing and showing requests, as the pickup and dropoff locations are not yet waypoints.
-     * Therefore, format the pickup and dropoff to emulate waypoints, and append them to the route.
+     * Used for previewing and showing ride requests with pickup and/or dropoff locations,
+     * as the pickup and dropoff locations are not yet waypoints. Formats the pickup and
+     * dropoff locations to emulate waypoints by setting the before and/or after keys,
+     * and appends them to the route.
      * 
      * Should never be called without either pickup or dropoff being set.
      */

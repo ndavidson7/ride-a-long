@@ -12,11 +12,11 @@
     
             $dispatch('map:update', [{
                     address: this.origin.formattedAddress,
-                    coordinates: [+this.origin.longitude, +this.origin.latitude],
+                    coordinates: [this.origin.longitude, this.origin.latitude],
                 },
                 {
                     address: this.destination.formattedAddress,
-                    coordinates: [+this.destination.longitude, +this.destination.latitude],
+                    coordinates: [this.destination.longitude, this.destination.latitude],
                 },
             ]);
         }

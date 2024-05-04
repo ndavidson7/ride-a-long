@@ -78,17 +78,17 @@
             <x-map x-show="!loading" x-init="$watch('ride', async value => {
                 await update([{
                         address: value?.origin?.formatted_address,
-                        coordinates: [+value?.origin?.longitude, +value?.origin?.latitude],
+                        coordinates: [value?.origin?.longitude, value?.origin?.latitude],
                     },
                     ...value?.waypoints?.map(waypoint => {
                         return {
                             address: waypoint.address.formatted_address,
-                            coordinates: [+waypoint.address.longitude, +waypoint.address.latitude],
+                            coordinates: [waypoint.address.longitude, waypoint.address.latitude],
                         };
                     }),
                     {
                         address: value?.destination?.formatted_address,
-                        coordinates: [+value?.destination?.longitude, +value?.destination?.latitude],
+                        coordinates: [value?.destination?.longitude, value?.destination?.latitude],
                     },
                 ]);
             
