@@ -16,19 +16,20 @@ class Address extends Model
 
     public static function rules(string $name = '', bool $required = true): array
     {
-        $rule = $required ? 'required' : 'nullable';
+        $baseRule = $required ? 'required' : 'nullable';
+        $componentRule = $baseRule . '|required_with:' . $name;
 
         return [
-            $name => $rule . '|array:street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude',
-            $name . '.street_address' => 'required|string',
-            $name . '.city' => 'required|string',
-            $name . '.state_name' => 'required|string',
-            $name . '.state_code' => 'required|string',
-            $name . '.postal_code' => 'required|string',
-            $name . '.country_name' => 'required|string',
-            $name . '.country_code' => 'required|string',
-            $name . '.latitude' => 'required|numeric',
-            $name . '.longitude' => 'required|numeric',
+            $name => $baseRule . '|array:street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude',
+            $name . '.street_address' => $componentRule . '|string',
+            $name . '.city' => $componentRule . '|string',
+            $name . '.state_name' => $componentRule . '|string',
+            $name . '.state_code' => $componentRule . '|string',
+            $name . '.postal_code' => $componentRule . '|string',
+            $name . '.country_name' => $componentRule . '|string',
+            $name . '.country_code' => $componentRule . '|string',
+            $name . '.latitude' => $componentRule . '|numeric',
+            $name . '.longitude' => $componentRule . '|numeric',
         ];
     }
 

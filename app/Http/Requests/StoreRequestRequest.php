@@ -2,10 +2,14 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Address;
+use App\Traits\HasAddressInputs;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRequestRequest extends FormRequest
 {
+    use HasAddressInputs;
+
     /**
      * Determine if the user is authorized to make this request.
      */
@@ -21,22 +25,10 @@ class StoreRequestRequest extends FormRequest
      */
     public function rules(): array
     {
-        return $this->ride->detours_allowed ? [
-            'pickup-address' => 'nullable',
-            'pickup-city' => 'nullable|required_with:pickup-address',
-            'pickup-state' => 'nullable|required_with:pickup-address',
-            'pickup-country' => 'nullable|required_with:pickup-address',
-            'pickup-latitude' => 'nullable|required_with:pickup-address|numeric',
-            'pickup-longitude' => 'nullable|required_with:pickup-address|numeric',
-            'dropoff-address' => 'nullable',
-            'dropoff-city' => 'nullable|required_with:dropoff-address',
-            'dropoff-state' => 'nullable|required_with:dropoff-address',
-            'dropoff-country' => 'nullable|required_with:dropoff-address',
-            'dropoff-latitude' => 'nullable|required_with:dropoff-address|numeric',
-            'dropoff-longitude' => 'nullable|required_with:dropoff-address|numeric',
-            'message' => 'nullable|string'
-        ] : [
-            'message' => 'nullable|string'
-        ];
+        $messageRule = ['message' => 'nullable|string'];
+
+        return $this->ride->detours_allowed
+            ? array_merge(Address::rules('pickup', false), Address::rules('dropoff', false), $messageRule)
+            : $messageRule;
     }
 }

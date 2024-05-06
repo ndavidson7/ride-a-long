@@ -19,16 +19,6 @@ class StoreOrUpdateRideRequest extends FormRequest
         return true;
     }
 
-    public function origin(): array
-    {
-        return $this->getAddress('origin');
-    }
-
-    public function destination(): array
-    {
-        return $this->getAddress('destination');
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *

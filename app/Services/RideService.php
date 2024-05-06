@@ -100,8 +100,8 @@ class RideService
     {
         $fields = $request->validated();
 
-        $originId = Address::firstOrCreateFromArray($request->origin())->id;
-        $destinationId = Address::firstOrCreateFromArray($request->destination())->id;
+        $originId = Address::firstOrCreateFromArray($request->getAddress('origin'))->id;
+        $destinationId = Address::firstOrCreateFromArray($request->getAddress('destination'))->id;
 
         // $price = $fields['pricing'] == "mile" ? $fields['price'] : null; // TODO: Calculate per mile price if seat price is given
         $details = [

@@ -4,7 +4,7 @@ namespace App\Traits;
 
 trait HasAddressInputs
 {
-    private function getAddress($location): array
+    public function getAddress($location): array
     {
         return [
             'street_address' => $this->input($location . '.street_address'),
