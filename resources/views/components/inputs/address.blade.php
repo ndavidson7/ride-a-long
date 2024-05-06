@@ -21,11 +21,11 @@
         formatted_address: null,
         street_address: null,
         city: null,
-        state: null,
-        stateCode: null,
-        postalCode: null,
-        country: null,
-        countryCode: null,
+        state_name: null,
+        state_code: null,
+        postal_code: null,
+        country_name: null,
+        country_code: null,
         latitude: null,
         longitude: null,
     },
@@ -36,11 +36,11 @@
         formatted_address: {{ Js::from($address->formatted_address) }},
         street_address: {{ Js::from($address->street_address) }},
         city: {{ Js::from($address->city) }},
-        state: {{ Js::from($address->state?->name) }},
-        stateCode: {{ Js::from($address->state?->code) }},
-        postalCode: {{ Js::from($address->postal_code) }},
-        country: {{ Js::from($address->country?->name) }},
-        countryCode: {{ Js::from($address->country?->code) }},
+        state_name: {{ Js::from($address->state?->name) }},
+        state_code: {{ Js::from($address->state?->code) }},
+        postal_code: {{ Js::from($address->postal_code) }},
+        country_name: {{ Js::from($address->country?->name) }},
+        country_code: {{ Js::from($address->country?->code) }},
         latitude: {{ Js::from($address->latitude) }},
         longitude: {{ Js::from($address->longitude) }},
     };
@@ -65,11 +65,11 @@
                     address.formatted_address = newAddress.formattedAddress;
                     address.street_address = newAddress.number + ' ' + newAddress.street;
                     address.city = newAddress.city;
-                    address.state = newAddress.state;
-                    address.stateCode = newAddress.stateCode;
-                    address.postalCode = newAddress.postalCode;
-                    address.country = newAddress.country;
-                    address.countryCode = newAddress.countryCode;
+                    address.state_name = newAddress.state;
+                    address.state_code = newAddress.stateCode;
+                    address.postal_code = newAddress.postalCode;
+                    address.country_name = newAddress.country;
+                    address.country_code = newAddress.countryCode;
                     address.latitude = newAddress.latitude;
                     address.longitude = newAddress.longitude;
                 }
@@ -92,7 +92,6 @@
         }"
         @blur="checkIfSelected" />
     @foreach ($addressComponents as $addressComponent)
-        <x-buk-input name="{{ $name }}-{{ $addressComponent }}" type="hidden"
-            x-model="address.{{ $addressComponent }}" />
+        <x-buk-input name="{{ $name }}[{{ $addressComponent }}]" type="hidden" ::value="address.{{ $addressComponent }}" />
     @endforeach
 </div>

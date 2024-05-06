@@ -14,6 +14,24 @@ class Address extends Model
 
     const UPDATED_AT = null;
 
+    public static function rules(string $name = '', bool $required = true): array
+    {
+        $rule = $required ? 'required' : 'nullable';
+
+        return [
+            $name => $rule . '|array:street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude',
+            $name . '.street_address' => 'required|string',
+            $name . '.city' => 'required|string',
+            $name . '.state_name' => 'required|string',
+            $name . '.state_code' => 'required|string',
+            $name . '.postal_code' => 'required|string',
+            $name . '.country_name' => 'required|string',
+            $name . '.country_code' => 'required|string',
+            $name . '.latitude' => 'required|numeric',
+            $name . '.longitude' => 'required|numeric',
+        ];
+    }
+
     public static function firstOrCreateFromArray(array $attributes): self
     {
         $address = null;
@@ -23,8 +41,8 @@ class Address extends Model
                 [
                     'street_address' => $attributes['street_address'],
                     'city' => $attributes['city'],
-                    'state_id' => State::firstOrCreate(['code' => $attributes['state_code']], ['name' => $attributes['state_name']])->id,
-                    'country_id' => Country::firstOrCreate(['code' => $attributes['country_code']], ['name' => $attributes['country_name']])->id,
+                    'state_id' => State::firstOrCreate($attributes['state'])->id,
+                    'country_id' => Country::firstOrCreate($attributes['country'])->id,
                 ],
                 [
                     'postal_code' => $attributes['postal_code'],

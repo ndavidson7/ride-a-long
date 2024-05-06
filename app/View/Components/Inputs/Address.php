@@ -11,7 +11,7 @@ class Address extends Component
 {
     public ?AddressModel $address = null;
     public array $layers;
-    public array $addressComponents; // The hidden address component inputs that will be submitted with the form.
+    public array $addressComponents;
 
     /**
      * Create a new address input instance.
@@ -39,7 +39,7 @@ class Address extends Component
         public bool $disabled = false,
         public string $countryCode = "us",
         string $layers = "address",
-        string $addressComponents = "street_address,city,state,stateCode,postalCode,country,countryCode,latitude,longitude"
+        string $addressComponents = "street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude"
     ) {
         if ($address->id) $this->address = $address;
         $this->layers = explode(',', $layers);

@@ -139,7 +139,7 @@ class RideService
             $waypoints->push($dropoffWaypoint);
         }
 
-        $optimizedWaypoints = $this->routeService->optimizeRoute([$origin->toArray(), ...$waypoints->load('address')->toArray(), $destination->toArray()]);
+        $optimizedWaypoints = $this->routeService->optimizeRoute([$origin->toArray(), ...$waypoints->toArray(), $destination->toArray()]);
         foreach ($optimizedWaypoints as $waypoint) {
             // find waypoint in $waypoints by $waypoint->id
             $model = $waypoints->firstWhere('id', $waypoint['id']);

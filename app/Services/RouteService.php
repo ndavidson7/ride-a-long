@@ -23,6 +23,8 @@ class RouteService
 
         $this->formatRequest($route, $pickup, $dropoff);
 
+        // TODO: Cache the optimized route for a certain amount of time
+        // to reuse when the request is viewed or accepted
         return $this->getOptimizedWaypoints($route);
     }
 
