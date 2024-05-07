@@ -1,64 +1,44 @@
-<x-layouts.app title="View request">
-    <main class="py-4">
-        <div class="col-sm-10 col-md-8 col-lg-6 container mb-3">
-            <h2 class="mb-3 text-center">Preview</h2>
-            <div class="row">
-                <x-map />
+<x-layouts.app class="mx-auto max-w-5xl space-y-3" title="View request">
+
+    <x-typography.h1>View {{ $request->user->name }}'s request</x-typography.h1>
+
+    @if ($request->ride->detours_allowed)
+        <x-map :ride="$request->ride" :$request />
+
+        <div class="grid gap-3 md:grid-cols-2">
+            <div>
+                <x-buk-label class="mb-1 font-medium" for="pickup">Pickup</x-buk-label>
+                <p id="pickup">{{ $request->pickup?->formatted_address ?? 'None' }}</p>
+            </div>
+
+            <div>
+                <x-buk-label class="mb-1 font-medium" for="dropoff">Dropoff</x-buk-label>
+                <p id="dropoff">{{ $request->dropoff?->formatted_address ?? 'None' }}</p>
             </div>
         </div>
-        <div class="col-sm-8 col-md-6 col-lg-5 col-xl-4 container">
-            <h2 class="mb-3 text-center">Request Details</h2>
-            @if ($request->ride->detours_allowed)
-                <h3>Pickup address</h3>
-                <div class="row mb-3">
-                    @if ($request->pickup)
-                        <p>{{ $request->pickup->address }}</p>
-                    @else
-                        <p>None</p>
-                    @endif
-                </div>
+    @endif
+
+    <div>
+        <x-buk-label class="mb-1 font-medium" for="message">Message</x-buk-label>
+        <p id="message">{{ $request->message ?? 'None' }}</p>
+    </div>
+
+    <x-cards.user :user="$request->user" />
+
+    @if ($request->ride->user_relation === 'driver' && $request->response === null)
+        <x-form action="{{ route('requests.update', $request->id) }}">
+            <x-button name="response" type="submit" value="1" size="sm">Accept</x-button>
+            <x-button name="response" type="submit" value="0" size="sm" variant="danger">Deny</x-button>
+        </x-form>
+    @elseif ($request->response !== null)
+        <div>
+            <x-buk-label class="mb-1 font-medium" for="response">Response</x-buk-label>
+            <p id="response">{{ $request->response ? 'Accepted' : 'Denied' }}</p>
+            @if ($request->user_id === auth()->user()->id)
+                <x-button size="sm" as="form" variant="danger"
+                    action="{{ route('requests.destroy', $request->id) }}" method="DELETE">Mark as Read</x-button>
             @endif
-            @if ($request->ride->detours_allowed)
-                <h3>Dropoff address</h3>
-                <div class="row mb-3">
-                    @if ($request->dropoff)
-                        <p>{{ $request->dropoff->address }}</p>
-                    @else
-                        <p>None</p>
-                    @endif
-                </div>
-            @endif
-            @if ($request->message)
-                <div class="row mb-3">
-                    <h3>Message</h3>
-                    <p>{{ $request->message }}</p>
-                </div>
-            @endif
-            @if ($request->ride->user_relation === 'driver' && $request->response === null)
-                <form action="{{ route('requests.update', $request->id) }}" method="POST">
-                    @method('PUT')
-                    @csrf
-                    <div class="d-flex justify-content-start gap-2">
-                        <button class="btn btn-success" name="response" type="submit" value="1">Accept</button>
-                        <button class="btn btn-danger" name="response" type="submit" value="0">Deny</button>
-                    </div>
-                </form>
-            @elseif ($request->response !== null)
-                <div class="row mb-3">
-                    <h3>Response</h3>
-                    <p>{{ $request->response ? 'Accepted' : 'Denied' }}</p>
-                    @if ($request->user_id === auth()->user()->id)
-                        <form action="{{ route('requests.destroy', $request->id) }}" method="POST">
-                            @method('DELETE')
-                            @csrf
-                            <button class="btn btn-danger" type="submit">Mark as Read</button>
-                        </form>
-                    @endif
-                </div>
-            @endif
-            <script>
-                var request = @json($request);
-            </script>
         </div>
-    </main>
+    @endif
+
 </x-layouts.app>

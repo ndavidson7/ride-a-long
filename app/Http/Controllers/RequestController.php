@@ -84,8 +84,7 @@ class RequestController extends Controller
     public function show(Request $request)
     {
         return view('requests.show', [
-            'entries' => ['resources/js/views/requests/show.js'],
-            'request' => $request->load(['ride', 'user', 'pickup', 'dropoff'])
+            'request' => $request->load(['ride'])
         ]);
     }
 

@@ -1,7 +1,9 @@
-@props(['ride' => null])
+@props(['ride' => null, 'request' => null])
 
 <div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0']) }} x-data="map"
-    @isset($ride) x-init="ride = {{ Js::from($ride) }}" @endisset
+    @if ($request || $ride) x-init="
+        @if ($request) request = {{ Js::from($request) }}; @endif
+    @if ($ride) ride = {{ Js::from($ride) }}; @endif "  @endif
     @map:set-origin.window="origin = $event.detail" @map:set-destination.window="destination = $event.detail"
     @map:set-pickup.window="pickup = $event.detail" @map:set-dropoff.window="dropoff = $event.detail"
     x-intersect="onIntersect">

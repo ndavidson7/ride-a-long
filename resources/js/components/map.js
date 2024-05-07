@@ -9,9 +9,13 @@ export default () => ({
     _ride: {
         origin: null,
         destination: null,
+        waypoints: [],
+    },
+
+    // Request locations
+    _request: {
         pickup: null,
         dropoff: null,
-        waypoints: [],
     },
 
     // Route results
@@ -34,7 +38,16 @@ export default () => ({
             accessToken: mapboxgl.accessToken,
         });
 
-        this.$watch("_ride", async () => await this.onRideUpdated());
+        this.$watch(
+            "_ride",
+            async (value, oldValue) =>
+                await this.onRouteUpdated(value, oldValue),
+        );
+        this.$watch(
+            "_request",
+            async (value, oldValue) =>
+                await this.onRouteUpdated(value, oldValue),
+        );
     },
 
     /**
@@ -68,9 +81,9 @@ export default () => ({
     },
 
     set ride(ride) {
-        this._ride.origin = ride.origin;
-        this._ride.destination = ride.destination;
-        this._ride.waypoints = ride.waypoints;
+        const { origin, destination, waypoints } = ride;
+
+        this._ride = { origin, destination, waypoints };
     },
 
     get origin() {
@@ -94,27 +107,39 @@ export default () => ({
         return this._ride.waypoints;
     },
 
+    get request() {
+        return this._request;
+    },
+
+    set request(request) {
+        const { pickup, dropoff } = request;
+
+        this._request = { pickup, dropoff };
+    },
+
     get pickup() {
-        return this._ride.pickup;
+        return this._request.pickup;
     },
 
     set pickup(pickup) {
-        this._ride.pickup = pickup;
+        this._request.pickup = pickup;
     },
 
     get dropoff() {
-        return this._ride.dropoff;
+        return this._request.dropoff;
     },
 
     set dropoff(dropoff) {
-        this._ride.dropoff = dropoff;
+        this._request.dropoff = dropoff;
     },
 
-    async onRideUpdated() {
+    async onRouteUpdated(value, oldValue) {
+        if (JSON.stringify(value) === JSON.stringify(oldValue)) return;
+
         if (!this.origin || !this.destination) return;
 
         const waypoints = await this.getOrderedWaypoints();
-        console.log("Waypoints: ", waypoints);
+
         this.route = [
             this.formatAddressForRoute(this.origin),
             ...waypoints.map((waypoint) =>
@@ -188,7 +213,6 @@ export default () => ({
 
         if (!response.ok) throw new Error(data);
 
-        console.log("Optimized waypoints: ", data);
         return data;
     },
 
