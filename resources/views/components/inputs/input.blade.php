@@ -18,7 +18,7 @@
             'text-base' => $size === 'md',
             'text-lg' => $size === 'lg',
             'cursor-pointer' => $attributes->get('type') === 'file',
-            'transition-all',
+            'transition',
             'file:cursor-pointer',
             'file:bg-gray-100',
             'file:border-0',

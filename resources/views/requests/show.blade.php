@@ -4,18 +4,6 @@
 
     @if ($request->ride->detours_allowed)
         <x-map :ride="$request->ride" :$request />
-
-        <div class="grid gap-3 md:grid-cols-2">
-            <div>
-                <x-buk-label class="mb-1 font-medium" for="pickup">Pickup</x-buk-label>
-                <p id="pickup">{{ $request->pickup?->formatted_address ?? 'None' }}</p>
-            </div>
-
-            <div>
-                <x-buk-label class="mb-1 font-medium" for="dropoff">Dropoff</x-buk-label>
-                <p id="dropoff">{{ $request->dropoff?->formatted_address ?? 'None' }}</p>
-            </div>
-        </div>
     @endif
 
     <div>
@@ -26,8 +14,8 @@
     <x-cards.user :user="$request->user" />
 
     @if ($request->ride->user_relation === 'driver' && $request->response === null)
-        <x-form action="{{ route('requests.update', $request->id) }}">
-            <x-button name="response" type="submit" value="1" size="sm">Accept</x-button>
+        <x-form class="flex items-center gap-2" action="{{ route('requests.update', $request->id) }}" method="PUT">
+            <x-button name="response" type="submit" value="1" size="sm" variant="success">Accept</x-button>
             <x-button name="response" type="submit" value="0" size="sm" variant="danger">Deny</x-button>
         </x-form>
     @elseif ($request->response !== null)

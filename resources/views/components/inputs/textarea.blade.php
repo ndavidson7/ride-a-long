@@ -11,7 +11,7 @@
             'py-1',
             'ring-2',
             'ring-transparent',
-            'transition-all',
+            'transition',
             'placeholder:text-gray-500',
             'focus:outline-none',
             'focus:border-blue-600',
