@@ -1,6 +1,4 @@
 @php
-    $name = $attributes->get('name');
-    //
     // TODO: Consider reimplementing this logic for re-populating the address fields.
     // Alternatively, consider Livewire for this functionality.
     //
@@ -47,8 +45,8 @@
 });" @endisset
     x-modelable="address" @isset($xModel)
     x-model="{{ $xModel }}" @endisset>
-    <x-inputs.input ::value="address.formatted_address" {{ $attributes->merge(['placeholder' => 'Enter an address']) }} autocomplete="off"
-        x-data="{
+    <x-inputs.input ::value="address.formatted_address" :name="'has-' . $name" {{ $attributes->merge(['placeholder' => 'Enter an address']) }}
+        autocomplete="off" x-data="{
             checkIfSelected() {
                     resultsShown = false;
                     if (!address.formatted_address) {

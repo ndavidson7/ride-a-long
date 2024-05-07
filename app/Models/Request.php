@@ -29,11 +29,10 @@ class Request extends Model
 
     public static function createFromRequest(StoreRequestRequest $request, Ride $ride): self
     {
-        // TODO: Validation fails when pickup or dropoff is not provided despite being nullable.
         $fields = $request->validated();
 
-        $pickupId = array_key_exists('pickup', $fields) ? Address::firstOrCreateFromArray($request->getAddress('pickup'))->id : null;
-        $dropoffId = array_key_exists('dropoff', $fields) ? Address::firstOrCreateFromArray($request->getAddress('dropoff'))->id : null;
+        $pickupId = $fields['has-pickup'] ? Address::firstOrCreateFromArray($request->getAddress('pickup'))->id : null;
+        $dropoffId = $fields['has-dropoff'] ? Address::firstOrCreateFromArray($request->getAddress('dropoff'))->id : null;
 
         $requestModel = Request::create([
             'ride_id' => $ride->id,

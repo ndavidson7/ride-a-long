@@ -17,6 +17,7 @@ class Address extends Component
      * Create a new address input instance.
      * 
      * @param ?AddressModel $address Optional address model. If set, the autocomplete input and hidden address component inputs will be pre-populated accordingly.
+     * @param string $name The name of the input.
      * @param ?string $xModel Optional parent property to 2-way bind the address to in order to pass the address to the parent component. See: https://codepen.io/SimoTod/pen/QWZJvmp
      * @param ?string $near The location to search near, in the format "latitude,longitude". If not specified, the search will automatically be biased based on the client's IP geolocation.
      * @param int $debounceMS The number of milliseconds to wait after typing is complete to refresh the results list.
@@ -31,6 +32,7 @@ class Address extends Component
      */
     public function __construct(
         ?AddressModel $address = null,
+        public string $name = 'address',
         public ?string $xModel = null,
         public ?string $near = null,
         public int $debounceMS = 200,

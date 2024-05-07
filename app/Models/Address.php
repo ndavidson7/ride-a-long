@@ -17,9 +17,10 @@ class Address extends Model
     public static function rules(string $name = '', bool $required = true): array
     {
         $baseRule = $required ? 'required' : 'nullable';
-        $componentRule = $baseRule . '|required_with:' . $name;
+        $componentRule = $required ? 'required' : 'nullable|required_with:has-' . $name;
 
         return [
+            'has-' . $name => $baseRule . '|string',
             $name => $baseRule . '|array:street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude',
             $name . '.street_address' => $componentRule . '|string',
             $name . '.city' => $componentRule . '|string',
