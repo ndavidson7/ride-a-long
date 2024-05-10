@@ -12,6 +12,6 @@ class RequestCreated extends BaseNotification
     public function __construct(Request $request)
     {
         $this->url = route('requests.show', $request->id);
-        $this->message = "{$request->user->first_name} {$request->user->last_name} requested to join your ride!";
+        $this->message = "{$request->user->name} requested to join your ride!";
     }
 }

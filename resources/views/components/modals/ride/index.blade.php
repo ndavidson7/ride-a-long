@@ -81,7 +81,6 @@
             </div>
 
             <x-map x-show="!loading" x-init="$watch('rideData', async value => {
-                console.log(value);
                 ride = value;
             
                 $nextTick(() => loading = false);

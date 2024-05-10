@@ -46,7 +46,7 @@ class RideService
             ? $request->ride->waypoints()->firstOrCreate([
                 'address_id' => $request->dropoff_id,
             ], [
-                'order' => 1
+                'order' => $pickupWaypoint ? 2 : 1
             ])
             : null;
 
@@ -59,12 +59,13 @@ class RideService
         // Add passenger to ride conversation
         Chat::conversation($request->ride->conversation)->addParticipants([$request->user]);
 
+        $numWaypoints = $request->ride->waypoints()->count();
         // if no pickup or dropoff was specified, done
         if (!$pickupWaypoint && !$dropoffWaypoint) return;
         // if only one was specified, it doesn't need to be restricted
         else if ($pickupWaypoint xor $dropoffWaypoint) {
             // if there are no other waypoints, done
-            if ($request->ride->waypoints()->count() <= 1) return;
+            if ($numWaypoints <= 1) return;
 
             // if there are other waypoints, reorder all
             return $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
@@ -79,7 +80,9 @@ class RideService
             $pickupWaypoint->update(['before' => $dropoffWaypoint->id]);
         }
 
-        $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
+        // only reorder if there were pre-existing waypoints
+        if ($numWaypoints > 2)
+            $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
     }
 
     public function removePassenger(Ride $ride, User $user)
@@ -139,7 +142,9 @@ class RideService
             $waypoints->push($dropoffWaypoint);
         }
 
-        $optimizedWaypoints = $this->routeService->optimizeRoute([$origin->toArray(), ...$waypoints->toArray(), $destination->toArray()]);
+        $waypointsArray = $waypoints->toArray();
+        $route = [$origin->toArray(), ...$waypointsArray, $destination->toArray()];
+        $optimizedWaypoints = $this->routeService->optimizeRoute($route);
         foreach ($optimizedWaypoints as $waypoint) {
             // find waypoint in $waypoints by $waypoint->id
             $model = $waypoints->firstWhere('id', $waypoint['id']);

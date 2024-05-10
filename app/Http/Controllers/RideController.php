@@ -50,13 +50,10 @@ class RideController extends Controller
         // Return JSON with relevant ride details
         if ($request->expectsJson()) {
             return new RideResource($ride);
-        } else if (in_array($ride->user_relation, ['requester', 'none'])) {
-            return view('rides.show', [
-                'ride' => $ride,
-            ]);
         }
 
-        $ride = $ride->load('requests', 'conversation');
+        if (in_array($ride->user_relation, ['driver', 'passenger']))
+            $ride = $ride->load('requests', 'conversation', 'waypoints.pickups', 'waypoints.dropoffs');
 
         return view('rides.show', [
             'ride' => $ride,

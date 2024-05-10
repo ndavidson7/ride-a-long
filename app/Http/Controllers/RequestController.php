@@ -120,6 +120,7 @@ class RequestController extends Controller
             return redirect()->route('rides.index')->with(['status' => 'success', 'message' => 'Passenger added.']);
         } catch (\Throwable $th) {
             DB::rollBack();
+            // dd($th->getMessage());
             return redirect()->route('rides.index')->with(['status' => 'error', 'message' => 'There was an error adding the passenger.']);
         }
     }

@@ -11,6 +11,14 @@
     }" x-init="$watch('pickup', value => $dispatch('map:set-pickup', value));
     $watch('dropoff', value => $dispatch('map:set-dropoff', value));">
 
+        @if ($errors->any())
+            <ul class="mb-1 border border-red-500">
+                @foreach ($errors->all() as $error)
+                    <li class="text-red-500">{{ $error }}</li>
+                @endforeach
+            </ul>
+        @endif
+
         <p class="mb-1 text-sm text-gray-500">All fields are optional</p>
 
         <div class="space-y-3">

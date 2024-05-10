@@ -50,37 +50,12 @@ export default () => ({
         );
     },
 
-    /**
-     * Route should follow this format (* indicates required):
-     *  [
-     *      {
-     *          *address,
-     *          *coordinates: [lng, lat],
-     *          info,
-     *          duration,
-     *          distance,
-     *      },
-     *      ...
-     *  ]
-     */
-    // set route(route) {
-    //     if (!route || !Array.isArray(route) || route.length < 2)
-    //         throw new TypeError(
-    //             "Route must be an array of at least 2 waypoints",
-    //         );
-
-    //     if (JSON.stringify(this.route) === JSON.stringify(route)) return;
-
-    //     this.origin = route[0];
-    //     this.destination = route[route.length - 1];
-    //     this.waypoints = route.slice(1, -1);
-    // },
-
     get ride() {
         return this._ride;
     },
 
     set ride(ride) {
+        console.log(ride);
         const { origin, destination, waypoints } = ride;
 
         this._ride = { origin, destination, waypoints };
@@ -143,7 +118,7 @@ export default () => ({
         this.route = [
             this.formatAddressForRoute(this.origin),
             ...waypoints.map((waypoint) =>
-                this.formatAddressForRoute(waypoint.address),
+                this.formatWaypointForRoute(waypoint),
             ),
             this.formatAddressForRoute(this.destination),
         ];
@@ -384,6 +359,16 @@ export default () => ({
         return {
             address: address.formatted_address,
             coordinates: [address.longitude, address.latitude],
+            pickups: address.pickups,
+            dropoffs: address.dropoffs,
+        };
+    },
+
+    formatWaypointForRoute(waypoint) {
+        return {
+            ...this.formatAddressForRoute(waypoint.address),
+            pickups: waypoint.pickups,
+            dropoffs: waypoint.dropoffs,
         };
     },
 });

@@ -21,6 +21,7 @@
     "dependencies": {
         "@googlemaps/js-api-loader": "^1.16.2",
         "@mapbox/mapbox-sdk": "^0.15.3",
+        "@tailwindcss/container-queries": "^0.1.1",
         "dayjs": "^1.11.10",
         "flatpickr": "^4.6.13",
         "mapbox-gl": "^3.1.2",

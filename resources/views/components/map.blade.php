@@ -1,6 +1,6 @@
 @props(['ride' => null, 'request' => null])
 
-<div {{ $attributes->class(['relative', 'space-y-4', 'lg:space-y-0']) }} x-data="map"
+<div {{ $attributes->class(['@container', 'relative', 'space-y-4', '@5xl:space-y-0']) }} x-data="map"
     @if ($request || $ride) x-init="
         @if ($request) request = {{ Js::from($request) }}; @endif
     @if ($ride) ride = {{ Js::from($ride) }}; @endif "  @endif
@@ -12,7 +12,7 @@
     <div class="aspect-video rounded-lg" x-ref="map"></div>
 
     {{-- Route info --}}
-    <div class="left-2.5 top-2.5 divide-y divide-[#ddd] overflow-hidden rounded-lg bg-white shadow-[0_0_0_2px_rgba(0,0,0,.1)] lg:absolute"
+    <div class="left-2.5 top-2.5 divide-y divide-[#ddd] overflow-hidden rounded-lg bg-white shadow-[0_0_0_2px_rgba(0,0,0,.1)] @5xl:absolute"
         x-ref="route">
         <div class="flex flex-wrap items-center gap-3 p-3">
             <div class="space-x-1">
@@ -34,8 +34,13 @@
                         x-text="index + 1"></div>
                     <div>
                         <div x-text="stop?.address"></div>
-                        <template x-if="stop?.info">
-                            <div class="text-xs" x-text="stop?.info"></div>
+                        <template x-if="stop?.dropoffs?.length">
+                            <div class="text-xs font-normal"
+                                x-text="`Dropoff ${stop?.dropoffs.map(user => user.name).join(', ')}`"></div>
+                        </template>
+                        <template x-if="stop?.pickups?.length">
+                            <div class="text-xs font-normal"
+                                x-text="`Pickup ${stop?.pickups.map(user => user.name).join(', ')}`"></div>
                         </template>
                     </div>
                     <div class="text-xs font-normal" x-text="stop?.duration ?? ''">

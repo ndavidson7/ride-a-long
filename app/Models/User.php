@@ -62,9 +62,14 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
         'year',
         'latitude',
         'longitude',
+        'first_name',
+        'last_name',
+        'college_id',
+        'email',
     ];
 
     protected $appends = [
+        'name',
         'pfp_url',
     ];
 

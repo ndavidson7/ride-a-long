@@ -15,7 +15,7 @@ class RideUserDestroyed extends BaseNotification
     {
         $this->url = route('rides.show', $ride->id);
         $this->message = Auth::id() === $user->id
-            ? "{$user->first_name} {$user->last_name} left your ride!"
-            : "You were removed from {$ride->driver->first_name} {$ride->driver->last_name}'s ride!";
+            ? "{$user->name} left your ride!"
+            : "You were removed from {$ride->driver->name}'s ride!";
     }
 }

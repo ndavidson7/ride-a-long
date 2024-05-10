@@ -14,6 +14,6 @@ class RequestUpdated extends BaseNotification
         $this->url = route('requests.show', $request->id);
 
         $response = $request->response == 1 ? 'accepted' : 'declined';
-        $this->message = "{$request->ride->driver->first_name} {$request->ride->driver->last_name} {$response} your request!";
+        $this->message = "{$request->ride->driver->name} {$response} your request!";
     }
 }
