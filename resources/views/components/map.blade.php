@@ -8,12 +8,15 @@
     @map:set-pickup.window="pickup = $event.detail" @map:set-dropoff.window="dropoff = $event.detail"
     x-intersect="onIntersect">
 
+    {{-- Loading skeleton --}}
+    <div class="absolute left-0 top-0 aspect-video animate-pulse rounded-lg bg-gray-300" x-show="loading"></div>
+
     {{-- Map container element --}}
-    <div class="aspect-video rounded-lg" x-ref="map"></div>
+    <div class="aspect-video rounded-lg" x-show="!loading" x-ref="map"></div>
 
     {{-- Route info --}}
     <div class="left-2.5 top-2.5 divide-y divide-[#ddd] overflow-hidden rounded-lg bg-white shadow-[0_0_0_2px_rgba(0,0,0,.1)] @5xl:absolute"
-        x-ref="route">
+        x-ref="route" x-show="!loading && route.length" x-cloak>
         <div class="flex flex-wrap items-center gap-3 p-3">
             <div class="space-x-1">
                 <x-fas-route class="size-5 inline-block text-neutral-600" />

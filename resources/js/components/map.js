@@ -4,6 +4,7 @@ export default () => ({
     directionsClient: null,
     bounds: null,
     markers: [],
+    loading: false,
 
     // Ride locations
     _ride: {
@@ -38,16 +39,8 @@ export default () => ({
             accessToken: mapboxgl.accessToken,
         });
 
-        this.$watch(
-            "_ride",
-            async (value, oldValue) =>
-                await this.onRouteUpdated(value, oldValue),
-        );
-        this.$watch(
-            "_request",
-            async (value, oldValue) =>
-                await this.onRouteUpdated(value, oldValue),
-        );
+        this.$watch("_ride", async () => await this.onRouteUpdated());
+        this.$watch("_request", async () => await this.onRouteUpdated());
     },
 
     get ride() {
@@ -55,10 +48,10 @@ export default () => ({
     },
 
     set ride(ride) {
-        console.log(ride);
         const { origin, destination, waypoints } = ride;
 
-        this._ride = { origin, destination, waypoints };
+        if (this.valueChanged({ origin, destination, waypoints }, this.ride))
+            this._ride = { origin, destination, waypoints };
     },
 
     get origin() {
@@ -66,7 +59,7 @@ export default () => ({
     },
 
     set origin(origin) {
-        this._ride.origin = origin;
+        if (this.valueChanged(origin, this.origin)) this._ride.origin = origin;
     },
 
     get destination() {
@@ -74,7 +67,8 @@ export default () => ({
     },
 
     set destination(destination) {
-        this._ride.destination = destination;
+        if (this.valueChanged(destination, this.destination))
+            this._ride.destination = destination;
     },
 
     // should never need to set waypoints directly, i think...
@@ -89,7 +83,8 @@ export default () => ({
     set request(request) {
         const { pickup, dropoff } = request;
 
-        this._request = { pickup, dropoff };
+        if (this.valueChanged({ pickup, dropoff }, this.request))
+            this._request = { pickup, dropoff };
     },
 
     get pickup() {
@@ -97,7 +92,8 @@ export default () => ({
     },
 
     set pickup(pickup) {
-        this._request.pickup = pickup;
+        if (this.valueChanged(pickup, this.pickup))
+            this._request.pickup = pickup;
     },
 
     get dropoff() {
@@ -105,13 +101,14 @@ export default () => ({
     },
 
     set dropoff(dropoff) {
-        this._request.dropoff = dropoff;
+        if (this.valueChanged(dropoff, this.dropoff))
+            this._request.dropoff = dropoff;
     },
 
-    async onRouteUpdated(value, oldValue) {
-        if (JSON.stringify(value) === JSON.stringify(oldValue)) return;
-
+    async onRouteUpdated() {
         if (!this.origin || !this.destination) return;
+
+        this.loading = true;
 
         const waypoints = await this.getOrderedWaypoints();
 
@@ -199,6 +196,8 @@ export default () => ({
         this.updateInfo(directions);
 
         this.fitBounds();
+
+        this.loading = false;
     },
 
     async getDirections() {
@@ -322,6 +321,15 @@ export default () => ({
     onIntersect() {
         this.map.resize();
         if (this.bounds) this.fitBounds();
+    },
+
+    valueChanged(value, oldValue) {
+        switch (typeof value) {
+            case "object":
+                return JSON.stringify(value) !== JSON.stringify(oldValue);
+            default:
+                return value !== oldValue;
+        }
     },
 
     fitBounds() {

@@ -76,15 +76,7 @@
 }">
     <x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info">
         <x-slot:body>
-            <div class="relative space-y-4 lg:space-y-0" x-show="loading">
-                <div class="aspect-video animate-pulse rounded-lg bg-gray-300"></div>
-            </div>
-
-            <x-map x-show="!loading" x-init="$watch('rideData', async value => {
-                ride = value;
-            
-                $nextTick(() => loading = false);
-            })" />
+            <x-map x-init="$watch('rideData', async value => ride = value)" />
         </x-slot:body>
 
         <x-slot:footer>
