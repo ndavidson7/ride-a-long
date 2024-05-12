@@ -1,14 +1,13 @@
-@props(['modalId', 'xData' => '{}'])
+@props(['target', 'xData' => '{}'])
 
-<button type="button" aria-controls="{{ $modalId }}" {{-- Prepending openModal() allows additional @click logic to be supplied to component --}}
+{{-- Target is the id of the modal being controlled by this button --}}
+<button data-target="{{ $target }}" type="button" aria-controls="{{ $target }}" {{-- Prepending openModal() allows additional @click logic to be supplied to component --}}
     {{ $attributes->merge(['@click' => $attributes->prepends('openModal();')]) }} x-data="{
-        modalId: '{{ $modalId }}',
-    
         openModal() {
-            $dispatch('modal:open', { id: this.modalId });
-        },
+                $dispatch('modal:open');
+            },
     
-        ...{!! $xData !!}
+            ...{!! $xData !!}
     }">
 
     {{ $slot }}

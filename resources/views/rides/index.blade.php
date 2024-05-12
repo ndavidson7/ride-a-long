@@ -2,8 +2,7 @@
 
     {{-- Hotbar (ride filters and create ride buttons) --}}
     <div class="flex gap-2">
-        <x-modal.button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800"
-            modal-id="ride-filter">
+        <x-modal.button class="rounded-full p-2 text-gray-600 hover:bg-gray-100 hover:text-gray-800" target="ride-filter">
             <x-fas-sliders class="size-8" />
         </x-modal.button>
 

@@ -1,15 +1,8 @@
 <div x-data="{
     rideData: null,
-    userRelation: null,
-    relatedModelId: null,
-    loading: false,
 
-    {{--
-        TODO: Consider storing relevant ride data within JS or HTML on rides index page
-        instead of fetching it each time the modal is opened. We already query all the
-        data on the index page, so we could store it in a data attribute or JS object.
-    --}}
-    async fetchData(rideId) {
+    {{-- Unused now that ride data is stored in an HTML data attribute --}}
+    {{-- async fetchData(rideId) {
         if (rideId === undefined) throw new TypeError(`Missing argument 'rideId'`);
 
         return fetch(route('rides.show', rideId), {
@@ -19,19 +12,16 @@
             .then(data => {
                 return data;
             });
-    },
+    }, --}}
 
     async update(args) {
-        const { rideId, userRelation, relatedModelId } = args;
+        const { ride } = args;
 
-        if (rideId === undefined || userRelation === undefined || relatedModelId === undefined) throw new TypeError(`Missing argument 'rideId', 'userRelation', or 'relatedModelId'`);
+        if (ride === undefined) throw new TypeError(`Missing argument 'ride'`);
 
-        if (rideId === this.rideData?.id) return;
+        if (ride.id === this.rideData?.id) return;
 
-        this.loading = true;
-        this.userRelation = userRelation;
-        this.relatedModelId = relatedModelId;
-        this.rideData = await this.fetchData(rideId);
+        this.rideData = ride;
     },
 
     constructDirectionsUrl(addresses) {
@@ -76,25 +66,25 @@
 }">
     <x-modal class="max-w-screen-2xl" id="ride-info" title="Ride info">
         <x-slot:body>
-            <x-map x-init="$watch('rideData', async value => ride = value)" />
+            <x-map x-init="$watch('rideData', value => ride = value)" />
         </x-slot:body>
 
         <x-slot:footer>
             <x-button as="anchor" target="_blank" ::href="rideData ? constructDirectionsUrl([rideData.origin, ...rideData.waypoints.map(waypoint => waypoint.address),
                 rideData.destination
-            ]) : ''" ::class="loading && 'pointer-events-none'" size="sm">View
+            ]) : ''" size="sm">View
                 directions</x-button>
-            <x-button as="anchor" ::href="rideData ? route('rides.show', rideData.id) : ''" ::class="loading && 'pointer-events-none'" size="sm">More info</x-button>
-            <template x-if="userRelation === 'driver'">
+            <x-button as="anchor" ::href="rideData ? route('rides.show', rideData.id) : ''" size="sm">More info</x-button>
+            <template x-if="rideData?.userRelation === 'driver'">
                 <x-button as="anchor" ::href="rideData ? route('rides.edit', rideData.id) : ''" size="sm">Edit ride</x-button>
             </template>
-            <template x-if="userRelation === 'requester'">
-                <x-button as="form" method="delete" ::action="relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
+            <template x-if="rideData?.userRelation === 'requester'">
+                <x-button as="form" method="delete" ::action="rideData?.relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
             </template>
-            <template x-if="userRelation === 'passenger'">
-                <x-button as="form" method="delete" ::action="rideData && relatedModelId ? route('rides.users.destroy', [rideData.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
+            <template x-if="rideData?.userRelation === 'passenger'">
+                <x-button as="form" method="delete" ::action="rideData?.relatedModelId ? route('rides.users.destroy', [rideData.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
             </template>
-            <template x-if="userRelation === 'none'">
+            <template x-if="rideData?.userRelation === 'none'">
                 <x-button as="anchor" ::href="rideData ? route('requests.create', rideData.id) : ''" size="sm">Request to join</x-button>
             </template>
         </x-slot:footer>
