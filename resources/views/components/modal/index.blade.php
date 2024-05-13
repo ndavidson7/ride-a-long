@@ -2,8 +2,7 @@
 
 <template id="{{ $id }}" x-teleport="body" x-data="{ open: false }" @keydown.escape.window="open = false"
     @modal:open.window="open = $event.target.dataset.target === $el.id"
-    @modal:update.window="if ($event.target.dataset.target === $el.id) update($event.detail.args);"
-    :class="{ 'z-40': open }">
+    @modal:update.window="if ($event.target.dataset.target === $el.id) update($event.detail);" :class="{ 'z-40': open }">
     <div class="fixed left-0 top-0 z-[99] flex h-screen w-screen items-center justify-center" x-show="open" x-cloak>
         {{-- Background blur --}}
         <div class="absolute inset-0 h-full w-full bg-white bg-opacity-70 backdrop-blur-sm" x-show="open"

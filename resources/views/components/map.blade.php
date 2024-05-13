@@ -9,7 +9,7 @@
     x-intersect="onIntersect">
 
     {{-- Loading skeleton --}}
-    <div class="absolute left-0 top-0 aspect-video animate-pulse rounded-lg bg-gray-300" x-show="loading"></div>
+    <div class="aspect-video animate-pulse rounded-lg bg-gray-300" x-show="loading"></div>
 
     {{-- Map container element --}}
     <div class="aspect-video rounded-lg" x-show="!loading" x-ref="map"></div>

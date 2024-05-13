@@ -17,6 +17,7 @@ export default () => ({
     _request: {
         pickup: null,
         dropoff: null,
+        user: null,
     },
 
     // Route results
@@ -47,9 +48,7 @@ export default () => ({
         return this._ride;
     },
 
-    set ride(ride) {
-        const { origin, destination, waypoints } = ride;
-
+    set ride({ origin, destination, waypoints }) {
         if (this.valueChanged({ origin, destination, waypoints }, this.ride))
             this._ride = { origin, destination, waypoints };
     },
@@ -80,11 +79,9 @@ export default () => ({
         return this._request;
     },
 
-    set request(request) {
-        const { pickup, dropoff } = request;
-
-        if (this.valueChanged({ pickup, dropoff }, this.request))
-            this._request = { pickup, dropoff };
+    set request({ pickup, dropoff, user }) {
+        if (this.valueChanged({ pickup, dropoff, user }, this.request))
+            this._request = { pickup, dropoff, user };
     },
 
     get pickup() {
@@ -128,12 +125,10 @@ export default () => ({
         if (!this.pickup && !this.dropoff) return this.waypoints;
 
         let pickupWaypoint = null;
-        if (this.pickup)
-            pickupWaypoint = this.getOrCreateWaypoint(this.pickup, -2);
+        if (this.pickup) pickupWaypoint = this.getOrCreateWaypoint("pickup");
 
         let dropoffWaypoint = null;
-        if (this.dropoff)
-            dropoffWaypoint = this.getOrCreateWaypoint(this.dropoff, -1);
+        if (this.dropoff) dropoffWaypoint = this.getOrCreateWaypoint("dropoff");
 
         // If we are adding to pre-existing waypoints, find the optimal order.
         // Otherwise, the only possible order is pickup -> dropoff.
@@ -151,17 +146,25 @@ export default () => ({
         }
     },
 
-    getOrCreateWaypoint(address, id) {
-        return (
-            this.waypoints.find(
-                (waypoint) =>
-                    waypoint.address.longitude === address.longitude &&
-                    waypoint.address.latitude === address.latitude,
-            ) ?? {
-                id: id,
-                address: address,
-            }
-        );
+    // TODO: use enum for type
+    getOrCreateWaypoint(type) {
+        const address = type === "pickup" ? this.pickup : this.dropoff;
+
+        const waypoint = this.waypoints.find(
+            (waypoint) =>
+                waypoint.address.longitude === address.longitude &&
+                waypoint.address.latitude === address.latitude,
+        ) ?? {
+            id: type === "pickup" ? -2 : -1,
+            address: address,
+            pickups: [],
+            dropoffs: [],
+        };
+
+        if (type === "pickup") waypoint.pickups.push(this.request.user);
+        else if (type === "dropoff") waypoint.dropoffs.push(this.request.user);
+
+        return waypoint;
     },
 
     async optimizeWaypoints(pickup, dropoff) {
@@ -319,6 +322,7 @@ export default () => ({
     },
 
     onIntersect() {
+        console.log("intersected");
         this.map.resize();
         if (this.bounds) this.fitBounds();
     },
@@ -367,8 +371,6 @@ export default () => ({
         return {
             address: address.formatted_address,
             coordinates: [address.longitude, address.latitude],
-            pickups: address.pickups,
-            dropoffs: address.dropoffs,
         };
     },
 

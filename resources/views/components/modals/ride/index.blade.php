@@ -14,9 +14,7 @@
             });
     }, --}}
 
-    async update(args) {
-        const { ride } = args;
-
+    async update({ ride }) {
         if (ride === undefined) throw new TypeError(`Missing argument 'ride'`);
 
         if (ride.id === this.rideData?.id) return;
@@ -75,16 +73,16 @@
             ]) : ''" size="sm">View
                 directions</x-button>
             <x-button as="anchor" ::href="rideData ? route('rides.show', rideData.id) : ''" size="sm">More info</x-button>
-            <template x-if="rideData?.userRelation === 'driver'">
+            <template x-if="rideData?.user_relation === 'driver'">
                 <x-button as="anchor" ::href="rideData ? route('rides.edit', rideData.id) : ''" size="sm">Edit ride</x-button>
             </template>
-            <template x-if="rideData?.userRelation === 'requester'">
-                <x-button as="form" method="delete" ::action="rideData?.relatedModelId ? route('requests.destroy', relatedModelId) : ''" size="sm">Cancel request</x-button>
+            <template x-if="rideData?.user_relation === 'requester'">
+                <x-button as="form" method="delete" ::action="rideData?.related_model_id ? route('requests.destroy', related_model_id) : ''" size="sm">Cancel request</x-button>
             </template>
-            <template x-if="rideData?.userRelation === 'passenger'">
-                <x-button as="form" method="delete" ::action="rideData?.relatedModelId ? route('rides.users.destroy', [rideData.id, relatedModelId]) : ''" size="sm">Leave ride</x-button>
+            <template x-if="rideData?.user_relation === 'passenger'">
+                <x-button as="form" method="delete" ::action="rideData?.related_model_id ? route('rides.users.destroy', [rideData.id, related_model_id]) : ''" size="sm">Leave ride</x-button>
             </template>
-            <template x-if="rideData?.userRelation === 'none'">
+            <template x-if="rideData?.user_relation === 'none'">
                 <x-button as="anchor" ::href="rideData ? route('requests.create', rideData.id) : ''" size="sm">Request to join</x-button>
             </template>
         </x-slot:footer>
