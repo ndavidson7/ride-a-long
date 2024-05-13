@@ -77,10 +77,12 @@
                 <x-button as="anchor" ::href="rideData ? route('rides.edit', rideData.id) : ''" size="sm">Edit ride</x-button>
             </template>
             <template x-if="rideData?.user_relation === 'requester'">
-                <x-button as="form" method="delete" ::action="rideData?.related_model_id ? route('requests.destroy', related_model_id) : ''" size="sm">Cancel request</x-button>
+                <x-button as="form" method="delete" variant="danger" ::action="rideData?.related_model_id ? route('requests.destroy', related_model_id) : ''" size="sm">Cancel
+                    request</x-button>
             </template>
             <template x-if="rideData?.user_relation === 'passenger'">
-                <x-button as="form" method="delete" ::action="rideData?.related_model_id ? route('rides.users.destroy', [rideData.id, related_model_id]) : ''" size="sm">Leave ride</x-button>
+                <x-button as="form" method="delete" variant="danger" ::action="rideData?.related_model_id ? route('rides.users.destroy', [rideData.id, related_model_id]) : ''" size="sm">Leave
+                    ride</x-button>
             </template>
             <template x-if="rideData?.user_relation === 'none'">
                 <x-button as="anchor" ::href="rideData ? route('requests.create', rideData.id) : ''" size="sm">Request to join</x-button>

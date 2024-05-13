@@ -6,21 +6,20 @@ export default () => ({
     markers: [],
     loading: false,
 
-    // Ride locations
-    _ride: {
-        origin: null,
-        destination: null,
-        waypoints: [],
+    _data: {
+        ride: {
+            origin: null,
+            destination: null,
+            waypoints: [],
+        },
+
+        request: {
+            pickup: null,
+            dropoff: null,
+            user: null,
+        },
     },
 
-    // Request locations
-    _request: {
-        pickup: null,
-        dropoff: null,
-        user: null,
-    },
-
-    // Route results
     route: [],
     totalDistance: null,
     totalDuration: null,
@@ -40,66 +39,75 @@ export default () => ({
             accessToken: mapboxgl.accessToken,
         });
 
-        this.$watch("_ride", async () => await this.onRouteUpdated());
-        this.$watch("_request", async () => await this.onRouteUpdated());
+        this.$watch("_data", async () => await this.onRouteUpdated());
+    },
+
+    get data() {
+        return this._data;
+    },
+
+    set data({ ride, request }) {
+        if (this.valueChanged({ ride, request }, this.data))
+            this._data = { ride, request };
     },
 
     get ride() {
-        return this._ride;
+        return this._data.ride;
     },
 
     set ride({ origin, destination, waypoints }) {
         if (this.valueChanged({ origin, destination, waypoints }, this.ride))
-            this._ride = { origin, destination, waypoints };
+            this._data.ride = { origin, destination, waypoints };
     },
 
     get origin() {
-        return this._ride.origin;
+        return this._data.ride.origin;
     },
 
     set origin(origin) {
-        if (this.valueChanged(origin, this.origin)) this._ride.origin = origin;
+        if (this.valueChanged(origin, this.origin))
+            this._data.ride.origin = origin;
     },
 
     get destination() {
-        return this._ride.destination;
+        return this._data.ride.destination;
     },
 
     set destination(destination) {
         if (this.valueChanged(destination, this.destination))
-            this._ride.destination = destination;
+            this._data.ride.destination = destination;
     },
 
     // should never need to set waypoints directly, i think...
     get waypoints() {
-        return this._ride.waypoints;
+        return this._data.ride.waypoints;
     },
 
     get request() {
-        return this._request;
+        return this._data.request;
     },
 
     set request({ pickup, dropoff, user }) {
         if (this.valueChanged({ pickup, dropoff, user }, this.request))
-            this._request = { pickup, dropoff, user };
+            this._data.request = { pickup, dropoff, user };
     },
 
     get pickup() {
-        return this._request.pickup;
+        return this._data.request.pickup;
     },
 
     set pickup(pickup) {
         if (this.valueChanged(pickup, this.pickup))
-            this._request.pickup = pickup;
+            this._data.request.pickup = pickup;
     },
 
     get dropoff() {
-        return this._request.dropoff;
+        return this._data.request.dropoff;
     },
 
     set dropoff(dropoff) {
         if (this.valueChanged(dropoff, this.dropoff))
-            this._request.dropoff = dropoff;
+            this._data.request.dropoff = dropoff;
     },
 
     async onRouteUpdated() {
@@ -146,7 +154,6 @@ export default () => ({
         }
     },
 
-    // TODO: use enum for type
     getOrCreateWaypoint(type) {
         const address = type === "pickup" ? this.pickup : this.dropoff;
 
