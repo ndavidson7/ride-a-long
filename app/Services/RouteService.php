@@ -133,7 +133,7 @@ class RouteService
      * 
      * Should never be called without either pickup or dropoff being set.
      */
-    private function formatRequest(&$route, $pickup, $dropoff)
+    private function formatRequest(&$route, &$pickup, &$dropoff)
     {
         // Set before and/or after if necessary and append to route
         if ($pickup xor $dropoff) {

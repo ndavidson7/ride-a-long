@@ -20,7 +20,6 @@ class Waypoint extends Model
     ];
 
     protected $hidden = [
-        'id',
         'ride_id',
         'address_id',
     ];

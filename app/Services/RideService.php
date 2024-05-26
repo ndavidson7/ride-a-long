@@ -68,7 +68,7 @@ class RideService
             if ($numWaypoints <= 1) return;
 
             // if there are other waypoints, reorder all
-            return $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
+            return $this->reorderWaypoints($request->ride);
         }
 
         // at this point, both waypoints must exist
@@ -82,7 +82,7 @@ class RideService
 
         // only reorder if there were pre-existing waypoints
         if ($numWaypoints > 2)
-            $this->reorderWaypoints($request->ride, $pickupWaypoint, $dropoffWaypoint);
+            $this->reorderWaypoints($request->ride);
     }
 
     public function removePassenger(Ride $ride, User $user)

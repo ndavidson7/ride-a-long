@@ -60,7 +60,6 @@
                 },
                 updateAddress(newAddress) {
                     {{-- Object.keys(address).forEach(key => address[key] = newAddress[key] ?? ''); --}}
-                    address.formatted_address = newAddress.formattedAddress;
                     address.street_address = newAddress.number + ' ' + newAddress.street;
                     address.city = newAddress.city;
                     address.state_name = newAddress.state;
@@ -68,6 +67,7 @@
                     address.postal_code = newAddress.postalCode;
                     address.country_name = newAddress.country;
                     address.country_code = newAddress.countryCode;
+                    address.formatted_address = `${address.street_address}, ${address.city}, ${address.state_code}, ${address.country_code}`;
                     address.latitude = newAddress.latitude;
                     address.longitude = newAddress.longitude;
                 }

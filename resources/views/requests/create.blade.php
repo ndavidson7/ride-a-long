@@ -2,7 +2,7 @@
     <x-typography.h1>Request to join {{ $ride->driver->name }}'s ride</x-typography.h1>
 
     @if ($ride->detours_allowed)
-        <x-map :$ride />
+        <x-map :$ride :request="(object) ['pickup' => null, 'dropoff' => null, 'user' => auth()->user()]" />
     @endif
 
     <x-form action="{{ route('requests.store', $ride->id) }}" x-data="{

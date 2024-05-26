@@ -47,8 +47,14 @@ export default () => ({
     },
 
     set data({ ride, request }) {
-        if (this.valueChanged({ ride, request }, this.data))
-            this._data = { ride, request };
+        if (this.valueChanged({ ride, request }, this.data)) {
+            const { origin, destination, waypoints } = ride;
+            const { pickup, dropoff, user } = request;
+            this._data = {
+                ride: { origin, destination, waypoints },
+                request: { pickup, dropoff, user },
+            };
+        }
     },
 
     get ride() {
@@ -61,7 +67,7 @@ export default () => ({
     },
 
     get origin() {
-        return this._data.ride.origin;
+        return this.ride?.origin;
     },
 
     set origin(origin) {
@@ -70,7 +76,7 @@ export default () => ({
     },
 
     get destination() {
-        return this._data.ride.destination;
+        return this.ride?.destination;
     },
 
     set destination(destination) {
@@ -80,7 +86,7 @@ export default () => ({
 
     // should never need to set waypoints directly, i think...
     get waypoints() {
-        return this._data.ride.waypoints;
+        return this.ride?.waypoints;
     },
 
     get request() {
@@ -93,7 +99,7 @@ export default () => ({
     },
 
     get pickup() {
-        return this._data.request.pickup;
+        return this.request?.pickup;
     },
 
     set pickup(pickup) {
@@ -102,7 +108,7 @@ export default () => ({
     },
 
     get dropoff() {
-        return this._data.request.dropoff;
+        return this.request?.dropoff;
     },
 
     set dropoff(dropoff) {
@@ -132,19 +138,23 @@ export default () => ({
     async getOrderedWaypoints() {
         if (!this.pickup && !this.dropoff) return this.waypoints;
 
+        // TODO
+        const waypoints = this.clone(this.waypoints);
+
         let pickupWaypoint = null;
         if (this.pickup) pickupWaypoint = this.getOrCreateWaypoint("pickup");
 
         let dropoffWaypoint = null;
         if (this.dropoff) dropoffWaypoint = this.getOrCreateWaypoint("dropoff");
 
-        // If we are adding to pre-existing waypoints, find the optimal order.
-        // Otherwise, the only possible order is pickup -> dropoff.
+        // TODO: Incorrect logic. Pickup waypoint could be an existing waypoint, in which case
+        // we should only optimize if dropoff exists and is a new waypoint, and vice versa.
         if (this.waypoints.length && (pickupWaypoint || dropoffWaypoint)) {
-            return await this.optimizeWaypoints(
-                pickupWaypoint,
-                dropoffWaypoint,
-            );
+            return await this.optimizeWaypoints([
+                this.origin,
+                ...this.waypoints,
+                this.destination,
+            ]);
         } else {
             // concat pickup and/or dropoff to this.waypoints
             return this.waypoints.concat(
@@ -157,24 +167,35 @@ export default () => ({
     getOrCreateWaypoint(type) {
         const address = type === "pickup" ? this.pickup : this.dropoff;
 
-        const waypoint = this.waypoints.find(
+        let waypoint = this.waypoints.find(
             (waypoint) =>
-                waypoint.address.longitude === address.longitude &&
-                waypoint.address.latitude === address.latitude,
-        ) ?? {
-            id: type === "pickup" ? -2 : -1,
-            address: address,
-            pickups: [],
-            dropoffs: [],
-        };
+                waypoint.address.formatted_address ===
+                address.formatted_address,
+        );
+        if (waypoint) {
+            // clone the raw object to avoid infinite loop due to reactivity
+            waypoint = this.clone(waypoint);
+        } else {
+            waypoint = {
+                id: type === "pickup" ? -2 : -1,
+                address: address,
+            };
+        }
 
-        if (type === "pickup") waypoint.pickups.push(this.request.user);
-        else if (type === "dropoff") waypoint.dropoffs.push(this.request.user);
+        if (type === "pickup") {
+            if (!Object.hasOwn(waypoint, "pickups")) waypoint.pickups = [];
+
+            waypoint.pickups.push(this.request.user);
+        } else if (type === "dropoff") {
+            if (!Object.hasOwn(waypoint, "dropoffs")) waypoint.dropoffs = [];
+
+            waypoint.dropoffs.push(this.request.user);
+        }
 
         return waypoint;
     },
 
-    async optimizeWaypoints(pickup, dropoff) {
+    async optimizeWaypoints(route) {
         const response = await fetch(route("route.optimize"), {
             headers: {
                 Accept: "application/json",
@@ -184,14 +205,11 @@ export default () => ({
             },
             method: "POST",
             credentials: "same-origin",
-            body: JSON.stringify({
-                route: [this.origin, ...this.waypoints, this.destination],
-                pickup: pickup,
-                dropoff: dropoff,
-            }),
+            body: JSON.stringify({ route }),
         });
 
         const data = await response.json();
+        console.log("Received optimized route:", data);
 
         if (!response.ok) throw new Error(data);
 
@@ -387,5 +405,9 @@ export default () => ({
             pickups: waypoint.pickups,
             dropoffs: waypoint.dropoffs,
         };
+    },
+
+    clone(obj) {
+        return structuredClone(obj.__v_raw);
     },
 });
