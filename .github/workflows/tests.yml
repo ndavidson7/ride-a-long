@@ -43,15 +43,12 @@ jobs:
 
       # Setup Node and NPM
 
-      # - name: Prepare the application
-      #   run: |
-      #     php -r "file_exists('.env') || copy('.env.testing', '.env');"
-
-      # - name: Set directory permissions
-      #   run: chmod -R 777 storage bootstrap/cache
+      - name: Prepare the application
+        run: |
+          php -r "file_exists('.env') || copy('.env.testing', '.env');"
 
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
 
       - name: Execute tests
-        run: php artisan test --env=testing --no-interaction -vvv
+        run: php artisan test --no-interaction -vvv
