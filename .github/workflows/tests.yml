@@ -43,10 +43,10 @@ jobs:
 
       # Setup Node and NPM
 
-      # - name: Prepare the application
-      #   run: |
-      #     php -r "file_exists('.env') || copy('.env.testing', '.env');"
-      #     php artisan key:generate
+      - name: Prepare the application
+        run: |
+          php -r "file_exists('.env') || copy('.env.testing', '.env');"
+          php artisan key:generate
 
       # - name: Set directory permissions
       #   run: chmod -R 777 storage bootstrap/cache
