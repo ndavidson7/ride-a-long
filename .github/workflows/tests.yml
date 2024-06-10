@@ -51,4 +51,4 @@ jobs:
         run: php artisan migrate --no-interaction -vvv
 
       - name: Execute tests
-        run: php artisan test --no-interaction -vvv
+        run: php artisan test
