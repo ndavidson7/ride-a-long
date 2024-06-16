@@ -1,7 +1,7 @@
-import { NewRideAlertEditMapComponent } from "@modules/map";
+// import { NewRideAlertEditMapComponent } from "@modules/map";
 
 const map = new NewRideAlertEditMapComponent(
-    document.getElementById("map-component")
+    document.getElementById("map-component"),
 );
 
 const previewButton = document.getElementById("preview-button");
@@ -23,7 +23,7 @@ requiredInputs.forEach((input) => {
 const originRadiusSlider = document.getElementById("origin-radius-slider");
 const originRadiusInput = document.getElementById("origin-radius");
 const destinationRadiusSlider = document.getElementById(
-    "destination-radius-slider"
+    "destination-radius-slider",
 );
 const destinationRadiusInput = document.getElementById("destination-radius");
 
