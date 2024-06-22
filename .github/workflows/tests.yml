@@ -11,8 +11,8 @@ jobs:
       mysql:
         image: mysql:latest
         env:
-          MYSQL_ALLOW_EMPTY_PASSWORD: true
-          MYSQL_DATABASE: database
+          MYSQL_DATABASE: testing
+          MYSQL_ROOT_PASSWORD: password
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -54,8 +54,7 @@ jobs:
         run: npm run build
 
       - name: Prepare the application
-        run: |
-          php -r "file_exists('.env') || copy('.env.testing', '.env');"
+        run: cp .env.testing .env
 
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
