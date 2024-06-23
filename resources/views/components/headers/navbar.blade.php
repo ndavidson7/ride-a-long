@@ -109,11 +109,7 @@
             {{-- Button --}}
             <button class="grid place-items-center rounded-full" type="button" x-ref="button" @click="toggle()"
                 :aria-expanded="open" :aria-controls="$id('dropdown-button')">
-                @if ($pfp = auth()->user()->fetchFirstMedia())
-                    <img class="size-12" src="{{ $pfp['file_url'] }}" alt="Profile picture">
-                @else
-                    <x-fas-circle-user class="size-12 text-white" />
-                @endif
+                <x-pfp class="size-12" :user="auth()->user()" />
             </button>
 
             {{-- Panel --}}
