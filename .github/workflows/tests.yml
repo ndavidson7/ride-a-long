@@ -54,10 +54,10 @@ jobs:
         run: npm run build
 
       - name: Prepare the application
-        run: cp .env.testing .env
+        run: cp .env.ci .env
 
       - name: Run migrations
         run: php artisan migrate --no-interaction -vvv
 
       - name: Execute tests
-        run: php artisan test
+        run: php artisan test --env=ci

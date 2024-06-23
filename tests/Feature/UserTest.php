@@ -21,17 +21,17 @@ class UserTest extends TestCase
         $this->assertEmpty(User::all());
     }
 
-    // public function test_can_signup_new_user(): void
-    // {
-    //     $response = $this->post('/signup', [
-    //         'first-name' => 'John',
-    //         'last-name' => 'Doe',
-    //         'email' => 'johndoe@virginia.edu',
-    //         'phone' => '1234567890',
-    //         'password' => 'password',
-    //         'password_confirmation' => 'password',
-    //     ]);
+    public function test_can_signup_new_user(): void
+    {
+        $response = $this->post('/signup', [
+            'first-name' => 'John',
+            'last-name' => 'Doe',
+            'email' => 'johndoe@virginia.edu',
+            'phone' => '3095557382',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
 
-    //     $response->assertRedirect('/email/verify');
-    // }
+        $response->assertRedirect('/email/verify');
+    }
 }
