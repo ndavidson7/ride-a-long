@@ -36,6 +36,8 @@ window.createMapboxDirections = createMapboxDirections;
 
 // Radar
 import Radar from "radar-sdk-js";
+import { createAutocompletePlugin } from '@radarlabs/plugin-autocomplete';
+Radar.registerPlugin(createAutocompletePlugin());
 Radar.initialize(
     import.meta.env.VITE_APP_ENV == "local"
         ? import.meta.env.VITE_RADAR_TEST_API_KEY

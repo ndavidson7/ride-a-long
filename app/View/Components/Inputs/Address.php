@@ -43,7 +43,8 @@ class Address extends Component
         string $layers = "address",
         string $addressComponents = "street_address,city,state_name,state_code,postal_code,country_name,country_code,latitude,longitude"
     ) {
-        if ($address->id) $this->address = $address;
+        if ($address?->id)
+            $this->address = $address;
         $this->layers = explode(',', $layers);
         $this->addressComponents = explode(',', $addressComponents);
     }

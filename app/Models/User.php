@@ -92,22 +92,22 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function phone(): Attribute
     {
         return Attribute::make(
-            get: fn (string $value) => phone($value, 'US')->formatForMobileDialingInCountry('US'),
-            set: fn (string $value) => phone($value, 'US')->formatE164()
+            get: fn(string $value) => phone($value, 'US')->formatForMobileDialingInCountry('US'),
+            set: fn(string $value) => phone($value, 'US')->formatE164()
         );
     }
 
     public function name(): Attribute
     {
         return Attribute::make(
-            get: fn ($value, array $attributes) => "{$attributes['first_name']} {$attributes['last_name']}"
+            get: fn($value, array $attributes) => "{$attributes['first_name']} {$attributes['last_name']}"
         );
     }
 
     public function yearFormatted(): Attribute
     {
         return Attribute::make(
-            get: fn (int $value) => match ($value) {
+            get: fn(int $value) => match ($value) {
                 1 => 'First',
                 2 => 'Second',
                 3 => 'Third',
@@ -121,14 +121,14 @@ class User extends Authenticatable implements MustVerifyEmail, CanResetPassword
     public function isDriver(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->car()->exists()
+            get: fn() => $this->car()->exists()
         );
     }
 
     public function pfpUrl(): Attribute
     {
         return Attribute::make(
-            get: fn () => $this->fetchFirstMedia()['file_url'] ?? null
+            get: fn() => $this->fetchFirstMedia()['file_url'] ?? null
         );
     }
 
